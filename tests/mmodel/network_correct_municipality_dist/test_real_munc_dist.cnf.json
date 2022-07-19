@@ -1,0 +1,1 @@
+{"name": "test_real_munc_dist", "config-file": "tests/mmodel/network_correct_municipality_dist/test_real_munc_dist.cnf.json", "network-file": "tests/mmodel/network_correct_municipality_dist/habana_network.json", "code-file": "tests/mmodel/network_correct_municipality_dist/test_real_munc_dist.py", "network-hash": "94f210224a27f2e8f274be1036f8dd211e6052c4"}
