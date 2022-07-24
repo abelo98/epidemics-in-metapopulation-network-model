@@ -32,7 +32,7 @@ total_pop_per_munc = {'0':43833,
 '13':125702,
 '14':174807}
 
-amount_workers_per_munc = {'0':43833,
+amount_workers_per_munc = {'0':18688,
 '1':64192,
 '2':82290,
 '3':61992,
@@ -51,7 +51,7 @@ amount_workers_per_munc = {'0':43833,
 with open("tests/mmodel/network_correct_municipality_dist/habana_network.json",'r') as f: 
     edges_json_file = json.load(f)
     new_edges_json = []
-    for edge in edges_json_file['edges']:
+    for edge in edges_json_file['graph']['edges']:
        current_perc = edge["metadata"]["weight"]
        munc_source = edge["source"]
        munc_target = edge["target"]
@@ -62,3 +62,8 @@ with open("tests/mmodel/network_correct_municipality_dist/habana_network.json",'
                 "target" : munc_target,
                 "metadata" : {"weight" : real_perc_w}
             })
+    edges_json_file['edges'] = new_edges_json
+    f.close()
+with open("tests/mmodel/network_correct_municipality_dist/habana_network2.json",'w') as f:
+    serialized_json = json.dumps(edges_json_file,indent=4)
+    f.write(serialized_json)
