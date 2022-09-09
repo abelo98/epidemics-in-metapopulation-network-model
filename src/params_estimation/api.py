@@ -8,9 +8,6 @@ class ApiConn:
     def simulate(self,input_params, input_time):
         self.output_simulation = self.model.simulate(input_params, input_time)
 
-    def get_ydata_for_node(self,idx):
-        S = self.output_simulation[idx]['S']
-        I = self.output_simulation[idx]['I']
-        R = self.output_simulation[idx]['R']
-
-        return S,I,R
+    def get_ydata_for_node(self,idx:int,compartiments:list):
+        for compart in compartiments:
+            yield self.output_simulation[idx][compart]
