@@ -427,6 +427,8 @@ def generate_base_model(_, input_params):
     prevent_initial_call=True,
 )
 def simulate_network(_, input_params, input_time):
+    print(input_params)
+    print("*************")
     if model is None:
         not_yet = dbc.Col(
             dbc.Alert(
