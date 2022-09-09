@@ -1,6 +1,4 @@
-from unittest import result
 from mmodel.simple_trip import SimpleTripMetaModel
-
 
 class ApiConn:
     def __init__(self,model_name:str, file_path:str) -> None:
