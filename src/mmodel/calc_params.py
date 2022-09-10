@@ -8,7 +8,7 @@ def get_ydata(caller: ApiConn, compartiments: list, idxs: list):
             output[c] = caller.get_ydata_for_node(idx, c).__next__()
     return output
 
-def Initialized(model_name, file_path, params, days):
+def Initialized(model_name = "", file_path="", params="", days=None):
     model_name = "model_api"
     file_path = "tests/mmodel/network_correct_municipality_dist/habana_network2.json"
     params = "tests/mmodel/network_correct_municipality_dist/parameters.json"
