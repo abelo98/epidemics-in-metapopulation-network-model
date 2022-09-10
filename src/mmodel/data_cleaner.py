@@ -7,4 +7,8 @@ class Cleaner:
 
     @staticmethod
     def select_rows(df: DataFrame, muncps):
-        return dict(zip(muncps, df[muncps]))
+        output = {}
+        for c in df[muncps]:
+            output[c] =  [int(v) for v in df.loc[:,[c]].values]
+
+        return output
