@@ -2,6 +2,8 @@ from mmodel.calc_params import Initialized
 from mmodel.data_reader import Reader
 from mmodel.data_cleaner import Cleaner
 
+import numpy as np
+
 data_conf_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_conf_mun.xlsx"
 data_dead_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_fall_mun.xlsx"
 
@@ -30,5 +32,6 @@ df_conf_havana = Cleaner.select_rows(df_conf, muncps)
 df_dead_havana = Cleaner.select_rows(df_dead, muncps)
 
 df_infected_havana = {
-    key: abs(df_conf_havana[key] - df_dead_havana[key]) for key in df_conf_havana}
+    key: abs(np.subtract(df_conf_havana[key], df_dead_havana[key])) for key in df_conf_havana}
 
+print("end")
