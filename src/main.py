@@ -1,3 +1,8 @@
-from mmodel.calc_params import main
+from mmodel.calc_params import Initialized
+from mmodel.data_reader import Reader
+from mmodel.data_cleaner import Cleaner
 
-main()
+ydata =  Initialized()
+
+reader = Cleaner()
+reader = Reader()
