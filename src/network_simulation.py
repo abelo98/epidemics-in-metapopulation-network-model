@@ -497,6 +497,7 @@ def simulate_node(node_data, time):
 
     s = result[int(idx)]["S"]
     i = result[int(idx)]["I"]
+    print(type(i))
 
     figure.add_trace(go.Scatter(x=time, y=s, mode="lines", name="S"))
     figure.add_trace(go.Scatter(x=time, y=i, mode="lines", name="I"))
