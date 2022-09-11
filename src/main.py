@@ -1,4 +1,4 @@
-from mmodel.calc_params import Initialized
+from mmodel.calc_params import initialize
 from mmodel.data_reader import Reader
 from mmodel.data_cleaner import Cleaner
 
@@ -23,7 +23,7 @@ muncps = ["Playa",
           "Arroyo Naranjo",
           "Cotorro"]
 
-ydata = Initialized()
+ydata = initialize()
 
 df_conf = Reader.get_data(data_conf_path)
 df_dead = Reader.get_data(data_dead_path)
@@ -35,3 +35,9 @@ df_infected_havana = {
     key: abs(np.subtract(df_conf_havana[key], df_dead_havana[key])) for key in df_conf_havana}
 
 print("end")
+
+
+N = 1.0
+I0 = ydata[0]
+S0 = N - I0
+R0 = 0.0
