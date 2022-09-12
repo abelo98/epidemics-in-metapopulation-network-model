@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from scipy import integrate, optimize
 from .model import SIR
 
+i_values = None
+
 
 def get_ydata(caller: ApiConn, compartiments: list, idxs: list):
     output = {}
@@ -26,12 +28,19 @@ def initialize(model_name="", file_path="", params="", days=None):
 
 
 def estimate_params(ydata: np.array, time: np.array, params: list, initial_v: dict):
-    sir_model = SIR(initial_v)
-    popt, pcov = optimize.curve_fit(sir_model.sir_ecuations, time, ydata)
-    # fitted = sir_model.fit_odeint(time, *popt)
+    global i_values
+    i_values = tuple(initial_v.values())
+
+    popt, _ = optimize.curve_fit(fit_odeint, time, ydata, p0=[
+                                 0.17, 0.082], maxfev=5000)
+
     params_estimated = {}
     for i, p in enumerate(popt):
         print(f'{params[i]}: {p}')
         params_estimated[params[i]] = p
 
     return params_estimated
+
+
+def fit_odeint(x, beta, gamma):
+    return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]

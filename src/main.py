@@ -9,9 +9,9 @@ def get_initial_values(json_file):
     S0 = json_file["y"]["S"]
     I0 = json_file["y"]["I"]
     R0 = json_file["y"]["R"]
-    N = json_file["y"]["N"]
+    # N = json_file["y"]["N"]
 
-    return {"S": S0, "I": I0, "R": R0, "N": N}
+    return {"S": S0, "I": I0, "R": R0}
 
 
 def estimate_new_params(current_paramas_json, infected, params_to_estimate):
@@ -37,13 +37,13 @@ def save_file_as_json(path, file: list):
         f.close()
 
 
-def call_estimator(munc,infected, params_to_estimate, initial_v: dict):
+def call_estimator(munc, infected, params_to_estimate, initial_v: dict):
     print(munc)
     print("params: ")
     print("")
 
     time = np.linspace(0, len(infected), len(infected))
-    ydata = np.array(infected)
+    ydata = np.array(infected, dtype=float)
 
     return estimate_params(ydata, time, params_to_estimate, initial_v)
 
@@ -57,9 +57,9 @@ def main():
     muncps = ["Playa",
               "Plaza de la Revolución",
               "Centro Habana",
-              "La Habana Vieja",
+              "Habana Vieja",
               "Regla",
-              "La Habana del Este",
+              "Habana del Este",
               "Guanabacoa",
               "San Miguel del Padrón",
               "Diez de Octubre",

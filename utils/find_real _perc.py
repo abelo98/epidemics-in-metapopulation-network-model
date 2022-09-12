@@ -1,4 +1,3 @@
-from operator import imod
 import json
 
 numb_munc = {0:'Regla',
