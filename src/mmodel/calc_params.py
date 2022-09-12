@@ -29,6 +29,9 @@ def estimate_params(ydata: np.array, time: np.array, params: list, initial_v: di
     sir_model = SIR(initial_v)
     popt, pcov = optimize.curve_fit(sir_model.sir_ecuations, time, ydata)
     # fitted = sir_model.fit_odeint(time, *popt)
-
+    params_estimated = {}
     for i, p in enumerate(popt):
         print(f'{params[i]}: {p}')
+        params_estimated[params[i]] = p
+        
+    return params_estimated

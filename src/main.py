@@ -4,14 +4,6 @@ from mmodel.data_cleaner import Cleaner
 import numpy as np
 import json
 
-{
-    "id": 1,
-    "label": "La Lisa",
-    "model": "SIR",
-    "y": {"S": 145022, "I": 1, "R": 0, "N": 145023},
-    "params": {"beta": 0.17, "gamma": 0.082}
-},
-
 
 def get_initial_values(json_file):
     S0 = json_file["y"]["S"]
@@ -23,34 +15,26 @@ def get_initial_values(json_file):
     return {label: [S0, I0, R0, N]}
 
 
-def parse_params_pob_file(path, infected, params_to_estimate):
+def estimate_new_params(path, infected, params_to_estimate):
     with open(path, 'r') as f:
         json_parsed = json.load(f)
+        output = []
         for model in json_parsed:
             initail_v_and_label = get_initial_values(model)
-            estimate(infected, params_to_estimate,initail_v_and_label)
-
-        new_edges_json = []
-        for edge in edges_json_file['graph']['edges']:
-            current_perc = edge["metadata"]["weight"]
-            munc_source = edge["source"]
-            munc_target = edge["target"]
-            real_portion_workers = current_perc * \
-                amount_workers_per_munc[munc_source]
-            real_perc_w = real_portion_workers/total_pop_per_munc[munc_source]
-            new_edges_json.append({
-                "source": munc_source,
-                "target": munc_target,
-                "metadata": {"weight": real_perc_w}
-            })
-        edges_json_file['edges'] = new_edges_json
+            new_params = call_estimator(infected, params_to_estimate,initail_v_and_label)
+            model["params"] = new_params
+            output.append(model)
         f.close()
-    with open("tests/mmodel/network_correct_municipality_dist/habana_network2.json", 'w') as f:
-        serialized_json = json.dumps(edges_json_file, indent=4)
+
+
+def save_file_as_json(path,file:list):
+    with open(path, 'w') as f:
+        serialized_json = json.dumps(file, indent=4)
         f.write(serialized_json)
+        f.close()
 
 
-def estimate(infected,params_to_estimate,initial_v:dict):
+def call_estimator(infected,params_to_estimate,initial_v:dict):
     print(initial_v.keys())
     print("params: ")
     print("")
@@ -58,14 +42,13 @@ def estimate(infected,params_to_estimate,initial_v:dict):
     time = np.linspace(0, len(infected), len(infected))
     ydata = np.array(infected)
     
-    estimate_params(ydata,time,params_to_estimate,initial_v)
-    print("")
-
+    return estimate_params(ydata,time,params_to_estimate,initial_v)
 
 
 def main():
     data_conf_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_conf_mun.xlsx"
     data_dead_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_fall_mun.xlsx"
+    current_paramas_json = "/media/abel/TERA/School/5to/Tesis/My work/epidemics-in-metapopulation-network-model/tests/mmodel/network_correct_municipality_dist/parameters_d16.json"
 
     muncps = ["Playa",
               "Plaza de la Revolución",
