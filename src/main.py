@@ -12,7 +12,7 @@ def get_initial_values(json_file):
     N = json_file["y"]["N"]
     label = json_file["label"]
 
-    return {label: [S0, I0, R0, N]}
+    return {"munc": label, "S": S0, "I": I0, "R": R0, "N": N}
 
 
 def estimate_new_params(current_paramas_json, infected, params_to_estimate):
