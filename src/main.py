@@ -10,9 +10,8 @@ def get_initial_values(json_file):
     I0 = json_file["y"]["I"]
     R0 = json_file["y"]["R"]
     N = json_file["y"]["N"]
-    label = json_file["label"]
 
-    return {"munc": label, "S": S0, "I": I0, "R": R0, "N": N}
+    return {"S": S0, "I": I0, "R": R0, "N": N}
 
 
 def estimate_new_params(current_paramas_json, infected, params_to_estimate):
@@ -22,8 +21,9 @@ def estimate_new_params(current_paramas_json, infected, params_to_estimate):
         for model in json_parsed:
             initail_v_and_label = get_initial_values(model)
             infected_by_munc = infected[model["label"]][15:]
+            munc = model["label"]
             new_params = call_estimator(
-                infected_by_munc, params_to_estimate, initail_v_and_label)
+                munc, infected_by_munc, params_to_estimate, initail_v_and_label)
             model["params"] = new_params
             output.append(model)
         f.close()
@@ -37,8 +37,8 @@ def save_file_as_json(path, file: list):
         f.close()
 
 
-def call_estimator(infected, params_to_estimate, initial_v: dict):
-    print(initial_v.keys())
+def call_estimator(munc,infected, params_to_estimate, initial_v: dict):
+    print(munc)
     print("params: ")
     print("")
 
