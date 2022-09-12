@@ -1,0 +1,1 @@
+{"name": "testing_estimated_params", "config-file": "tests/mmodel/network_correct_municipality_dist/testing_estimated_params.cnf.json", "network-file": "tests/mmodel/network_correct_municipality_dist/habana_network2.json", "code-file": "tests/mmodel/network_correct_municipality_dist/testing_estimated_params.py", "network-hash": "340dc6c867ee4ce143cf6b55bf9d034e3e9876f6"}
