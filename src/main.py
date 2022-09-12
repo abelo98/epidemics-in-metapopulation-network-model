@@ -21,8 +21,9 @@ def estimate_new_params(current_paramas_json, infected, params_to_estimate):
         output = []
         for model in json_parsed:
             initail_v_and_label = get_initial_values(model)
+            infected_by_munc = infected[initail_v_and_label["label"]][15:]
             new_params = call_estimator(
-                infected, params_to_estimate, initail_v_and_label)
+                , params_to_estimate, initail_v_and_label)
             model["params"] = new_params
             output.append(model)
         f.close()
@@ -82,8 +83,9 @@ def main():
 
     new_paramas_to_save = estimate_new_params(current_paramas_json,
                                               df_infected_havana, ["beta", "gamma"])
-    
-    save_file_as_json(paramas_estimated_json,new_paramas_to_save)
+
+    save_file_as_json(paramas_estimated_json, new_paramas_to_save)
+
 
 if __name__ == "__main__":
     main()
