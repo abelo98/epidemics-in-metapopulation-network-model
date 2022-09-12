@@ -21,9 +21,9 @@ def estimate_new_params(current_paramas_json, infected, params_to_estimate):
         output = []
         for model in json_parsed:
             initail_v_and_label = get_initial_values(model)
-            infected_by_munc = infected[initail_v_and_label["label"]][15:]
+            infected_by_munc = infected[json_parsed["label"]][15:]
             new_params = call_estimator(
-                , params_to_estimate, initail_v_and_label)
+                infected_by_munc, params_to_estimate, initail_v_and_label)
             model["params"] = new_params
             output.append(model)
         f.close()
