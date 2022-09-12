@@ -2,7 +2,7 @@ from .api import ApiConn
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate, optimize
-from model import SIR
+from .model import SIR
 
 
 def get_ydata(caller: ApiConn, compartiments: list, idxs: list):
@@ -33,5 +33,5 @@ def estimate_params(ydata: np.array, time: np.array, params: list, initial_v: di
     for i, p in enumerate(popt):
         print(f'{params[i]}: {p}')
         params_estimated[params[i]] = p
-        
+
     return params_estimated
