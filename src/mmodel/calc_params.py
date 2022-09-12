@@ -32,7 +32,7 @@ def estimate_params(ydata: np.array, time: np.array, params: list, initial_v: di
     i_values = tuple(initial_v.values())
 
     popt, _ = optimize.curve_fit(fit_odeint, time, ydata, p0=[
-                                 0.17, 0.082], maxfev=5000)
+                                 0.17, 0.082],bounds=(0,1) ,maxfev=5000)
 
     params_estimated = {}
     for i, p in enumerate(popt):
