@@ -55,6 +55,8 @@ def calc_infected(conf_less_dead:dict):
         for idx in range(0,len(conf_less_dead[munc])):
             accumaleted_infected.append(sum(conf_less_dead[munc][0:idx]))
         infected[munc] = accumaleted_infected
+        
+    return infected
 
 def main():
     data_conf_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_conf_mun.xlsx"
