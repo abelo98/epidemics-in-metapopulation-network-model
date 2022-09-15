@@ -47,6 +47,14 @@ def call_estimator(munc, infected, params_to_estimate, initial_v: dict):
 
     return estimate_params(ydata, time, params_to_estimate, initial_v)
 
+def calc_infected(conf_less_dead:dict):
+    infected={}
+    accumaleted_infected = []
+
+    for munc in conf_less_dead:
+        for idx in range(0,len(conf_less_dead[munc])):
+            accumaleted_infected.append(sum(conf_less_dead[munc][0:idx]))
+        infected[munc] = accumaleted_infected
 
 def main():
     data_conf_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_conf_mun.xlsx"
@@ -78,11 +86,13 @@ def main():
     df_conf_havana = Cleaner.select_rows(df_conf, muncps)
     df_dead_havana = Cleaner.select_rows(df_dead, muncps)
 
-    df_infected_havana = {
-        key: abs(np.subtract(df_conf_havana[key], df_dead_havana[key])) for key in df_conf_havana}
+    df_conf_less_dead_havana = {
+        key: np.subtract(df_conf_havana[key], df_dead_havana[key]) for key in df_conf_havana}
+
+    acc_infected = calc_infected(df_conf_less_dead_havana)
 
     new_paramas_to_save = estimate_new_params(current_paramas_json,
-                                              df_infected_havana, ["beta", "gamma"])
+                                              acc_infected, ["beta", "gamma"])
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
 
