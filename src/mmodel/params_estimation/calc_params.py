@@ -1,4 +1,4 @@
-from .api import ApiConn
+from ..data_manager.api import ApiConn
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate, optimize

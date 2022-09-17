@@ -1,6 +1,6 @@
-from mmodel.calc_params import estimate_params, initialize
-from mmodel.data_reader import Reader
-from mmodel.data_cleaner import Cleaner
+from mmodel.params_estimation.calc_params import estimate_params
+from mmodel.data_manager.data_reader import Reader
+from mmodel.data_manager.data_cleaner import Cleaner
 import numpy as np
 import json
 
