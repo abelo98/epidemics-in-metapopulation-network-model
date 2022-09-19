@@ -1,6 +1,6 @@
-from mmodel.calc_params import estimate_params, initialize
-from mmodel.data_reader import Reader
-from mmodel.data_cleaner import Cleaner
+from mmodel.params_estimation.calc_params import estimate_params, initialize
+from mmodel.data_manager.data_reader import Reader
+from mmodel.data_manager.data_cleaner import Cleaner
 import numpy as np
 import json
 
@@ -59,6 +59,7 @@ def calc_infected(conf_less_dead:dict):
     return infected
 
 def main():
+    initialize(days=200)
     data_conf_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_conf_mun.xlsx"
     data_dead_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_fall_mun.xlsx"
     current_paramas_json = "/media/abel/TERA/School/5to/Tesis/My work/epidemics-in-metapopulation-network-model/tests/mmodel/network_correct_municipality_dist/parameters_d16.json"
