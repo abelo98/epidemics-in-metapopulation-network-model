@@ -16,9 +16,9 @@ def get_ydata(caller: ApiConn, compartiments: list, idxs: list):
 
 
 def initialize(model_name="", file_path="", params="", days=None):
-    model_name = "model_api"
-    file_path = "tests/mmodel/network_correct_municipality_dist/habana_network2.json"
-    params = "tests/mmodel/network_correct_municipality_dist/parameters.json"
+    model_name = "model_api_network_2_nodes"
+    file_path = "tests/mmodel/simple/simple_network.json"
+    params = "tests/mmodel/simple/params/simple_params.json"
     days = np.linspace(0, 200, 200)
 
     caller = ApiConn(model_name, file_path)
