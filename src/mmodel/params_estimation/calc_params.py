@@ -1,12 +1,9 @@
-from importlib.resources import path
-from time import time
 from ..data_manager.api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy import integrate, optimize
 from .model import SIR
-from constants import *
+from ...constants import *
 
 i_values = None
 
@@ -31,6 +28,10 @@ def initialize(model_name="", file_path="", params="", days=None):
     get_ydata(caller, ['S', 'I', 'R'], [0, 1])
 
 
+def fit_odeint(i_values, x, beta, gamma):
+    return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
+
+
 def estimate_params(ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
     global i_values
     i_values = tuple(initial_v.values())
@@ -49,10 +50,6 @@ def estimate_params(ydata: np.array, time: np.array, params: list, initial_v: di
     return params_estimated
 
 
-def fit_odeint(x, beta, gamma):
-    return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
-
-
 def get_initial_values_SIR(json_file):
     S0 = json_file["y"]["S"]
     I0 = json_file["y"]["I"]
@@ -67,7 +64,7 @@ def build_json_params(models_json, infected, params_to_estimate):
         initial_v = get_initial_values_SIR(model)
         infected_by_munc = infected[model["label"]][START_INFECTED:]
         munc = model["label"]
-        time = np.linspace(0,len(infected_by_munc),len(infected_by_munc))
+        time = np.linspace(0, len(infected_by_munc), len(infected_by_munc))
 
         new_params = estimate_params(
             infected_by_munc, time, params_to_estimate, initial_v, munc)

@@ -1,3 +1,5 @@
+from scipy.integrate import odeint
+
 
 class SIR:
     @staticmethod
