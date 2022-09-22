@@ -15,3 +15,6 @@ MUNCPS = ["Playa",
               "Cotorro"]
 
 START_INFECTED = 15 #constant to get the infected from the day 15
+
+BETA = 0.17 #difusion rate
+GAMMA = 0.082 #recovery rate
