@@ -57,7 +57,7 @@ class estimator:
 
         return self.__get_params__(params, munc, popt)
 
-    def estimate_params(self,ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
+    def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
         global i_values
         i_values = tuple(initial_v.values())
 
