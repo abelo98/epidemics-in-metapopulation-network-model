@@ -1,101 +1,34 @@
-from mmodel.params_estimation.calc_params import estimate_params, initialize
+from mmodel.params_estimation.calc_params import *
 from mmodel.data_manager.data_reader import Reader
 from mmodel.data_manager.data_cleaner import Cleaner
-import numpy as np
-import json
+from mmodel.data_manager.data_operations import data_operator
+from mmodel.json_manager.json_processor import *
 
+from constants import *
 
-def get_initial_values(json_file):
-    S0 = json_file["y"]["S"]
-    I0 = json_file["y"]["I"]
-    R0 = json_file["y"]["R"]
-    # N = json_file["y"]["N"]
-
-    return {"S": S0, "I": I0, "R": R0}
-
-
-def estimate_new_params(current_paramas_json, infected, params_to_estimate):
-    with open(current_paramas_json, 'r') as f:
-        json_parsed = json.load(f)
-        output = []
-        for model in json_parsed:
-            initail_v_and_label = get_initial_values(model)
-            infected_by_munc = infected[model["label"]][15:]
-            munc = model["label"]
-            new_params = call_estimator(
-                munc, infected_by_munc, params_to_estimate, initail_v_and_label)
-            model["params"] = new_params
-            output.append(model)
-        f.close()
-        return output
-
-
-def save_file_as_json(path, file: list):
-    with open(path, 'w') as f:
-        serialized_json = json.dumps(file, indent=4)
-        f.write(serialized_json)
-        f.close()
-
-
-def call_estimator(munc, infected, params_to_estimate, initial_v: dict):
-    print(munc)
-    print("params: ")
-    print("")
-
-    time = np.linspace(0, len(infected), len(infected))
-    ydata = np.array(infected, dtype=float)
-
-    return estimate_params(ydata, time, params_to_estimate, initial_v)
-
-def calc_infected(conf_less_dead:dict):
-    infected={}
-    accumaleted_infected = []
-
-    for munc in conf_less_dead:
-        for idx in range(0,len(conf_less_dead[munc])):
-            accumaleted_infected.append(sum(conf_less_dead[munc][0:idx]))
-        infected[munc] = accumaleted_infected
-        
-    return infected
 
 def main():
-    initialize(days=200)
+    # initialize(days=200)
     data_conf_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_conf_mun.xlsx"
     data_dead_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_fall_mun.xlsx"
     current_paramas_json = "/media/abel/TERA/School/5to/Tesis/My work/epidemics-in-metapopulation-network-model/tests/mmodel/network_correct_municipality_dist/parameters_d16.json"
     paramas_estimated_json = "/media/abel/TERA/School/5to/Tesis/My work/epidemics-in-metapopulation-network-model/tests/mmodel/network_correct_municipality_dist/parameters_estimated_d16.json"
-
-    muncps = ["Playa",
-              "Plaza de la Revolución",
-              "Centro Habana",
-              "Habana Vieja",
-              "Regla",
-              "Habana del Este",
-              "Guanabacoa",
-              "San Miguel del Padrón",
-              "Diez de Octubre",
-              "Cerro",
-              "Marianao",
-              "La Lisa",
-              "Boyeros",
-              "Arroyo Naranjo",
-              "Cotorro"]
 
     # ydata = initialize()
 
     df_conf = Reader.get_data(data_conf_path)
     df_dead = Reader.get_data(data_dead_path)
 
-    df_conf_havana = Cleaner.select_rows(df_conf, muncps)
-    df_dead_havana = Cleaner.select_rows(df_dead, muncps)
+    df_conf_havana = Cleaner.select_rows(df_conf, MUNCPS)
+    df_dead_havana = Cleaner.select_rows(df_dead, MUNCPS)
 
-    df_conf_less_dead_havana = {
-        key: np.subtract(df_conf_havana[key], df_dead_havana[key]) for key in df_conf_havana}
+    df_conf_less_dead_havana = data_operator.get_conf_less_dead(
+        df_conf_havana, df_dead_havana)
 
-    acc_infected = calc_infected(df_conf_less_dead_havana)
+    acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = estimate_new_params(current_paramas_json,
-                                              acc_infected, ["beta", "gamma"])
+    new_paramas_to_save = get_params_estimation(current_paramas_json,
+                                                acc_infected, ["beta", "gamma"])
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
 
