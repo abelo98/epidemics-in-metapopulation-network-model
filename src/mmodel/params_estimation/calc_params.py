@@ -4,7 +4,7 @@ import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
 from ..constants import BETA, GAMMA, START_INFECTED
-# from ....tests.mmodel.simple.model_api_network_2_nodes import deriv
+from ....tests.mmodel.simple.model_api_network_2_nodes import deriv
 
 
 class estimator:
@@ -29,20 +29,7 @@ class estimator:
                 output[c] = caller.get_ydata_for_node(idx, c).__next__()
         return output
 
-    @staticmethod
-    def fit_odeint(i_values, x, beta, gamma):
-        return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
-
-    def fit_odeint_metamodel(i_values, x, params):
-        return integrate.odeint(deriv, i_values, x, args=(params,))[:, 1]
-
-    def estimate_params_metamodel(ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
-        global i_values
-        i_values = tuple(initial_v.values())
-
-        popt, _ = optimize.curve_fit(estimator.fit_odeint, time, ydata, p0=[
-            BETA, GAMMA], bounds=(0, 1), maxfev=5000)
-
+    def __get_params__(self, params, munc, popt):
         params_estimated = {}
         for i, p in enumerate(popt):
             print(munc)
@@ -50,25 +37,34 @@ class estimator:
             print("")
             print(f'{params[i]}: {p}')
             params_estimated[params[i]] = p
-
         return params_estimated
 
-    def estimate_params(ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
+    @staticmethod
+    def fit_odeint(i_values, x, beta, gamma):
+        return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
+
+    @staticmethod
+    def fit_odeint_metamodel(i_values, x, params):
+        return integrate.odeint(deriv, i_values, x, args=(params,))[:, 1]
+
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
+        global i_values
+        i_values = [initial_v.values()]
+        i_values = self.api.transform_input(i_values)
+
+        popt, _ = optimize.curve_fit(
+            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), maxfev=5000)
+
+        return self.__get_params__(params, munc, popt)
+
+    def estimate_params(self,ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
         global i_values
         i_values = tuple(initial_v.values())
 
         popt, _ = optimize.curve_fit(estimator.fit_odeint_metamodel, time, ydata, p0=[
             BETA, GAMMA], bounds=(0, 1), maxfev=5000)
 
-        params_estimated = {}
-        for i, p in enumerate(popt):
-            print(munc)
-            print("params: ")
-            print("")
-            print(f'{params[i]}: {p}')
-            params_estimated[params[i]] = p
-
-        return params_estimated
+        return self.__get_params__(params, munc, popt)
 
     def get_initial_values_SIR(json_file):
         S0 = json_file["y"]["S"]
@@ -117,3 +113,7 @@ class estimator:
     def get_params_estimation(self, nodes_params_json_path, infected, params_to_estiamte):
         models = read_json(nodes_params_json_path)
         return self.build_json_params(models, infected, params_to_estiamte)
+
+    def get_params_estimation_metamodel(self, nodes_params_json_path, infected, params_to_estiamte):
+        models = read_json(nodes_params_json_path)
+        return self.build_json_params_metamodel(models, infected, params_to_estiamte)
