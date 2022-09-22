@@ -4,11 +4,11 @@ from mmodel.data_manager.data_cleaner import Cleaner
 from mmodel.data_manager.data_operations import data_operator
 from mmodel.json_manager.json_processor import *
 
-from constants import *
+from mmodel.constants import *
 
 
 def main():
-    # initialize(days=200)
+    est = estimator(days=200)
     data_conf_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_conf_mun.xlsx"
     data_dead_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_fall_mun.xlsx"
     current_paramas_json = "/media/abel/TERA/School/5to/Tesis/My work/epidemics-in-metapopulation-network-model/tests/mmodel/network_correct_municipality_dist/parameters_d16.json"
@@ -27,7 +27,7 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = get_params_estimation(current_paramas_json,
+    new_paramas_to_save = est.get_params_estimation(current_paramas_json,
                                                 acc_infected, ["beta", "gamma"])
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
