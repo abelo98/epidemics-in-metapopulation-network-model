@@ -427,6 +427,8 @@ def generate_base_model(_, input_params):
     prevent_initial_call=True,
 )
 def simulate_network(_, input_params, input_time):
+    print(input_params)
+    print("*************")
     if model is None:
         not_yet = dbc.Col(
             dbc.Alert(
@@ -495,6 +497,7 @@ def simulate_node(node_data, time):
 
     s = result[int(idx)]["S"]
     i = result[int(idx)]["I"]
+    print(type(i))
 
     figure.add_trace(go.Scatter(x=time, y=s, mode="lines", name="S"))
     figure.add_trace(go.Scatter(x=time, y=i, mode="lines", name="I"))
