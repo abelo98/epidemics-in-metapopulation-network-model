@@ -34,20 +34,20 @@ class estimator:
     def __get_params__(self, params, munc, popt, id=0):
         params_estimated = {}
         start = id*len(params)
+        print(munc)
+        print("params: ")
         for i, p in enumerate(popt[start:start+len(params)]):
-            print(munc)
-            print("params: ")
-            print("")
             print(f'{params[i]}: {p}')
             params_estimated[params[i]] = p
+        print("")
         return params_estimated
 
     @staticmethod
-    def fit_odeint(i_values, x, beta, gamma):
+    def fit_odeint(x, beta, gamma):
         return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
 
     # @staticmethod
-    # def fit_odeint_metamodel(i_values, x, params):
+    # def fit_odeint_metamodel(x, params):
     #     return integrate.odeint(metamodel.deriv, i_values, x, args=(params,))[:, 1]
 
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc, id):
