@@ -8,4 +8,5 @@ class SIR:
         dSdt = -beta * S * I / N
         dRdt = gamma * I
         dIdt = -(S + R)
-        return dSdt, dIdt, dRdt
+        dNdt = 0
+        return dSdt, dIdt, dRdt, dNdt

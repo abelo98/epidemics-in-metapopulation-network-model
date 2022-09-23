@@ -4,7 +4,7 @@ import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
 from ..constants import BETA, GAMMA, START_INFECTED
-from ....tests.mmodel.simple.model_api_network_2_nodes import deriv
+# from ....tests.mmodel.simple.model_api_network_2_nodes import deriv
 
 
 class estimator:
@@ -40,12 +40,12 @@ class estimator:
         return params_estimated
 
     @staticmethod
-    def fit_odeint(i_values, x, beta, gamma):
+    def fit_odeint(x, beta, gamma):
         return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
 
-    @staticmethod
-    def fit_odeint_metamodel(i_values, x, params):
-        return integrate.odeint(deriv, i_values, x, args=(params,))[:, 1]
+    # @staticmethod
+    # def fit_odeint_metamodel(x, params):
+    #     return integrate.odeint(deriv, i_values, x, args=(params,))[:, 1]
 
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
         global i_values
@@ -61,12 +61,12 @@ class estimator:
         global i_values
         i_values = tuple(initial_v.values())
 
-        popt, _ = optimize.curve_fit(estimator.fit_odeint_metamodel, time, ydata, p0=[
+        popt, _ = optimize.curve_fit(self.fit_odeint, time, ydata, p0=[
             BETA, GAMMA], bounds=(0, 1), maxfev=5000)
 
         return self.__get_params__(params, munc, popt)
 
-    def get_initial_values_SIR(json_file):
+    def get_initial_values_SIR(self,json_file):
         S0 = json_file["y"]["S"]
         I0 = json_file["y"]["I"]
         R0 = json_file["y"]["R"]
