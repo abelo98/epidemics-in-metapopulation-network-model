@@ -9,8 +9,8 @@ from mmodel.constants import *
 
 def main():
     est = estimator(days=200)
-    data_conf_path = "/media/abelo/Nuevo vol/5to/Tesis/tesis stuff/cv19_conf_mun.xlsx"
-    data_dead_path = "/media/abelo/Nuevo vol/5to/Tesis/tesis stuff/cv19_fall_mun.xlsx"
+    data_conf_path = "data_cov/cv19_conf_mun.xlsx"
+    data_dead_path = "data_cov/cv19_fall_mun.xlsx"
     current_paramas_json = "tests/mmodel/network_correct_municipality_dist/parameters_d16.json"
     paramas_estimated_json = "tests/mmodel/network_correct_municipality_dist/parameters_estimated_d16.json"
 
