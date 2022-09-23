@@ -3,7 +3,7 @@ from ..json_manager.json_processor import read_json
 import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
-from ...constants import *
+from ..constants import *
 
 i_values = None
 
@@ -28,7 +28,7 @@ def initialize(model_name="", file_path="", params="", days=None):
     get_ydata(caller, ['S', 'I', 'R'], [0, 1])
 
 
-def fit_odeint(i_values, x, beta, gamma):
+def fit_odeint(x, beta, gamma):
     return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
 
 
@@ -40,12 +40,14 @@ def estimate_params(ydata: np.array, time: np.array, params: list, initial_v: di
                                  0.17, 0.082], bounds=(0, 1), maxfev=5000)
 
     params_estimated = {}
+    print(munc)
+    print("params: ")
+
     for i, p in enumerate(popt):
-        print(munc)
-        print("params: ")
-        print("")
         print(f'{params[i]}: {p}')
         params_estimated[params[i]] = p
+
+    print("")
 
     return params_estimated
 
@@ -54,8 +56,9 @@ def get_initial_values_SIR(json_file):
     S0 = json_file["y"]["S"]
     I0 = json_file["y"]["I"]
     R0 = json_file["y"]["R"]
+    N = json_file["y"]["N"]
 
-    return {"S": S0, "I": I0, "R": R0}
+    return {"S": S0, "I": I0, "R": R0, "N": N}
 
 
 def build_json_params(models_json, infected, params_to_estimate):
