@@ -7,6 +7,6 @@ class SIR:
         S, I, R, N = y
         dSdt = -beta * S * I / N
         dRdt = gamma * I
-        dIdt = -(S + R)
+        dIdt = -(dSdt + dRdt)
         dNdt = 0
         return dSdt, dIdt, dRdt, dNdt

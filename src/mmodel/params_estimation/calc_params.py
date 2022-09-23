@@ -164,8 +164,9 @@ def get_initial_values_SIR(json_file):
     S0 = json_file["y"]["S"]
     I0 = json_file["y"]["I"]
     R0 = json_file["y"]["R"]
+    N = json_file["y"]["N"]
 
-    return {"S": S0, "I": I0, "R": R0}
+    return {"S": S0, "I": I0, "R": R0, "N": N}
 
 
 def build_json_params(models_json, infected, params_to_estimate):
@@ -174,7 +175,7 @@ def build_json_params(models_json, infected, params_to_estimate):
         initial_v = get_initial_values_SIR(model)
         infected_by_munc = infected[model["label"]][START_INFECTED:]
         munc = model["label"]
-        time = np.linspace(0,len(infected_by_munc),len(infected_by_munc))
+        time = np.linspace(0, len(infected_by_munc), len(infected_by_munc))
 
         new_params = estimate_params(
             infected_by_munc, time, params_to_estimate, initial_v, munc)
@@ -188,4 +189,3 @@ def build_json_params(models_json, infected, params_to_estimate):
 def get_params_estimation(params_json_path, infected, params_to_estiamte):
     models = read_json(params_json_path)
     return build_json_params(models, infected, params_to_estiamte)
-
