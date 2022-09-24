@@ -27,11 +27,11 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = est.get_params_estimation(current_paramas_json,
-                                                    acc_infected, ["beta", "gamma"])
+    # new_paramas_to_save = est.get_params_estimation(current_paramas_json,
+    #                                                 acc_infected, ["beta", "gamma"])
 
-    # new_paramas_to_save = est.get_params_estimation_metamodel(current_paramas_json,
-    #                                                           acc_infected, ["beta", "gamma"])
+    new_paramas_to_save = est.get_params_estimation_metamodel(current_paramas_json,
+                                                              acc_infected, ["beta", "gamma"])
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
 
