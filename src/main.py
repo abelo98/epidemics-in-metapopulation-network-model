@@ -8,11 +8,11 @@ from mmodel.constants import *
 
 
 def main():
-    # est = estimator(days=200)
-    data_conf_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_conf_mun.xlsx"
-    data_dead_path = "/media/abel/TERA/School/5to/tesis stuff/cv19_fall_mun.xlsx"
-    current_paramas_json = "/media/abel/TERA/School/5to/Tesis/My work/epidemics-in-metapopulation-network-model/tests/mmodel/network_correct_municipality_dist/parameters_d16.json"
-    paramas_estimated_json = "/media/abel/TERA/School/5to/Tesis/My work/epidemics-in-metapopulation-network-model/tests/mmodel/network_correct_municipality_dist/parameters_estimated_d16.json"
+    est = estimator(days=200)
+    data_conf_path = "data_cov/cv19_conf_mun.xlsx"
+    data_dead_path = "data_cov/cv19_fall_mun.xlsx"
+    current_paramas_json = "tests/mmodel/network_correct_municipality_dist/parameters_d16.json"
+    paramas_estimated_json = "tests/mmodel/network_correct_municipality_dist/parameters_estimated_d16.json"
 
     # ydata = initialize()
 
@@ -27,8 +27,11 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save =  get_params_estimation(current_paramas_json,
-                                                acc_infected, ["beta", "gamma"])
+    # new_paramas_to_save = est.get_params_estimation(current_paramas_json,
+    #                                                 acc_infected, ["beta", "gamma"])
+
+    new_paramas_to_save = est.get_params_estimation_metamodel(current_paramas_json,
+                                                              acc_infected, ["beta", "gamma"])
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
 

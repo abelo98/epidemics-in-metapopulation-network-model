@@ -1,4 +1,5 @@
-from ..simple_trip import SimpleTripMetaModel
+from .simple_trip import SimpleTripMetaModel
+from utils.imports import import_from_file
 
 
 class ApiConn:
@@ -17,5 +18,8 @@ class ApiConn:
         initial_v_extended, _ = self.model.__transform_input__(initial_v, None)
         return initial_v_extended
 
-    def read_json_node(self, nodes_json):
-        return self.model.import_input(nodes_json)
+    def import_params(self, params_json_path):
+        return self.model.import_input(params_json_path)
+
+    def import_model(self, module_name, module_path):
+        return import_from_file(module_name, module_path)

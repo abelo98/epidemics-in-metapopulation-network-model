@@ -14,5 +14,3 @@ def save_file_as_json(path, file: list):
         serialized_json = json.dumps(file, indent=4)
         f.write(serialized_json)
         f.close()
-
-
