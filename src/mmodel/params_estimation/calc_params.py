@@ -1,3 +1,4 @@
+from operator import le
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
@@ -14,7 +15,9 @@ class estimator:
         self.params = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
         self.days = np.linspace(0, days, days)
 
+        # compiles the model
         self.api = ApiConn(self.model_name, self.file_path)
+
         # self.start_sim()
 
     def start_sim(self):
@@ -47,21 +50,21 @@ class estimator:
         return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
 
     @staticmethod
-    def fit_odeint_metamodel(x, params):
+    def fit_odeint_metamodel(x, *params):
         return integrate.odeint(metamodel.deriv, i_values, x, args=(params,))[:, 1]
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc, id):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, munc, id):
         global i_values
-        i_values = [initial_v.values()]
+        i_values, _ = self.api.import_params(self.params)
         i_values = self.api.transform_input(i_values)
 
         # imports the metamodel
         global metamodel
         metamodel = self.api.import_model(
-            self.api.model.name, f'{self.api.model.name}.py')
+            self.api.model.name, self.api.model.code_file)
 
         popt, _ = optimize.curve_fit(
-            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), maxfev=5000)
+            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=[0]*len(params)*15, maxfev=1000)
 
         return self.__get_params__(params, munc, popt, id)
 
@@ -94,11 +97,11 @@ class estimator:
     def build_json_params_metamodel(self, models_json, infected, params_to_estimate):
         output = []
         for model in models_json:
-            initial_v, infected_by_munc, munc, time, id = self.set_initial_values(
+            _, infected_by_munc, munc, time, id = self.set_initial_values(
                 model, infected)
 
             new_params = self.estimate_params_metamodel(
-                infected_by_munc, time, params_to_estimate, initial_v, munc, id)
+                infected_by_munc, time, params_to_estimate, munc, id)
 
             model["params"] = new_params
             output.append(model)
