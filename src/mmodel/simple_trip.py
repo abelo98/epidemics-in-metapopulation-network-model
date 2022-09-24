@@ -7,9 +7,9 @@ class SimpleTripMetaModel(MetaModel):
         network = self.network
         cmodel = load_model(network.nodes[0].cmodel)
         sets = cmodel.sets
-        
+
         N = len(network.nodes)
-        matrices = { s : np.zeros(shape=(N,N)) for s in sets }
+        matrices = {s: np.zeros(shape=(N, N)) for s in sets}
 
         cury = 0
         for i in range(N):
@@ -28,8 +28,9 @@ class SimpleTripMetaModel(MetaModel):
 
         N = len(network.nodes)
 
-        local_pos = lambda k,i,j : k * N * N + i * N + j
-        global_value = lambda y,k,j: sum([y[local_pos(k,i,j)] for i in range(N)])
+        def local_pos(k, i, j): return k * N * N + i * N + j
+        def global_value(y, k, j): return sum(
+            [y[local_pos(k, i, j)] for i in range(N)])
 
         results = {}
 
@@ -39,18 +40,16 @@ class SimpleTripMetaModel(MetaModel):
                 results[i][s] = global_value(ret, k, i)
         return results
 
-
-
     def __compute_structures__(self):
         network = self.network
-        
+
         N = len(network.nodes)
 
         # Store the models used in the network to avoid multiple dynamic loading
         cmodels = {}
 
         # Asociates every node with the starting and ending positions of its parameters in the param vector
-        params_map = { i : (0,0) for i in range(N) }
+        params_map = {i: (0, 0) for i in range(N)}
 
         node_map = {}
 
@@ -60,35 +59,32 @@ class SimpleTripMetaModel(MetaModel):
                 cmodel = cmodels[node.cmodel]
             except KeyError:
                 cmodel = cmodels[node.cmodel] = load_model(node.cmodel)
-            
+
             params_map[node.id] = (curp, curp + len(cmodel.params))
             curp += len(cmodel.params)
 
             node_map[node.id] = node
 
-
         # Build an adyacency matrix for the network
         ady_matrix = [[0 for i in range(N)] for j in range(N)]
         for edge in network.edges:
             ady_matrix[edge.source][edge.target] = edge.weight
-        
-        
-        local_pos = lambda k,i,j : k * N * N + i * N + j
-        global_pos = lambda k,j: [local_pos(k,i,j) for i in range(N)]
+
+        def local_pos(k, i, j): return k * N * N + i * N + j
+        def global_pos(k, j): return [local_pos(k, i, j) for i in range(N)]
 
         return cmodels, ady_matrix, node_map, params_map, local_pos, global_pos
 
     def __generate_code__(self, structures):
         network = self.network
         cmodels, ady_matrix, node_map, params_map, local_pos, global_pos = structures
-        
+
         N = len(network.nodes)
         sets = cmodels[network.nodes[0].cmodel].sets
         K = len(sets)
-        
-        def get_global_symbol(k,j):
-            return "(" + "+".join([f"y[{local_pos(k,i,j)}]" for i in range(N)]) + ")"
 
+        def get_global_symbol(k, j):
+            return "(" + "+".join([f"y[{local_pos(k,i,j)}]" for i in range(N)]) + ")"
 
         code = "from scipy.integrate import odeint\n\n\n"
         code += "def deriv(y, t, params):\n"
@@ -99,18 +95,21 @@ class SimpleTripMetaModel(MetaModel):
                 for j in range(N):
                     node = node_map[j]
                     cmodel = cmodels[node.cmodel]
-                    # Generate the equation of the set s for the node i,j 
+                    # Generate the equation of the set s for the node i,j
                     # This represents the population of the subyacent node i living in the subyacent node j
                     equation = f"\tresult[{local_pos(k,i,j)}] = "
-                    
+
                     # Get the value of the sets of node i,j
-                    local_symbols = [f"y[{local_pos(kx,i,j)}]" for kx in range(K)]
-                    global_symbols = [get_global_symbol(kx,j) for kx in range(K)]
+                    local_symbols = [
+                        f"y[{local_pos(kx,i,j)}]" for kx in range(K)]
+                    global_symbols = [get_global_symbol(
+                        kx, j) for kx in range(K)]
                     start, end = params_map[j]
-                    params_symbols = [f"params[{p}]" for p in range(start, end)]
+                    params_symbols = [
+                        f"params[{p}]" for p in range(start, end)]
                     symbols = local_symbols + global_symbols + params_symbols
 
-                    equation += cmodel.equations[s](*symbols) 
+                    equation += cmodel.equations[s](*symbols)
 
                     if i == j:
                         out_weight = 0
@@ -125,7 +124,6 @@ class SimpleTripMetaModel(MetaModel):
                         equation += f" - {ady_matrix[j][i]} * y[{local_pos(k,i,j)}]"
 
                     code += equation + "\n"
-
 
         code += "\treturn result\n"
         code += "\n\n"
