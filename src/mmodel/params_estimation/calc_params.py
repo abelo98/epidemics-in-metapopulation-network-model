@@ -1,3 +1,4 @@
+from math import gamma
 from operator import le
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
@@ -11,7 +12,7 @@ class estimator:
     def __init__(self, model_name="", file_path="", params="", days=0):
         self.model_name = "model_havana_d16"
         self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
-        self.params = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
+        self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
         self.days = np.linspace(0, days, days)
 
         # compiles the model
@@ -20,7 +21,7 @@ class estimator:
         # self.start_sim()
 
     def start_sim(self):
-        self.api.simulate(self.params, self.days)
+        self.api.simulate(self.params_path, self.days)
         self.get_ydata(self.api, ['S', 'I', 'R'], [0, 1])
 
     i_values = None
@@ -54,7 +55,7 @@ class estimator:
 
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, munc, id):
         global i_values
-        i_values, _ = self.api.import_params(self.params)
+        i_values, _ = self.api.import_params(self.params_path)
         i_values = self.api.transform_input(i_values)
 
         # imports the metamodel
@@ -62,8 +63,15 @@ class estimator:
         metamodel = self.api.import_model(
             self.api.model.name, self.api.model.code_file)
 
+        guess = []
+        for i in range(0, 30):
+            if i % 2 == 0:
+                guess.append(BETA)
+            else:
+                guess.append(GAMMA)
+
         popt, _ = optimize.curve_fit(
-            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=[0]*len(params)*15, maxfev=1000)
+            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=5000)
 
         return self.__get_params__(params, munc, popt, id)
 
@@ -121,10 +129,10 @@ class estimator:
 
         return output
 
-    def get_params_estimation(self, nodes_params_json_path, infected, params_to_estiamte):
-        models = read_json(nodes_params_json_path)
+    def get_params_estimation(self, infected, params_to_estiamte):
+        models = read_json(self.params_path)
         return self.build_json_params(models, infected, params_to_estiamte)
 
-    def get_params_estimation_metamodel(self, nodes_params_json_path, infected, params_to_estiamte):
-        models = read_json(nodes_params_json_path)
+    def get_params_estimation_metamodel(self, infected, params_to_estiamte):
+        models = read_json(self.params_path)
         return self.build_json_params_metamodel(models, infected, params_to_estiamte)
