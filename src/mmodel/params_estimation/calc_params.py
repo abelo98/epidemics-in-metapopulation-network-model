@@ -10,8 +10,8 @@ from ..constants import BETA, GAMMA, START_INFECTED
 class estimator:
     def __init__(self, model_name="", file_path="", params="", days=0):
         self.model_name = "model_havana_d16"
-        self.file_path = "tests/mmodel/simple/simple_network.json"
-        self.params = "tests/mmodel/simple/params/simple_params.json"
+        self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
+        self.params = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
         self.days = np.linspace(0, days, days)
 
         self.api = ApiConn(self.model_name, self.file_path)
@@ -50,13 +50,15 @@ class estimator:
     def fit_odeint_metamodel(x, params):
         return integrate.odeint(metamodel.deriv, i_values, x, args=(params,))[:, 1]
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc, id, module_name, module_path):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc, id):
         global i_values
         i_values = [initial_v.values()]
         i_values = self.api.transform_input(i_values)
 
+        # imports the metamodel
         global metamodel
-        metamodel = self.api.import_model(module_name, module_path)
+        metamodel = self.api.import_model(
+            self.api.model.name, f'{self.api.model.name}.py')
 
         popt, _ = optimize.curve_fit(
             estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), maxfev=5000)
@@ -89,14 +91,14 @@ class estimator:
 
         return initial_v, infected_by_munc, munc, time, id
 
-    def build_json_params_metamodel(self, models_json, infected, params_to_estimate, module_name, module_path):
+    def build_json_params_metamodel(self, models_json, infected, params_to_estimate):
         output = []
         for model in models_json:
             initial_v, infected_by_munc, munc, time, id = self.set_initial_values(
                 model, infected)
 
             new_params = self.estimate_params_metamodel(
-                infected_by_munc, time, params_to_estimate, initial_v, munc, id, module_name, module_path)
+                infected_by_munc, time, params_to_estimate, initial_v, munc, id)
 
             model["params"] = new_params
             output.append(model)
@@ -121,6 +123,6 @@ class estimator:
         models = read_json(nodes_params_json_path)
         return self.build_json_params(models, infected, params_to_estiamte)
 
-    def get_params_estimation_metamodel(self, nodes_params_json_path, infected, params_to_estiamte, module_name, module_path):
+    def get_params_estimation_metamodel(self, nodes_params_json_path, infected, params_to_estiamte):
         models = read_json(nodes_params_json_path)
-        return self.build_json_params_metamodel(models, infected, params_to_estiamte, module_name, module_path)
+        return self.build_json_params_metamodel(models, infected, params_to_estiamte)
