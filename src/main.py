@@ -11,7 +11,6 @@ def main():
     est = estimator(days=200)
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    current_paramas_json = f"tests/mmodel/network_correct_municipality_dist/parameters_d{START_INFECTED}.json"
     paramas_estimated_json = f"tests/mmodel/network_correct_municipality_dist/parameters_estimated_d{START_INFECTED}.json"
 
     # ydata = initialize()
@@ -27,11 +26,14 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
+    acc_infected_combine = data_operator.combine_infected_all_mcps(
+        acc_infected)
+
     # new_paramas_to_save = est.get_params_estimation(current_paramas_json,
     #                                                 acc_infected, ["beta", "gamma"])
 
     new_paramas_to_save = est.get_params_estimation_metamodel(
-        acc_infected, ["beta", "gamma"])
+        acc_infected_combine, ["beta", "gamma"])
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
 
