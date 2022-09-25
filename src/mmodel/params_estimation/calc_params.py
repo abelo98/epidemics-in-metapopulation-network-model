@@ -5,7 +5,7 @@ from ..json_manager.json_processor import read_json
 import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
-from ..constants import *
+from ..constants import BETA, GAMMA, START_INFECTED
 
 
 class estimator:
@@ -115,18 +115,6 @@ class estimator:
 
         return output
 
-    def build_json_params_metamodel_combine(self, infected, params_to_estimate):
-        output = []
-        time = np.linspace(0, len(infected), len(infected))
-
-        new_params = self.estimate_params_metamodel(
-            infected, time, params_to_estimate, "All")
-
-        # model["params"] = new_params
-        # output.append(model)
-
-        # return output
-
     def build_json_params(self, models_json, infected, params_to_estimate):
         output = []
         for model in models_json:
@@ -148,6 +136,3 @@ class estimator:
     def get_params_estimation_metamodel(self, infected, params_to_estiamte):
         models = read_json(self.params_path)
         return self.build_json_params_metamodel(models, infected, params_to_estiamte)
-
-    def get_params_estimation_combine_infected(self, infected, params_to_estiamte):
-        self.build_json_params_metamodel_combine(infected, params_to_estiamte)
