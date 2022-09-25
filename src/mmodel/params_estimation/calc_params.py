@@ -32,8 +32,8 @@ class estimator:
                 output[c] = caller.get_ydata_for_node(idx, c).__next__()
         return output
 
-    def __get_muncp_params__(self, params, muncps, popt, id=0):
-        params_estimated = {}
+    def __get_params__(self, params, muncps, popt, id=0):
+        params_estimated = []
         start = id*len(params)
         end = start+len(params)
 
@@ -45,7 +45,7 @@ class estimator:
             print("params: ")
             for i, p in enumerate(popt[start:end]):
                 print(f'{params[i%len(params)]}: {p}')
-                params_estimated[params[i % len(params)]] = p
+                params_estimated.append({params[i % len(params)]: p})
             print("")
         return params_estimated
 
@@ -60,15 +60,15 @@ class estimator:
     #         print("")
     #     return params_estimated
 
-    @staticmethod
+    @ staticmethod
     def fit_odeint(x, beta, gamma):
         return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
 
-    @staticmethod
+    @ staticmethod
     def fit_odeint_metamodel(x, *params):
         return integrate.odeint(metamodel.deriv, i_values, x, args=(params,))[:, 1]
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, munc, id):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, muncps: list, id=0):
         global i_values
         i_values, _ = self.api.import_params(self.params_path)
         i_values = self.api.transform_input(i_values)
@@ -89,7 +89,7 @@ class estimator:
             estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=6500)
 
         # return self.__get_params_all__(params, munc, popt)
-        return self.__get_params__(params, munc, popt, id)
+        return self.__get_params__(params, muncps, popt, id)
 
     def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
         global i_values
@@ -124,24 +124,26 @@ class estimator:
                 model, infected)
 
             new_params = self.estimate_params_metamodel(
-                infected_by_munc, time, params_to_estimate, munc, id)
+                infected_by_munc, time, params_to_estimate, [munc], id)
 
-            model["params"] = new_params
+            model["params"] = new_params[0]
             output.append(model)
 
         return output
 
-    def build_json_params_metamodel_combine(self, infected, params_to_estimate):
+    def build_json_params_metamodel_combine(self, models_json, infected, params_to_estimate):
         output = []
         time = np.linspace(0, len(infected), len(infected))
+        muncps = [model["label"] for model in models_json]
 
         new_params = self.estimate_params_metamodel(
-            infected, time, params_to_estimate, "All", 100)
+            infected, time, params_to_estimate, muncps, 0)
 
-        # model["params"] = new_params
-        # output.append(model)
+        for i, model in enumerate(models_json):
+            model["params"] = new_params[i]
+            output.append(model)
 
-        # return output
+        return output
 
     def build_json_params(self, models_json, infected, params_to_estimate):
         output = []
