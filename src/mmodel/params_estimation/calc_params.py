@@ -1,5 +1,3 @@
-from math import gamma
-from operator import le
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
@@ -34,27 +32,33 @@ class estimator:
                 output[c] = caller.get_ydata_for_node(idx, c).__next__()
         return output
 
-    def __get_params__(self, params, munc, popt, id=0):
+    def __get_muncp_params__(self, params, muncps, popt, id=0):
         params_estimated = {}
         start = id*len(params)
-        print(munc)
-        print("params: ")
-        for i, p in enumerate(popt[start:start+len(params)]):
-            print(f'{params[i]}: {p}')
-            params_estimated[params[i]] = p
-        print("")
+        end = start+len(params)
+
+        if len(muncps) > 1:
+            end = len(popt)
+
+        for munc in muncps:
+            print(munc)
+            print("params: ")
+            for i, p in enumerate(popt[start:end]):
+                print(f'{params[i%len(params)]}: {p}')
+                params_estimated[params[i % len(params)]] = p
+            print("")
         return params_estimated
 
-    def __get_params_all__(self, params, munc, popt):
-        params_estimated = {}
-        # start = id*len(params)
-        print(munc)
-        print("params: ")
-        for i, p in enumerate(popt):
-            print(f'{params[i%len(params)]}: {p}')
-            params_estimated[params[i % len(params)]] = p
-        print("")
-        return params_estimated
+    # def __get_all_params__(self, params, muncps, popt):
+    #     params_estimated = {}
+    #     for munc in muncps:
+    #         print(munc)
+    #         print("params: ")
+    #         for i, p in enumerate(popt):
+    #             print(f'{params[i%len(params)]}: {p}')
+    #             params_estimated[params[i % len(params)]] = p
+    #         print("")
+    #     return params_estimated
 
     @staticmethod
     def fit_odeint(x, beta, gamma):
@@ -84,8 +88,8 @@ class estimator:
         popt, _ = optimize.curve_fit(
             estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=6500)
 
-        return self.__get_params_all__(params, munc, popt)
-        # return self.__get_params__(params, munc, popt, id)
+        # return self.__get_params_all__(params, munc, popt)
+        return self.__get_params__(params, munc, popt, id)
 
     def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
         global i_values
