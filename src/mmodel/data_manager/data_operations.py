@@ -22,7 +22,7 @@ class data_operator:
     @staticmethod
     def __find_min__(acc_infected_by_mcp: dict):
         min = -1000000
-        for k, v in acc_infected_by_mcp:
+        for k, v in acc_infected_by_mcp.items():
             if len(acc_infected_by_mcp[k]) > min:
                 min = len(acc_infected_by_mcp[k])
         return min

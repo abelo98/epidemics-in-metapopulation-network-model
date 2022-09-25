@@ -45,6 +45,17 @@ class estimator:
         print("")
         return params_estimated
 
+    def __get_params_all__(self, params, munc, popt):
+        params_estimated = {}
+        # start = id*len(params)
+        print(munc)
+        print("params: ")
+        for i, p in enumerate(popt):
+            print(f'{params[i%len(params)]}: {p}')
+            params_estimated[params[i % len(params)]] = p
+        print("")
+        return params_estimated
+
     @staticmethod
     def fit_odeint(x, beta, gamma):
         return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
@@ -71,9 +82,10 @@ class estimator:
                 guess.append(GAMMA)
 
         popt, _ = optimize.curve_fit(
-            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=5000)
+            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=6500)
 
-        return self.__get_params__(params, munc, popt, id)
+        return self.__get_params_all__(params, munc, popt)
+        # return self.__get_params__(params, munc, popt, id)
 
     def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
         global i_values
@@ -120,7 +132,7 @@ class estimator:
         time = np.linspace(0, len(infected), len(infected))
 
         new_params = self.estimate_params_metamodel(
-            infected, time, params_to_estimate, "All")
+            infected, time, params_to_estimate, "All", 100)
 
         # model["params"] = new_params
         # output.append(model)

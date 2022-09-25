@@ -32,7 +32,10 @@ def main():
     # new_paramas_to_save = est.get_params_estimation(current_paramas_json,
     #                                                 acc_infected, ["beta", "gamma"])
 
-    new_paramas_to_save = est.get_params_estimation_metamodel(
+    # new_paramas_to_save = est.get_params_estimation_metamodel(
+    #     acc_infected_combine, ["beta", "gamma"])
+
+    new_paramas_to_save = est.get_params_estimation_combine_infected(
         acc_infected_combine, ["beta", "gamma"])
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
