@@ -34,18 +34,21 @@ class estimator:
 
     def __get_params__(self, params, muncps, popt, id=0):
         params_estimated = []
-        start = id*len(params)
-        end = start+len(params)
 
-        if len(muncps) > 1:
-            end = len(popt)
+        # if len(muncps) > 1:
+        #     end = len(popt)
 
-        for munc in muncps:
+        for id, munc in muncps:
+            start = id*len(params)
+            end = start+len(params)
+            estimation = {}
+
             print(munc)
             print("params: ")
             for i, p in enumerate(popt[start:end]):
                 print(f'{params[i%len(params)]}: {p}')
-                params_estimated.append({params[i % len(params)]: p})
+                estimation[params[i % len(params)]] = p
+            params_estimated.append(estimation)
             print("")
         return params_estimated
 
@@ -86,7 +89,7 @@ class estimator:
                 guess.append(GAMMA)
 
         popt, _ = optimize.curve_fit(
-            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=6500)
+            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=10)
 
         # return self.__get_params_all__(params, munc, popt)
         return self.__get_params__(params, muncps, popt, id)
@@ -96,7 +99,7 @@ class estimator:
         i_values = tuple(initial_v.values())
 
         popt, _ = optimize.curve_fit(estimator.fit_odeint, time, ydata, p0=[
-            BETA, GAMMA], bounds=(0, 1), maxfev=5000)
+            BETA, GAMMA], bounds=(0, 1), maxfev=10)
 
         return self.__get_params__(params, munc, popt)
 
@@ -168,4 +171,6 @@ class estimator:
         return self.build_json_params_metamodel(models, infected, params_to_estiamte)
 
     def get_params_estimation_combine_infected(self, infected, params_to_estiamte):
-        self.build_json_params_metamodel_combine(infected, params_to_estiamte)
+        models = read_json(self.params_path)
+        self.build_json_params_metamodel_combine(
+            models, infected, params_to_estiamte)
