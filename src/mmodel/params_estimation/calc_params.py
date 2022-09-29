@@ -162,5 +162,5 @@ class estimator:
 
     def get_params_estimation_combine_infected(self, infected, params_to_estiamte):
         models = read_json(self.params_path)
-        self.build_json_params_metamodel_combine(
+        return self.build_json_params_metamodel_combine(
             models, infected, params_to_estiamte)
