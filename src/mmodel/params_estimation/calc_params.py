@@ -8,9 +8,13 @@ from ..constants import BETA, GAMMA, START_INFECTED
 
 class estimator:
     def __init__(self, model_name="", file_path="", params="", days=0):
-        self.model_name = "model_havana_d16"
-        self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
-        self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
+        self.model_name = "model_havana_d29"
+        # self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
+        # self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
+        self.file_path = "tests/mmodel/simple/simple_network.json"
+
+        self.params_path = "tests/mmodel/simple/params/simple_params.json"
+
         self.days = np.linspace(0, days, days)
 
         # compiles the model
