@@ -18,3 +18,23 @@ class data_operator:
             infected[munc] = accumaleted_infected
 
         return infected
+
+    @staticmethod
+    def __find_min__(acc_infected_by_mcp: dict):
+        min = -1000000
+        for k, v in acc_infected_by_mcp.items():
+            if len(acc_infected_by_mcp[k]) > min:
+                min = len(acc_infected_by_mcp[k])
+        return min
+
+    @staticmethod
+    def combine_infected_all_mcps(acc_infected_by_mcp: dict):
+        output = []
+        max_days = data_operator.__find_min__(acc_infected_by_mcp)
+
+        for i in range(0, max_days):
+            acc = 0
+            for list_infected_by_day in acc_infected_by_mcp.values():
+                acc += list_infected_by_day[i]
+            output.append(acc)
+        return output
