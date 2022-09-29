@@ -35,10 +35,7 @@ class estimator:
     def __get_params__(self, params, muncps, popt, id=0):
         params_estimated = []
 
-        # if len(muncps) > 1:
-        #     end = len(popt)
-
-        for id, munc in muncps:
+        for id, munc in enumerate(muncps):
             start = id*len(params)
             end = start+len(params)
             estimation = {}
@@ -51,17 +48,6 @@ class estimator:
             params_estimated.append(estimation)
             print("")
         return params_estimated
-
-    # def __get_all_params__(self, params, muncps, popt):
-    #     params_estimated = {}
-    #     for munc in muncps:
-    #         print(munc)
-    #         print("params: ")
-    #         for i, p in enumerate(popt):
-    #             print(f'{params[i%len(params)]}: {p}')
-    #             params_estimated[params[i % len(params)]] = p
-    #         print("")
-    #     return params_estimated
 
     @ staticmethod
     def fit_odeint(x, beta, gamma):
@@ -81,6 +67,7 @@ class estimator:
         metamodel = self.api.import_model(
             self.api.model.name, self.api.model.code_file)
 
+        # TODO: need to change the code below to accept a list of estimation
         guess = []
         for i in range(0, 30):
             if i % 2 == 0:
@@ -89,9 +76,8 @@ class estimator:
                 guess.append(GAMMA)
 
         popt, _ = optimize.curve_fit(
-            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=10)
+            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=5000)
 
-        # return self.__get_params_all__(params, munc, popt)
         return self.__get_params__(params, muncps, popt, id)
 
     def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
@@ -99,9 +85,9 @@ class estimator:
         i_values = tuple(initial_v.values())
 
         popt, _ = optimize.curve_fit(estimator.fit_odeint, time, ydata, p0=[
-            BETA, GAMMA], bounds=(0, 1), maxfev=10)
+            BETA, GAMMA], bounds=(0, 1), maxfev=5000)
 
-        return self.__get_params__(params, munc, popt)
+        return self.__get_params__(params, [munc], popt)
 
     def get_initial_values_SIR(self, json_file):
         S0 = json_file["y"]["S"]
