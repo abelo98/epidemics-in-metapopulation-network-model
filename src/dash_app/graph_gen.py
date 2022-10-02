@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import numpy as np
 
 from mmodel.mmodel import MetaModel
@@ -25,7 +26,7 @@ def show_sir_simulation(model: MetaModel, result: Dict, time: np.ndarray):
         i += result[idx]["I"]
         r += result[idx]["R"]
 
-    figure = go.Figure()
+    figure = make_subplots(rows=3, cols=1)
     figure.append_trace(go.Scatter(
         x=time, y=s, mode="lines", name="S"), row=1, col=1)
     figure.append_trace(go.Scatter(
