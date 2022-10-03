@@ -1,9 +1,13 @@
+from asyncio.windows_events import NULL
+from curses.ascii import NUL
+from sympy import false
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
 from ..constants import BETA, GAMMA, START_INFECTED
+from lmfit import Parameters, minimize, fit_report
 
 
 class estimator:
@@ -61,7 +65,7 @@ class estimator:
     def fit_odeint_metamodel(x, *params):
         return integrate.odeint(metamodel.deriv, i_values, x, args=(params,))[:, 1]
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, muncps: list, id=0):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, muncps: list, id=0, op_lmfit=False):
         global i_values
         i_values, _ = self.api.import_params(self.params_path)
         i_values = self.api.transform_input(i_values)
@@ -73,25 +77,51 @@ class estimator:
 
         # TODO: need to change the code below to accept a list of estimation
         guess = []
-        for i in range(0, 30):
-            if i % 2 == 0:
+        for i in range(0, len(muncps)*len(params)):
+            if i % len(params) == 0:
                 guess.append(BETA)
             else:
                 guess.append(GAMMA)
 
-        popt, _ = optimize.curve_fit(
-            estimator.fit_odeint_metamodel, time, ydata, p0=guess, maxfev=5000)
+        fitted_params = NULL
 
-        return self.__get_params__(params, muncps, popt, id)
+        if op_lmfit:
+            params_to_est = Parameters()
+            params_to_est.add("beta")
+            params_to_est.add('gamma')
 
-    def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
+            fitted_params = minimize(
+                estimator.fit_odeint_metamodel, params, args=(time, ydata,), method='least_squares')
+
+            fitted_params = [fitted_params.params[p].value for p in params]
+
+        else:
+            fitted_params, _ = optimize.curve_fit(
+                estimator.fit_odeint_metamodel, time, ydata, p0=guess, maxfev=5000)
+
+        return self.__get_params__(params, muncps, fitted_params, id)
+
+    def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc, op_lmfit=False):
         global i_values
         i_values = tuple(initial_v.values())
 
-        popt, _ = optimize.curve_fit(estimator.fit_odeint, time, ydata, p0=[
-            BETA, GAMMA], maxfev=5000)
+        fitted_params = NULL
 
-        return self.__get_params__(params, [munc], popt)
+        if op_lmfit:
+            params_to_est = Parameters()
+            params_to_est.add("beta")
+            params_to_est.add('gamma')
+
+            fitted_params = minimize(
+                estimator.fit_odeint_metamodel, params, args=(time, ydata,), method='least_squares')
+
+            fitted_params = [fitted_params.params[p].value for p in params]
+
+        else:
+            fitted_params, _ = optimize.curve_fit(
+                estimator.fit_odeint_metamodel, time, ydata, p0=[BETA, GAMMA], maxfev=5000)
+
+        return self.__get_params__(params, [munc], fitted_params)
 
     def get_initial_values_SIR(self, json_file):
         S0 = json_file["y"]["S"]
@@ -110,43 +140,43 @@ class estimator:
 
         return initial_v, infected_by_munc, munc, time, id
 
-    def build_json_params_metamodel(self, models_json, infected, params_to_estimate):
+    def build_json_params_metamodel(self, models_json, infected, params_to_estimate, op_lmfit):
         output = []
         for model in models_json:
             _, infected_by_munc, munc, time, id = self.set_initial_values(
                 model, infected)
 
             new_params = self.estimate_params_metamodel(
-                infected_by_munc, time, params_to_estimate, [munc], id)
+                infected_by_munc, time, params_to_estimate, [munc], id, op_lmfit)
 
             model["params"] = new_params[0]
             output.append(model)
 
         return output
 
-    def build_json_params(self, models_json, infected, params_to_estimate):
+    def build_json_params(self, models_json, infected, params_to_estimate, op_lmfit):
         output = []
         for model in models_json:
             initial_v, infected_by_munc, munc, time, _ = self.set_initial_values(
                 model, infected)
 
             new_params = self.estimate_params(
-                infected_by_munc, time, params_to_estimate, initial_v, munc)
+                infected_by_munc, time, params_to_estimate, initial_v, munc, op_lmfit)
 
             model["params"] = new_params
             output.append(model)
 
         return output
 
-    def get_params_estimation(self, infected, params_to_estiamte):
+    def get_params_estimation(self, infected, params_to_estiamte, op_lmfit):
         models = read_json(self.params_path)
-        return self.build_json_params(models, infected, params_to_estiamte)
+        return self.build_json_params(models, infected, params_to_estiamte, op_lmfit)
 
-    def get_params_estimation_metamodel(self, infected, params_to_estiamte):
+    def get_params_estimation_metamodel(self, infected, params_to_estiamte, op_lmfit):
         models = read_json(self.params_path)
-        return self.build_json_params_metamodel(models, infected, params_to_estiamte)
+        return self.build_json_params_metamodel(models, infected, params_to_estiamte, op_lmfit)
 
-    def get_params_estimation_combine_infected(self, infected, params_to_estiamte):
-        models = read_json(self.params_path)
-        return self.build_json_params_metamodel_combine(
-            models, infected, params_to_estiamte)
+    # def get_params_estimation_combine_infected(self, infected, params_to_estiamte,op_lmfit):
+    #     models = read_json(self.params_path)
+    #     return self.build_json_params_metamodel_combine(
+    #         models, infected, params_to_estiamte,op_lmfit)
