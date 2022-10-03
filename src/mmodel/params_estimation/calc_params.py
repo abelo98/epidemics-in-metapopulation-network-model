@@ -80,7 +80,7 @@ class estimator:
                 guess.append(GAMMA)
 
         popt, _ = optimize.curve_fit(
-            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=10000)
+            estimator.fit_odeint_metamodel, time, ydata, p0=guess, maxfev=5000)
 
         return self.__get_params__(params, muncps, popt, id)
 
@@ -89,7 +89,7 @@ class estimator:
         i_values = tuple(initial_v.values())
 
         popt, _ = optimize.curve_fit(estimator.fit_odeint, time, ydata, p0=[
-            BETA, GAMMA], bounds=(0, 1), maxfev=10000)
+            BETA, GAMMA], maxfev=5000)
 
         return self.__get_params__(params, [munc], popt)
 
