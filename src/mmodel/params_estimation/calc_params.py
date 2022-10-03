@@ -9,11 +9,11 @@ from ..constants import BETA, GAMMA, START_INFECTED
 class estimator:
     def __init__(self, model_name="", file_path="", params="", days=0):
         self.model_name = "model_havana_d29"
-        # self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
-        # self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
-        self.file_path = "tests/mmodel/simple/simple_network.json"
+        self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
+        self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
+        # self.file_path = "tests/mmodel/simple/simple_network.json"
 
-        self.params_path = "tests/mmodel/simple/params/simple_params.json"
+        # self.params_path = "tests/mmodel/simple/params/simple_params.json"
 
         self.days = np.linspace(0, days, days)
 
@@ -80,7 +80,7 @@ class estimator:
                 guess.append(GAMMA)
 
         popt, _ = optimize.curve_fit(
-            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=5000)
+            estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=10000)
 
         return self.__get_params__(params, muncps, popt, id)
 
@@ -89,7 +89,7 @@ class estimator:
         i_values = tuple(initial_v.values())
 
         popt, _ = optimize.curve_fit(estimator.fit_odeint, time, ydata, p0=[
-            BETA, GAMMA], bounds=(0, 1), maxfev=5000)
+            BETA, GAMMA], bounds=(0, 1), maxfev=10000)
 
         return self.__get_params__(params, [munc], popt)
 
