@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import numpy as np
 
 from mmodel.mmodel import MetaModel
@@ -13,7 +14,8 @@ def show_simulation(model: MetaModel, result: Dict, time: np.ndarray):
     if cmodel == "sis":
         return show_sis_simulation(model, result, time)
 
-    raise NotImplementedError(f"No visualization for {cmodel} compartimental models")
+    raise NotImplementedError(
+        f"No visualization for {cmodel} compartimental models")
 
 
 def show_sir_simulation(model: MetaModel, result: Dict, time: np.ndarray):
@@ -24,10 +26,13 @@ def show_sir_simulation(model: MetaModel, result: Dict, time: np.ndarray):
         i += result[idx]["I"]
         r += result[idx]["R"]
 
-    figure = go.Figure()
-    figure.add_trace(go.Scatter(x=time, y=s, mode="lines", name="S"))
-    figure.add_trace(go.Scatter(x=time, y=i, mode="lines", name="I"))
-    figure.add_trace(go.Scatter(x=time, y=r, mode="lines", name="R"))
+    figure = make_subplots(rows=3, cols=1)
+    figure.append_trace(go.Scatter(
+        x=time, y=s, mode="lines", name="S"), row=1, col=1)
+    figure.append_trace(go.Scatter(
+        x=time, y=i, mode="lines", name="I"), row=2, col=1)
+    figure.append_trace(go.Scatter(
+        x=time, y=r, mode="lines", name="R"), row=3, col=1)
 
     return figure
 
