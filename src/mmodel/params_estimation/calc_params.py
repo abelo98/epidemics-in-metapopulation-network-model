@@ -1,5 +1,3 @@
-from math import gamma
-from operator import le
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
@@ -10,9 +8,13 @@ from ..constants import BETA, GAMMA, START_INFECTED
 
 class estimator:
     def __init__(self, model_name="", file_path="", params="", days=0):
-        self.model_name = "model_havana_d16"
-        self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
-        self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
+        self.model_name = "model_havana_d29"
+        # self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
+        # self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
+        self.file_path = "tests/mmodel/simple/simple_network.json"
+
+        self.params_path = "tests/mmodel/simple/params/simple_params.json"
+
         self.days = np.linspace(0, days, days)
 
         # compiles the model
@@ -34,26 +36,32 @@ class estimator:
                 output[c] = caller.get_ydata_for_node(idx, c).__next__()
         return output
 
-    def __get_params__(self, params, munc, popt, id=0):
-        params_estimated = {}
-        start = id*len(params)
-        print(munc)
-        print("params: ")
-        for i, p in enumerate(popt[start:start+len(params)]):
-            print(f'{params[i]}: {p}')
-            params_estimated[params[i]] = p
-        print("")
+    def __get_params__(self, params, muncps, popt, id=0):
+        params_estimated = []
+
+        for id, munc in enumerate(muncps):
+            start = id*len(params)
+            end = start+len(params)
+            estimation = {}
+
+            print(munc)
+            print("params: ")
+            for i, p in enumerate(popt[start:end]):
+                print(f'{params[i%len(params)]}: {p}')
+                estimation[params[i % len(params)]] = p
+            params_estimated.append(estimation)
+            print("")
         return params_estimated
 
-    @staticmethod
+    @ staticmethod
     def fit_odeint(x, beta, gamma):
         return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
 
-    @staticmethod
+    @ staticmethod
     def fit_odeint_metamodel(x, *params):
         return integrate.odeint(metamodel.deriv, i_values, x, args=(params,))[:, 1]
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, munc, id):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, muncps: list, id=0):
         global i_values
         i_values, _ = self.api.import_params(self.params_path)
         i_values = self.api.transform_input(i_values)
@@ -63,6 +71,7 @@ class estimator:
         metamodel = self.api.import_model(
             self.api.model.name, self.api.model.code_file)
 
+        # TODO: need to change the code below to accept a list of estimation
         guess = []
         for i in range(0, 30):
             if i % 2 == 0:
@@ -73,7 +82,7 @@ class estimator:
         popt, _ = optimize.curve_fit(
             estimator.fit_odeint_metamodel, time, ydata, bounds=(0, 1), p0=guess, maxfev=5000)
 
-        return self.__get_params__(params, munc, popt, id)
+        return self.__get_params__(params, muncps, popt, id)
 
     def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc):
         global i_values
@@ -82,7 +91,7 @@ class estimator:
         popt, _ = optimize.curve_fit(estimator.fit_odeint, time, ydata, p0=[
             BETA, GAMMA], bounds=(0, 1), maxfev=5000)
 
-        return self.__get_params__(params, munc, popt)
+        return self.__get_params__(params, [munc], popt)
 
     def get_initial_values_SIR(self, json_file):
         S0 = json_file["y"]["S"]
@@ -108,9 +117,9 @@ class estimator:
                 model, infected)
 
             new_params = self.estimate_params_metamodel(
-                infected_by_munc, time, params_to_estimate, munc, id)
+                infected_by_munc, time, params_to_estimate, [munc], id)
 
-            model["params"] = new_params
+            model["params"] = new_params[0]
             output.append(model)
 
         return output
