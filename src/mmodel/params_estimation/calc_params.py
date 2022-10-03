@@ -1,6 +1,3 @@
-from asyncio.windows_events import NULL
-from curses.ascii import NUL
-from sympy import false
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
@@ -65,6 +62,22 @@ class estimator:
     def fit_odeint_metamodel(x, *params):
         return integrate.odeint(metamodel.deriv, i_values, x, args=(params,))[:, 1]
 
+    @ staticmethod
+    def fit_odeint_lmfit(params, x, y):
+        beta = params["beta"]
+        gamma = params["gamma"]
+        y_fit = integrate.odeint(
+            SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
+        return y_fit - y
+
+    @ staticmethod
+    def fit_odeint_metamodel_lmfit(params, x, y):
+        beta = params["beta"]
+        gamma = params["gamma"]
+        y_fit = integrate.odeint(
+            metamodel.deriv, i_values, x, args=(beta, gamma))[:, 1]
+        return y_fit - y
+
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, muncps: list, id=0, op_lmfit=False):
         global i_values
         i_values, _ = self.api.import_params(self.params_path)
@@ -83,15 +96,15 @@ class estimator:
             else:
                 guess.append(GAMMA)
 
-        fitted_params = NULL
+        fitted_params = None
 
         if op_lmfit:
             params_to_est = Parameters()
-            params_to_est.add("beta")
-            params_to_est.add('gamma')
+            params_to_est.add('beta', value=0.087, vary=True)
+            params_to_est.add('gamma', value=0.05, vary=True)
 
             fitted_params = minimize(
-                estimator.fit_odeint_metamodel, params, args=(time, ydata,), method='least_squares')
+                estimator.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
 
             fitted_params = [fitted_params.params[p].value for p in params]
 
@@ -105,21 +118,21 @@ class estimator:
         global i_values
         i_values = tuple(initial_v.values())
 
-        fitted_params = NULL
+        fitted_params = None
 
         if op_lmfit:
             params_to_est = Parameters()
-            params_to_est.add("beta")
-            params_to_est.add('gamma')
+            params_to_est.add('beta', value=0.087, vary=True)
+            params_to_est.add('gamma', value=0.05, vary=True)
 
             fitted_params = minimize(
-                estimator.fit_odeint_metamodel, params, args=(time, ydata,), method='least_squares')
+                estimator.fit_odeint_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
 
             fitted_params = [fitted_params.params[p].value for p in params]
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator.fit_odeint_metamodel, time, ydata, p0=[BETA, GAMMA], maxfev=5000)
+                estimator.fit_odeint, time, ydata, p0=[BETA, GAMMA], maxfev=5000)
 
         return self.__get_params__(params, [munc], fitted_params)
 
