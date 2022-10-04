@@ -189,6 +189,20 @@ class estimator:
 
         return output
 
+    def build_json_params_metamodel_combine(self, models_json, infected, params_to_estimate, op_lmfit):
+        output = []
+        time = np.linspace(0, len(infected), len(infected))
+        muncps = [model["label"] for model in models_json]
+
+        new_params = self.estimate_params_metamodel(
+            infected, time, params_to_estimate, muncps, 0)
+
+        for i, model in enumerate(models_json):
+            model["params"] = new_params[i]
+            output.append(model)
+
+        return output
+
     def get_params_estimation(self, infected, params_to_estiamte, op_lmfit):
         models = read_json(self.params_path)
         return self.build_json_params(models, infected, params_to_estiamte, op_lmfit)
@@ -197,7 +211,7 @@ class estimator:
         models = read_json(self.params_path)
         return self.build_json_params_metamodel(models, infected, params_to_estiamte, op_lmfit)
 
-    # def get_params_estimation_combine_infected(self, infected, params_to_estiamte,op_lmfit):
-    #     models = read_json(self.params_path)
-    #     return self.build_json_params_metamodel_combine(
-    #         models, infected, params_to_estiamte,op_lmfit)
+    def get_params_estimation_combine_infected(self, infected, params_to_estiamte, op_lmfit):
+        models = read_json(self.params_path)
+        return self.build_json_params_metamodel_combine(
+            models, infected, params_to_estiamte, op_lmfit)
