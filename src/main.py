@@ -1,4 +1,3 @@
-from sympy import true
 from mmodel.params_estimation.calc_params import *
 from mmodel.data_manager.data_reader import Reader
 from mmodel.data_manager.data_cleaner import Cleaner
@@ -11,7 +10,7 @@ from mmodel.constants import *
 def calc_params_with_acc_infected_combine(est: estimator, acc_infected, op_lmfit):
     acc_infected_combine = data_operator.combine_infected_all_mcps(
         acc_infected)
-    return est.get_params_estimation_combine_infected(
+    return est.get_params_estimation_metamodel(
         acc_infected_combine, ["beta", "gamma"], op_lmfit)
 
 
@@ -30,7 +29,7 @@ def main():
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
     # paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/estimation_2_nodes/parameters_estimated_d{START_INFECTED}.json"
-    paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/parameters_estimated_lmfit_d{START_INFECTED}.json"
+    paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/parameters_estimated_lmfit_infected_by_mcp_metamodel_d{START_INFECTED}.json"
 
     # ydata = initialize()
 
@@ -45,7 +44,7 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = calc_params_by_munc_model(
+    new_paramas_to_save = calc_params_with_acc_infected_by_muncps(
         est, acc_infected, True)
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)

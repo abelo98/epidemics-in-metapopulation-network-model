@@ -3,7 +3,7 @@ from ..json_manager.json_processor import read_json
 import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
-from ..constants import BETA, GAMMA, START_INFECTED
+from ..constants import BETA, GAMMA, MUNCPS, START_INFECTED
 from lmfit import Parameters, minimize, fit_report
 
 
@@ -72,10 +72,11 @@ class estimator:
 
     @ staticmethod
     def fit_odeint_metamodel_lmfit(params, x, y):
-        beta = params["beta"]
-        gamma = params["gamma"]
+        # beta = params["beta"]
+        # gamma = params["gamma"]
+        params = [p for p in params.values()]
         y_fit = integrate.odeint(
-            metamodel.deriv, i_values, x, args=(beta, gamma))[:, 1]
+            metamodel.deriv, i_values, x, args=(params,))[:, 1]
         return y_fit - y
 
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, muncps: list, id=0, op_lmfit=False):
@@ -90,7 +91,7 @@ class estimator:
 
         # TODO: need to change the code below to accept a list of estimation
         guess = []
-        for i in range(0, len(muncps)*len(params)):
+        for i in range(len(MUNCPS)*len(params)):
             if i % len(params) == 0:
                 guess.append(BETA)
             else:
@@ -100,13 +101,20 @@ class estimator:
 
         if op_lmfit:
             params_to_est = Parameters()
-            params_to_est.add('beta', value=0.087, vary=True)
-            params_to_est.add('gamma', value=0.05, vary=True)
+            params_est_name = []
+            for i, g in enumerate(guess):
+                if i % len(params) == 0:
+                    params_est_name.append(f'beta{i}')
+                    params_to_est.add(f'beta{i}', value=g, vary=True)
+                else:
+                    params_est_name.append(f'gamma{i}')
+                    params_to_est.add(f'gamma{i}', value=g, vary=True)
 
             fitted_params = minimize(
                 estimator.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
 
-            fitted_params = [fitted_params.params[p].value for p in params]
+            fitted_params = [
+                fitted_params.params[p].value for p in params_est_name]
 
         else:
             fitted_params, _ = optimize.curve_fit(
@@ -122,8 +130,8 @@ class estimator:
 
         if op_lmfit:
             params_to_est = Parameters()
-            params_to_est.add('beta', value=0.087, vary=True)
-            params_to_est.add('gamma', value=0.05, vary=True)
+            params_to_est.add('beta', value=BETA, vary=True)
+            params_to_est.add('gamma', value=GAMMA, vary=True)
 
             fitted_params = minimize(
                 estimator.fit_odeint_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
