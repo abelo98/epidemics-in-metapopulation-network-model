@@ -58,23 +58,35 @@ class estimator_calc:
 
         params_to_est = Parameters()
         params_est_name = []
+        guess_for_muncps = []
 
         # builds initial estimations for params*MUNCPS params
         for i in range(len(MUNCPS) * total_params):
-            params_est_name.append(f'guess_{i}')
+            params_est_name.append(f'param_{i}')
+            guess_value = initial_guess["values"][str(i % total_params)]
+            guess_for_muncps.append(guess_value)
             params_to_est.add(
-                f'guess_{i}', value=initial_guess["values"][str(i % total_params)], vary=True)
+                f'param_{i}', value=guess_value, vary=True, min=0, max=1)
 
         if self.lmfit:
-            fitted_params = minimize(
-                estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
+            methods = ['least_squares', 'differential_evolution', 'brute',
+                       'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cg', 'newton', 'cobyla', 'bfgs', 'tnc', 'trust-ncg', 'trust-exact', 'trust-krylov', 'trust-constr', 'dogleg', 'slsqp', 'emcee', 'shgo', 'dual_annealing', 'leastsq']
 
-            fitted_params = [
-                fitted_params.params[p].value for p in initial_guess["names"]]
+            for m in methods:
+                print(" ")
+                print(f'***** {m} *****')
+                print(" ")
+                fitted_params = minimize(
+                    estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), method=m)
+
+                fitted_params = [
+                    fitted_params.params[p].value for p in params_est_name]
+
+                _ = get_params(initial_guess["names"], muncps, fitted_params)
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint_metamodel, time, ydata, p0=[g for g in initial_guess["values"].values()], maxfev=5000)
+                estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess_for_muncps, maxfev=100000)
 
         return get_params(initial_guess["names"], muncps, fitted_params, id)
 
@@ -92,7 +104,7 @@ class estimator_calc:
 
         for i in range(total_params):
             params_to_est.add(
-                initial_guess["names"][i], value=initial_guess["values"][str(i)], vary=True)
+                initial_guess["names"][i], value=initial_guess["values"][str(i)], vary=True, min=0, max=1)
 
         if self.lmfit:
             fitted_params = minimize(
@@ -103,6 +115,6 @@ class estimator_calc:
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint, time, ydata, p0=[g for g in initial_guess["values"].values()], maxfev=5000)
+                estimator_calc.fit_odeint, time, ydata, p0=[g for g in initial_guess["values"].values()], maxfev=100000)
 
         return get_params(initial_guess["names"], [munc], fitted_params)

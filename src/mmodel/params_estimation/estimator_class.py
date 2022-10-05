@@ -19,7 +19,7 @@ class estimator:
         self.api = ApiConn(self.model_name, self.file_path)
 
         self.opt_func = estimator_calc(
-            guess_path, self.api, self.params_path, lmfit)
+            guess_path, self.params_path, self.api, lmfit)
 
         # self.start_sim()
 
