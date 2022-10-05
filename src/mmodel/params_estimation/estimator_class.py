@@ -8,30 +8,36 @@ from .calc_params import estimator_calc
 class estimator:
     def __init__(self, guess_path, model_name="", file_path="", params="", lmfit=False):
         self.model_name = "model_havana_d29"
-        self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
-        self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
+        # self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
+        # self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
         self.opt_func = None
-        # self.file_path = "tests/mmodel/simple/simple_network.json"
+        self.file_path = "tests/mmodel/simple/one_node_network.json"
+        self.params_path = "tests/mmodel/simple/params/simple_params_one_node.json"
 
+        # self.file_path = "tests/mmodel/simple/simple_network.json"
         # self.params_path = "tests/mmodel/simple/params/simple_params.json"
 
         # compiles the model
         self.api = ApiConn(self.model_name, self.file_path)
 
         self.opt_func = estimator_calc(
-            guess_path, self.api, self.params_path, lmfit)
-
-        # self.start_sim()
+            guess_path,  self.params_path, self.api, lmfit)
 
     def start_sim(self, days):
         self.api.simulate(self.params_path, days)
-        self.get_ydata(self.api, ['S', 'I', 'R'], [0, 1])
+        return self.__get_ydata__()
 
-    def get_ydata(self, caller: ApiConn, compartiments: list, idxs: list):
+    def __get_ydata__(self, caller: ApiConn, compartiments):
         output = {}
-        for idx in idxs:
-            for c in compartiments:
-                output[c] = caller.get_ydata_for_node(idx, c).__next__()
+        nodes = self.api.get_network_nodes()
+        for node in nodes:
+            for c in node.model:
+                try:
+                    output[c] += caller.get_ydata_for_node(
+                        node.id, c).__next__()
+                except KeyError:
+                    output[c] = caller.get_ydata_for_node(
+                        node.id, c).__next__()
         return output
 
     def get_initial_values_SIR(self, json_file):

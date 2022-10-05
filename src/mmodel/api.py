@@ -23,3 +23,6 @@ class ApiConn:
 
     def import_model(self, module_name, module_path):
         return import_from_file(module_name, module_path)
+
+    def get_network_nodes(self):
+        return self.model.network.nodes
