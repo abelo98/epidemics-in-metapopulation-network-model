@@ -1,10 +1,10 @@
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
-from scipy import integrate, optimize
+from scipy import integrate
 from .model import SIR
-from ..constants import BETA, GAMMA, MUNCPS, START_INFECTED
-from lmfit import Parameters, minimize, fit_report
+from ..constants import MUNCPS, START_INFECTED
+from lmfit import Parameters, minimize
 
 
 class estimator:
@@ -64,14 +64,13 @@ class estimator:
 
     @ staticmethod
     def fit_odeint_metamodel_lmfit(params, x, y):
-        # beta = params["beta"]
-        # gamma = params["gamma"]
         params = [p for p in params.values()]
         y_fit = integrate.odeint(
             metamodel.deriv, i_values, x, args=(params,))[:, 1]
         return y_fit - y
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, params: list, muncps: list, id=0, op_lmfit=False):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, guess_path: str, muncps: list, id=0):
+        # imports and expand for mncps initial values
         global i_values
         i_values, _ = self.api.import_params(self.params_path)
         i_values = self.api.transform_input(i_values)
@@ -81,55 +80,50 @@ class estimator:
         metamodel = self.api.import_model(
             self.api.model.name, self.api.model.code_file)
 
-        # TODO: need to change the code below to accept a list of estimation
-        # guess = []
-        # for i in range(len(MUNCPS)*len(params)):
-        #     if i % len(params) == 0:
-        #         guess.append(BETA)
-        #     else:
-        #         guess.append(GAMMA)
-
-        fitted_params = None
+        # reads params initial guess json
+        initial_guess = read_json(guess_path)
+        total_params = len(initial_guess)
 
         params_to_est = Parameters()
         params_est_name = []
-        for i, _ in enumerate(len(MUNCPS) * len(params)):
-            if i % len(params) == 0:
-                params_est_name.append(f'beta{i}')
-                params_to_est.add(f'beta{i}', value=BETA, vary=True)
-            else:
-                params_est_name.append(f'gamma{i}')
-                params_to_est.add(f'gamma{i}', value=GAMMA, vary=True)
 
-            fitted_params = minimize(
-                estimator.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
+        # builds initial estimations for params*MUNCPS params
+        for i in range(len(MUNCPS) * total_params):
+            params_est_name.append(f'guess_{i}')
+            params_to_est.add(
+                f'guess_{i}', value=initial_guess["values"][str(i % total_params)], vary=True)
 
-            fitted_params = [
-                fitted_params.params[p].value for p in params_est_name]
+        fitted_params = minimize(
+            estimator.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
 
-        return self.__get_params__(params, muncps, fitted_params, id)
+        fitted_params = [
+            fitted_params.params[p].value for p in params_est_name]
 
-    def estimate_params(self, ydata: np.array, time: np.array, params: list, initial_v: dict, munc, op_lmfit=False):
+        return self.__get_params__(initial_guess["names"], muncps, fitted_params, id)
+
+    def estimate_params_single_model(self, ydata: np.array, time: np.array, guess_path: str, initial_v: dict, munc):
         global i_values
         i_values = tuple(initial_v.values())
 
         fitted_params = None
 
-        if op_lmfit:
-            params_to_est = Parameters()
-            params_to_est.add('beta', value=BETA, vary=True)
-            params_to_est.add('gamma', value=GAMMA, vary=True)
+        params_to_est = Parameters()
 
-            fitted_params = minimize(
-                estimator.fit_odeint_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
+        # reads params initial guess json
+        initial_guess = read_json(guess_path)
+        total_params = len(initial_guess)
 
-            fitted_params = [fitted_params.params[p].value for p in params]
+        for i in range(total_params):
+            params_to_est.add(
+                initial_guess["names"][i], value=initial_guess["values"][str(i)], vary=True)
 
-        else:
-            fitted_params, _ = optimize.curve_fit(
-                estimator.fit_odeint, time, ydata, p0=[BETA, GAMMA], maxfev=5000)
+        fitted_params = minimize(
+            estimator.fit_odeint_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
 
-        return self.__get_params__(params, [munc], fitted_params)
+        fitted_params = [
+            fitted_params.params[p].value for p in initial_guess["names"]]
+
+        return self.__get_params__(initial_guess["names"], [munc], fitted_params)
 
     def get_initial_values_SIR(self, json_file):
         S0 = json_file["y"]["S"]
@@ -148,41 +142,41 @@ class estimator:
 
         return initial_v, infected_by_munc, munc, time, id
 
-    def build_json_params_metamodel(self, models_json, infected, params_to_estimate, op_lmfit):
+    def build_json_params_metamodel(self, models_json, infected, guess_path):
         output = []
         for model in models_json:
             _, infected_by_munc, munc, time, id = self.set_initial_values(
                 model, infected)
 
             new_params = self.estimate_params_metamodel(
-                infected_by_munc, time, params_to_estimate, [munc], id, op_lmfit)
+                infected_by_munc, time, guess_path, [munc], id)
 
             model["params"] = new_params[0]
             output.append(model)
 
         return output
 
-    def build_json_params(self, models_json, infected, params_to_estimate, op_lmfit):
+    def build_json_params(self, models_json, infected, guess_path):
         output = []
         for model in models_json:
             initial_v, infected_by_munc, munc, time, _ = self.set_initial_values(
                 model, infected)
 
-            new_params = self.estimate_params(
-                infected_by_munc, time, params_to_estimate, initial_v, munc, op_lmfit)
+            new_params = self.estimate_params_single_model(
+                infected_by_munc, time, guess_path, initial_v, munc)
 
             model["params"] = new_params
             output.append(model)
 
         return output
 
-    def build_json_params_metamodel_combine(self, models_json, infected, params_to_estimate, op_lmfit):
+    def build_json_params_metamodel_combine(self, models_json, infected, guess_path):
         output = []
         time = np.linspace(0, len(infected), len(infected))
         muncps = [model["label"] for model in models_json]
 
         new_params = self.estimate_params_metamodel(
-            infected, time, params_to_estimate, muncps, 0)
+            infected, time, guess_path, muncps, 0)
 
         for i, model in enumerate(models_json):
             model["params"] = new_params[i]
@@ -190,15 +184,15 @@ class estimator:
 
         return output
 
-    def get_params_estimation(self, infected, params_to_estiamte, op_lmfit):
+    def get_params_estimation(self, infected, guess_path):
         models = read_json(self.params_path)
-        return self.build_json_params(models, infected, params_to_estiamte, op_lmfit)
+        return self.build_json_params(models, infected, guess_path)
 
-    def get_params_estimation_metamodel(self, infected, params_to_estiamte, op_lmfit):
+    def get_params_estimation_metamodel(self, infected, guess_path):
         models = read_json(self.params_path)
-        return self.build_json_params_metamodel(models, infected, params_to_estiamte, op_lmfit)
+        return self.build_json_params_metamodel(models, infected, guess_path)
 
-    def get_params_estimation_combine_infected(self, infected, params_to_estiamte, op_lmfit):
+    def get_params_estimation_combine_infected(self, infected, guess_path):
         models = read_json(self.params_path)
         return self.build_json_params_metamodel_combine(
-            models, infected, params_to_estiamte, op_lmfit)
+            models, infected, guess_path)
