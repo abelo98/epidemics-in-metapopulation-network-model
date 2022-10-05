@@ -27,16 +27,16 @@ class estimator:
         self.api.simulate(self.params_path, days)
         return self.__get_ydata__()
 
-    def __get_ydata__(self, caller: ApiConn, compartiments):
+    def __get_ydata__(self):
         output = {}
         nodes = self.api.get_network_nodes()
         for node in nodes:
-            for c in node.model:
+            for c in node.cmodel:
                 try:
-                    output[c] += caller.get_ydata_for_node(
+                    output[c] += self.api.get_ydata_for_node(
                         node.id, c).__next__()
                 except KeyError:
-                    output[c] = caller.get_ydata_for_node(
+                    output[c] = self.api.get_ydata_for_node(
                         node.id, c).__next__()
         return output
 
