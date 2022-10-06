@@ -11,12 +11,15 @@ class estimator_calc:
     def __init__(self, guess_path, params_path, api, lmfit=False):
         self.guess_path = guess_path
         self.params_path = params_path
+        global g_api
+        g_api = api
         self.api = api
         self.lmfit = lmfit
         # self.params_path = "tests/mmodel/simple/params/simple_params.json"
 
     i_values = None
     metamodel = None
+    g_api = None
 
     @ staticmethod
     def fit_odeint(x, beta, gamma):
@@ -37,9 +40,9 @@ class estimator_calc:
     @ staticmethod
     def fit_odeint_metamodel_lmfit(params, x, y):
         params = [p for p in params.values()]
-        y_fit = integrate.odeint(
-            metamodel.deriv, i_values, x, args=(params,))[:, 1]
-        return y_fit - y
+        y_fit = metamodel.solve(y, x, params).T
+        y_infected = g_api.transform_ydata(y_fit)
+        return y_infected
 
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, id=0):
         # imports and expand for mncps initial values
@@ -72,7 +75,7 @@ class estimator_calc:
             methods = ['least_squares', 'differential_evolution', 'brute',
                        'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cg', 'newton', 'cobyla', 'bfgs', 'tnc', 'trust-ncg', 'trust-exact', 'trust-krylov', 'trust-constr', 'dogleg', 'slsqp', 'emcee', 'shgo', 'dual_annealing', 'leastsq']
 
-            for m in methods:
+            for m in methods[:1]:
                 print(" ")
                 print(f'***** {m} *****')
                 print(" ")
@@ -82,7 +85,7 @@ class estimator_calc:
                 fitted_params = [
                     fitted_params.params[p].value for p in params_est_name]
 
-                break  # kitar esto
+                # break  # kitar esto
                 _ = get_params(initial_guess["names"], muncps, fitted_params)
 
         else:
