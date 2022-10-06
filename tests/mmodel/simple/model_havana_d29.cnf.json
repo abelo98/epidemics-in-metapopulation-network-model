@@ -1,1 +1,1 @@
-{"name": "model_havana_d29", "config-file": "tests/mmodel/simple/model_havana_d29.cnf.json", "network-file": "tests/mmodel/simple/one_node_network.json", "code-file": "tests/mmodel/simple/model_havana_d29.py", "network-hash": "c34346a6e2d4f5b6d73c2b713cc2a343a0d8d4dc"}
+{"name": "model_havana_d29", "config-file": "tests/mmodel/simple/model_havana_d29.cnf.json", "network-file": "tests/mmodel/simple/simple_network.json", "code-file": "tests/mmodel/simple/model_havana_d29.py", "network-hash": "f74640d97e23d323d3b8538a47c757b2ae6c3998"}
