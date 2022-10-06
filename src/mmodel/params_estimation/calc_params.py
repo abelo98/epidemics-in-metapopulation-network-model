@@ -98,7 +98,7 @@ class estimator_calc:
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess_for_muncps, bounds=(0, 1), maxfev=100000)
+                estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess_for_muncps, bounds=(0, 1), maxfev=10)
 
         return get_params(initial_guess["names"], muncps, fitted_params, id)
 
@@ -127,6 +127,6 @@ class estimator_calc:
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint, time, ydata, p0=[g for g in initial_guess["values"].values()], maxfev=100000)
+                estimator_calc.fit_odeint, time, ydata, p0=[g for g in initial_guess["values"].values()], maxfev=10)
 
         return get_params(initial_guess["names"], [munc], fitted_params)
