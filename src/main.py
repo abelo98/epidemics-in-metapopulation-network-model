@@ -35,18 +35,18 @@ def main():
     # paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/estimation_2_nodes/parameters_estimated_d{START_INFECTED}.json"
     paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/parameters_estimated_curvefit_infected_all_mcp_metamodel_d{START_INFECTED}.json"
 
-    ydata = get_data_simulation(est)['I']
+    # ydata = get_data_simulation(est)['I']
 
-    # df_conf = Reader.get_data(data_conf_path)
-    # df_dead = Reader.get_data(data_dead_path)
+    df_conf = Reader.get_data(data_conf_path)
+    df_dead = Reader.get_data(data_dead_path)
 
-    # df_conf_havana = Cleaner.select_rows(df_conf, MUNCPS)
-    # df_dead_havana = Cleaner.select_rows(df_dead, MUNCPS)
+    df_conf_havana = Cleaner.select_rows(df_conf, MUNCPS)
+    df_dead_havana = Cleaner.select_rows(df_dead, MUNCPS)
 
-    # df_conf_less_dead_havana = data_operator.get_conf_less_dead(
-    #     df_conf_havana, df_dead_havana)
+    df_conf_less_dead_havana = data_operator.get_conf_less_dead(
+        df_conf_havana, df_dead_havana)
 
-    # acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
+    acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
     new_paramas_to_save = est.get_params_estimation_combine_infected(ydata)
 
