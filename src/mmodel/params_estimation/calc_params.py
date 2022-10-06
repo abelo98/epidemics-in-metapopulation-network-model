@@ -23,7 +23,10 @@ class estimator_calc:
 
     @ staticmethod
     def fit_odeint(x, beta, gamma):
-        return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
+        y_fit = integrate.odeint(
+            SIR.sir_ecuations, i_values, x, args=(beta, gamma)).T
+        y_infected = g_api.transform_ydata(y_fit)
+        return y_infected
 
     @ staticmethod
     def fit_odeint_metamodel(x, *params):
@@ -37,8 +40,9 @@ class estimator_calc:
         beta = params["beta"]
         gamma = params["gamma"]
         y_fit = integrate.odeint(
-            SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
-        return y_fit - y
+            SIR.sir_ecuations, i_values, x, args=(beta, gamma)).T
+        y_infected = g_api.transform_ydata(y_fit)
+        return y_infected - y
 
     @ staticmethod
     def fit_odeint_metamodel_lmfit(params, x, y):
@@ -68,7 +72,7 @@ class estimator_calc:
         guess_for_muncps = []
 
         # builds initial estimations for params*MUNCPS params
-        for i in range(len(MUNCPS[:2]) * total_params):
+        for i in range(len(MUNCPS) * total_params):
             params_est_name.append(f'param_{i}')
             guess_value = initial_guess["values"][str(i % total_params)]
             guess_for_muncps.append(guess_value)
@@ -76,25 +80,25 @@ class estimator_calc:
                 f'param_{i}', value=guess_value, vary=True, min=0, max=1)
 
         if self.lmfit:
-            methods = ['least_squares', 'differential_evolution', 'brute',
-                       'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cg', 'newton', 'cobyla', 'bfgs', 'tnc', 'trust-ncg', 'trust-exact', 'trust-krylov', 'trust-constr', 'dogleg', 'slsqp', 'emcee', 'shgo', 'dual_annealing', 'leastsq']
+            # methods = ['least_squares', 'differential_evolution', 'brute',
+            #            'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cobyla', 'bfgs', 'tnc', 'slsqp', 'shgo', 'dual_annealing', 'leastsq']
 
-            for m in methods[:1]:
-                print(" ")
-                print(f'***** {m} *****')
-                print(" ")
-                fitted_params = minimize(
-                    estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), method=m)
+            # for m in methods:
+            # print(" ")
+            # print(f'***** {m} *****')
+            # print(" ")
+            fitted_params = minimize(
+                estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,))
 
-                fitted_params = [
-                    fitted_params.params[p].value for p in params_est_name]
+            fitted_params = [
+                fitted_params.params[p].value for p in params_est_name]
 
-                # break  # kitar esto
-                _ = get_params(initial_guess["names"], muncps, fitted_params)
+            # break  # kitar esto
+            # _ = get_params(initial_guess["names"], muncps, fitted_params)
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess_for_muncps, maxfev=100000)
+                estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess_for_muncps, bounds=(0, 1), maxfev=100000)
 
         return get_params(initial_guess["names"], muncps, fitted_params, id)
 
