@@ -27,7 +27,10 @@ class estimator_calc:
 
     @ staticmethod
     def fit_odeint_metamodel(x, *params):
-        return integrate.odeint(metamodel.deriv, i_values, x, args=(params,))[:, 1]
+        y_fit = integrate.odeint(
+            metamodel.deriv, i_values, x, args=(params,)).T
+        y_infected = g_api.transform_ydata(y_fit)
+        return y_infected
 
     @ staticmethod
     def fit_odeint_lmfit(params, x, y):
@@ -42,7 +45,8 @@ class estimator_calc:
         params = [p for p in params.values()]
         y_fit = metamodel.solve(y, x, params).T
         y_infected = g_api.transform_ydata(y_fit)
-        return y_infected
+
+        return y_infected - y
 
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, id=0):
         # imports and expand for mncps initial values
