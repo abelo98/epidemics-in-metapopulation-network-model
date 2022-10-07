@@ -29,7 +29,7 @@ def get_data_simulation(est: estimator):
 
 def main():
     est = estimator(
-        "src/mmodel/params_estimation/params_guess.json", lmfit=False)
+        "src/mmodel/params_estimation/params_guess.json", lmfit=True)
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
     # paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/estimation_2_nodes/parameters_estimated_d{START_INFECTED}.json"
@@ -48,7 +48,7 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = calc_params_by_munc_model(
+    new_paramas_to_save = calc_params_with_acc_infected_combine(
         est, acc_infected)
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)

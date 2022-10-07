@@ -80,7 +80,7 @@ class estimator:
             new_params = self.opt_func.estimate_params_single_model(
                 infected_by_munc, time, initial_v, munc)
 
-            model["params"] = new_params
+            model["params"] = new_params[0]
             output.append(model)
 
         return output
