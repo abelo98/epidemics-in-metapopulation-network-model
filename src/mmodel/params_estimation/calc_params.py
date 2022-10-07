@@ -20,7 +20,6 @@ class estimator_calc:
     i_values = None
     metamodel = None
     g_api = None
-    special_p = None
 
     @ staticmethod
     def fit_odeint(x, beta, gamma):
@@ -42,8 +41,10 @@ class estimator_calc:
         return y_fit - y
 
     @ staticmethod
-    def fitter(x):
-        y_fit = metamodel.solve(i_values, x, special_p).T
+    def fitter(x, param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_10, param_11, param_12, param_13, param_14, param_15, param_16, param_17, param_18, param_19, param_20, param_21, param_22, param_23, param_24, param_25, param_26, param_27, param_28, param_29, param_30):
+        params = [param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_10, param_11, param_12, param_13, param_14, param_15,
+                  param_16, param_17, param_18, param_19, param_20, param_21, param_22, param_23, param_24, param_25, param_26, param_27, param_28, param_29, param_30]
+        y_fit = metamodel.solve(i_values, x, params).T
         y_infected = g_api.transform_ydata(y_fit)
 
         return y_infected
@@ -80,12 +81,11 @@ class estimator_calc:
             params_est_name.append(f'param_{i}')
             guess_value = initial_guess["values"][str(i % total_params)]
             guess_for_muncps.append(guess_value)
-            # mod.set_param_hint(
-            #     f'p', value=guess_value, min=0, max=1, vary=True)
+            mod.set_param_hint(
+                f'param_{i}', value=guess_value, min=0, max=1, vary=True)
 
         if self.lmfit:
-            global special_p
-            special_p = guess_for_muncps
+            params = mod.make_params()
             fit_method = "leastsq"
             # methods = ['least_squares', 'differential_evolution', 'brute',
             #            'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cobyla', 'bfgs', 'tnc', 'slsqp', 'shgo', 'dual_annealing', 'leastsq']
@@ -94,8 +94,9 @@ class estimator_calc:
             # print(" ")
             # print(f'***** {m} *****')
             # print(" ")
-            fitted_params = mod.fit(ydata, method=fit_method, x=time)
-            fitted_params = fitted_params.best_values
+            fitted_params = mod.fit(ydata, params, method=fit_method, x=time)
+            fitted_params = list(fitted_params.best_values.values())
+
             # break  # kitar esto
             # _ = get_params(initial_guess["names"], muncps, fitted_params)
 

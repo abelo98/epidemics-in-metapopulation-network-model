@@ -8,14 +8,14 @@ from .calc_params import estimator_calc
 class estimator:
     def __init__(self, guess_path, model_name="", file_path="", params="", lmfit=False):
         self.model_name = "model_havana_d29"
-        self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
-        self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
+        # self.file_path = "tests/mmodel/havana_metamodel_params_est/habana_network2.json"
+        # self.params_path = "tests/mmodel/havana_metamodel_params_est/parameters_estimated_d16.json"
         self.opt_func = None
         # self.file_path = "tests/mmodel/simple/one_node_network.json"
         # self.params_path = "tests/mmodel/simple/params/simple_params_one_node.json"
 
-        # self.file_path = "tests/mmodel/simple/simple_network.json"
-        # self.params_path = "tests/mmodel/simple/params/simple_params.json"
+        self.file_path = "tests/mmodel/simple/simple_network.json"
+        self.params_path = "tests/mmodel/simple/params/simple_params.json"
 
         # compiles the model
         self.api = ApiConn(self.model_name, self.file_path)
