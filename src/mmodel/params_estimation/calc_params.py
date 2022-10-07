@@ -24,9 +24,9 @@ class estimator_calc:
     @ staticmethod
     def fit_odeint(x, beta, gamma):
         y_fit = integrate.odeint(
-            SIR.sir_ecuations, i_values, x, args=(beta, gamma)).T
-        y_infected = g_api.transform_ydata(y_fit)
-        return y_infected
+            SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:1]
+        # y_infected = g_api.transform_ydata(y_fit)
+        return y_fit
 
     @ staticmethod
     def fit_odeint_metamodel(x, *params):
