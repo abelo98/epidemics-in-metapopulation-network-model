@@ -2,8 +2,8 @@
 import json
 
 
-def read_json(current_paramas_json):
-    with open(current_paramas_json, 'r') as f:
+def read_json(path):
+    with open(path, 'r') as f:
         json_parsed = json.load(f)
         f.close()
         return json_parsed

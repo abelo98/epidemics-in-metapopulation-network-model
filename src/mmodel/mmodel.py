@@ -37,7 +37,8 @@ class MetaModel:
             self.net_file = args[1]
             self.net_file_hash = None
 
-            self.path = self.net_file[: self.net_file.rfind("/")]  # generated files
+            # generated files
+            self.path = self.net_file[: self.net_file.rfind("/")]
             self.code_file = f"{self.path}/{self.name}.py"
             self.config_file = f"{self.path}/{self.name}.cnf.json"
 
@@ -46,10 +47,10 @@ class MetaModel:
         else:
             raise Exception("Paremeter exception")
 
-   
     def simulate(self, input_file, t):
         if hash_file(self.net_file) != self.net_file_hash:
-            print(f"hash of network file {self.net_file} changed, recompiling...")
+            print(
+                f"hash of network file {self.net_file} changed, recompiling...")
             self.network = Network(self.net_file)
             self.compile()
         else:
@@ -60,24 +61,22 @@ class MetaModel:
         except FileNotFoundError:
             print("input file not exists")
             return None
-       
+
         y_, params_ = self.__transform_input__(y, params)
 
         model = import_from_file(self.name, self.code_file)
 
         ret = model.solve(y_, t, params_).T
-        
+
         results = self.__transform_output__(ret)
 
         return results
 
-    
     def __transform_input__(self, y, params):
         raise NotImplementedError()
 
     def __transform_output__(self, ret):
         raise NotImplementedError()
-
 
     # ------------------------------------------------------------------
     # This sections conatins the methods that generate the code for
@@ -219,7 +218,8 @@ class MetaModel:
         for node in root:
             for item in node:
                 if item.tag == NY:
-                    nodey = {key: float(value) for key, value in item.attrib.items()}
+                    nodey = {key: float(value)
+                             for key, value in item.attrib.items()}
                 elif item.tag == NPARAMS:
                     nodeparams = {
                         key: float(value) for key, value in item.attrib.items()
