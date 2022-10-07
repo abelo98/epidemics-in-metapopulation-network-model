@@ -20,13 +20,14 @@ class estimator_calc:
     i_values = None
     metamodel = None
     g_api = None
+    special_p = None
 
     @ staticmethod
     def fit_odeint(x, beta, gamma):
         return integrate.odeint(SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
 
     @ staticmethod
-    def fit_odeint_metamodel(x, *params):
+    def fit_odeint_metamodel(x, params):
         y_fit = integrate.odeint(
             metamodel.deriv, i_values, x, args=(params,)).T
         y_infected = g_api.transform_ydata(y_fit)
@@ -41,12 +42,11 @@ class estimator_calc:
         return y_fit - y
 
     @ staticmethod
-    def fitter(x, p):
-        p = [p for p in p.values()]
-        y_fit = metamodel.solve(y, x, p).T
+    def fitter(x):
+        y_fit = metamodel.solve(i_values, x, special_p).T
         y_infected = g_api.transform_ydata(y_fit)
 
-        return y_infected - y
+        return y_infected
 
     @ staticmethod
     def fit_odeint_metamodel_lmfit(params, x, y):
@@ -80,11 +80,12 @@ class estimator_calc:
             params_est_name.append(f'param_{i}')
             guess_value = initial_guess["values"][str(i % total_params)]
             guess_for_muncps.append(guess_value)
-            mod.set_param_hint(
-                f'param_{i}', value=guess_value, min=0, max=1, vary=True)
+            # mod.set_param_hint(
+            #     f'p', value=guess_value, min=0, max=1, vary=True)
 
         if self.lmfit:
-            params = mod.make_params()
+            global special_p
+            special_p = guess_for_muncps
             fit_method = "leastsq"
             # methods = ['least_squares', 'differential_evolution', 'brute',
             #            'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cobyla', 'bfgs', 'tnc', 'slsqp', 'shgo', 'dual_annealing', 'leastsq']
@@ -93,8 +94,8 @@ class estimator_calc:
             # print(" ")
             # print(f'***** {m} *****')
             # print(" ")
-            result = mod.fit(ydata, params, method=fit_method, x=time)
-
+            fitted_params = mod.fit(ydata, method=fit_method, x=time)
+            fitted_params = fitted_params.best_values
             # break  # kitar esto
             # _ = get_params(initial_guess["names"], muncps, fitted_params)
 
