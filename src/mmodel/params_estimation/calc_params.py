@@ -51,11 +51,11 @@ class estimator_calc:
 
         return y_infected - y
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, id=0):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, initial_v, initial_guess, id=0):
         # imports and expand for mncps initial values
         global i_values
-        i_values, _ = self.api.import_params(self.params_path)
-        i_values = self.api.transform_input(i_values)
+        # i_values, _ = self.api.import_params(self.params_path)
+        i_values = self.api.transform_input(initial_v)
 
         # imports the metamodel
         global metamodel
@@ -63,7 +63,7 @@ class estimator_calc:
             self.api.model.name, self.api.model.code_file)
 
         # reads params initial guess json
-        initial_guess = read_json(self.guess_path)
+        # initial_guess = read_json(self.guess_path)
         total_params = len(initial_guess)
 
         params_to_est = Parameters()

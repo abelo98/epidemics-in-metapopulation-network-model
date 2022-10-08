@@ -3,6 +3,7 @@ from ..json_manager.json_processor import read_json
 import numpy as np
 from ..constants import START_INFECTED
 from .calc_params import estimator_calc
+from mmodel.data_manager.data_operations import data_operator
 
 
 class estimator:
@@ -48,35 +49,39 @@ class estimator:
 
         return {"S": S0, "I": I0, "R": R0, "N": N}
 
-    def get_initial_values_SIR_metamodel(self, infected_by_munc):
-        initial_v = self.api.import_params(self.params_path)
+    def get_initial_values_SIR_metamodel(self, models, infected):
+        initial_v, guess = self.api.import_params(self.params_path)
         # its where the value of S is in the list for each muncp(order:S,I,R,N)
         i = 0
+        for model in models:
+            infected_by_munc = infected[model["label"]][START_INFECTED:]
 
-        while (i < len(initial_v)):
             initial_v[i] = initial_v[i+3] - infected_by_munc[0]
             initial_v[i+1] = infected_by_munc[0]
             i += 4  # where the initial values of other munc start
 
-        return initial_v
+        return initial_v, guess
 
     def set_initial_values(self, model, infected):
         infected_by_munc = infected[model["label"]][START_INFECTED:]
-        initial_v = self.get_initial_values_SIR(infected_by_munc, model)
         munc = model["label"]
         time = np.linspace(0, len(infected_by_munc), len(infected_by_munc))
         id = int(model["id"])
 
-        return initial_v, infected_by_munc, munc, time, id
+        return infected_by_munc, munc, time, id
 
     def build_json_params_metamodel(self, models_json, infected):
         output = []
+
+        initial_v, guess = self.get_initial_values_SIR_metamodel(
+            models_json, infected)
+
         for model in models_json:
-            _, infected_by_munc, munc, time, id = self.set_initial_values(
+            infected_by_munc, munc, time, id = self.set_initial_values(
                 model, infected)
 
             new_params = self.opt_func.estimate_params_metamodel(
-                infected_by_munc, time, [munc], id)
+                infected_by_munc, time, [munc], initial_v, guess, id)
 
             model["params"] = new_params[0]
             output.append(model)
@@ -86,7 +91,8 @@ class estimator:
     def build_json_params(self, models_json, infected):
         output = []
         for model in models_json:
-            initial_v, infected_by_munc, munc, time, _ = self.set_initial_values(
+            initial_v = self.get_initial_values_SIR(infected_by_munc, model)
+            infected_by_munc, munc, time, _ = self.set_initial_values(
                 model, infected)
 
             new_params = self.opt_func.estimate_params_single_model(
@@ -97,13 +103,18 @@ class estimator:
 
         return output
 
-    def build_json_params_metamodel_combine(self, models_json, infected):
+    def build_json_params_metamodel_combine(self, models_json, acc_infected_by_munc):
         output = []
-        time = np.linspace(0, len(infected), len(infected))
+        acc_infected_combine = data_operator.combine_infected_all_mcps(
+            acc_infected_by_munc)
+        initial_v, guess = self.get_initial_values_SIR_metamodel(
+            models_json, acc_infected_by_munc)
+        time = np.linspace(0, len(acc_infected_combine),
+                           len(acc_infected_combine))
         muncps = [model["label"] for model in models_json]
 
         new_params = self.opt_func.estimate_params_metamodel(
-            infected, time, muncps, 0)
+            acc_infected_combine, time, muncps, initial_v, guess, 0)
 
         for i, model in enumerate(models_json):
             model["params"] = new_params[i]

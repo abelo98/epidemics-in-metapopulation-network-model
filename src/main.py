@@ -9,9 +9,7 @@ from mmodel.constants import *
 
 
 def calc_params_with_acc_infected_combine(est: estimator, acc_infected):
-    acc_infected_combine = data_operator.combine_infected_all_mcps(
-        acc_infected)
-    return est.get_params_estimation_combine_infected(acc_infected_combine)
+    return est.get_params_estimation_combine_infected(acc_infected)
 
 
 def calc_params_with_acc_infected_by_muncps(est: estimator, acc_infected):
