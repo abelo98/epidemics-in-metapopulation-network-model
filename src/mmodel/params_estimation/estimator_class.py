@@ -1,3 +1,4 @@
+from time import time
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
@@ -47,20 +48,26 @@ class estimator:
         R0 = json_file["y"]["R"]
         N = json_file["y"]["N"]
 
-        return {"S": S0, "I": I0, "R": R0, "N": N}
+        p1 = json_file["params"]["beta"]
+        p2 = json_file["params"]["gamma"]
+
+        return {"S": S0, "I": I0, "R": R0, "N": N}, [p1, p2]
 
     def get_initial_values_SIR_metamodel(self, models, infected):
         initial_v, guess = self.api.import_params(self.params_path)
         # its where the value of S is in the list for each muncp(order:S,I,R,N)
         i = 0
+        time = -np.inf
         for model in models:
             infected_by_munc = infected[model["label"]][START_INFECTED:]
+            if (len(infected_by_munc) > time):
+                time = len(infected_by_munc)
 
             initial_v[i] = initial_v[i+3] - infected_by_munc[0]
             initial_v[i+1] = infected_by_munc[0]
             i += 4  # where the initial values of other munc start
 
-        return initial_v, guess
+        return initial_v, guess, np.linspace(0, time, time)
 
     def set_initial_values(self, model, infected):
         infected_by_munc = infected[model["label"]][START_INFECTED:]
@@ -70,33 +77,39 @@ class estimator:
 
         return infected_by_munc, munc, time, id
 
-    def build_json_params_metamodel(self, models_json, infected):
-        output = []
+    # def build_json_params_metamodel(self, models_json, infected):
+    #     output = []
 
-        initial_v, guess = self.get_initial_values_SIR_metamodel(
-            models_json, infected)
+    #     initial_v, guess = self.get_initial_values_SIR_metamodel(
+    #         models_json, infected)
 
-        for model in models_json:
-            infected_by_munc, munc, time, id = self.set_initial_values(
-                model, infected)
+    #     for model in models_json:
+    #         params_names = model["params"].values()
 
-            new_params = self.opt_func.estimate_params_metamodel(
-                infected_by_munc, time, [munc], initial_v, guess, id)
+    #         infected_by_munc, munc, time, id = self.set_initial_values(
+    #             model, infected)
 
-            model["params"] = new_params[0]
-            output.append(model)
+    #         new_params = self.opt_func.estimate_params_metamodel(
+    #             infected_by_munc, time, [munc], initial_v, guess, params_names, id)
 
-        return output
+    #         model["params"] = new_params[0]  # revisar esto
+    #         output.append(model)
+
+    #     return output
 
     def build_json_params(self, models_json, infected):
         output = []
         for model in models_json:
-            initial_v = self.get_initial_values_SIR(infected_by_munc, model)
+            params_names = model["params"].values()
+
+            initial_v, guess = self.get_initial_values_SIR(
+                infected_by_munc, model)
+
             infected_by_munc, munc, time, _ = self.set_initial_values(
                 model, infected)
 
             new_params = self.opt_func.estimate_params_single_model(
-                infected_by_munc, time, initial_v, munc)
+                infected_by_munc, time, initial_v, guess, params_names, munc)
 
             model["params"] = new_params
             output.append(model)
@@ -106,15 +119,14 @@ class estimator:
     def build_json_params_metamodel_combine(self, models_json, acc_infected_by_munc):
         output = []
         acc_infected_combine = data_operator.combine_infected_all_mcps(
-            acc_infected_by_munc)
-        initial_v, guess = self.get_initial_values_SIR_metamodel(
+            acc_infected_by_munc)[0:START_INFECTED]
+        initial_v, guess, time = self.get_initial_values_SIR_metamodel(
             models_json, acc_infected_by_munc)
-        time = np.linspace(0, len(acc_infected_combine),
-                           len(acc_infected_combine))
         muncps = [model["label"] for model in models_json]
+        params_names = models_json[0]["params"].values()
 
         new_params = self.opt_func.estimate_params_metamodel(
-            acc_infected_combine, time, muncps, initial_v, guess, 0)
+            acc_infected_combine, time, muncps, initial_v, guess, params_names, 0)
 
         for i, model in enumerate(models_json):
             model["params"] = new_params[i]
