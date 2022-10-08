@@ -48,7 +48,7 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = calc_params_by_munc_model(
+    new_paramas_to_save = calc_params_with_acc_infected_combine(
         est, acc_infected)
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
