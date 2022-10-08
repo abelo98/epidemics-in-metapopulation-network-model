@@ -72,7 +72,7 @@ class estimator_calc:
         guess_for_muncps = []
 
         # builds initial estimations for params*MUNCPS params
-        for i in range(len(MUNCPS[:2]) * total_params):
+        for i in range(len(MUNCPS) * total_params):
             params_est_name.append(f'param_{i}')
             guess_value = initial_guess["values"][str(i % total_params)]
             guess_for_muncps.append(guess_value)
@@ -98,7 +98,7 @@ class estimator_calc:
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess_for_muncps, bounds=(0, 1), maxfev=10)
+                estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess_for_muncps, bounds=(0, 1), maxfev=100000)
 
         return get_params(initial_guess["names"], muncps, fitted_params, id)
 
