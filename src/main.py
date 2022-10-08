@@ -33,7 +33,7 @@ def main():
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
     # paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/estimation_2_nodes/parameters_estimated_d{START_INFECTED}.json"
-    paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/parameters_estimated_curvefit_infected_all_mcp_metamodel_d{START_INFECTED}.json"
+    paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/parameters_estimated_curvefit_infected_all_mcp_SIR_Model_d{START_INFECTED}.json"
 
     # ydata = get_data_simulation(est)['I']
 
@@ -48,7 +48,7 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = calc_params_with_acc_infected_combine(
+    new_paramas_to_save = calc_params_by_munc_model(
         est, acc_infected)
 
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
