@@ -1,0 +1,1 @@
+{"name": "havana_vieja_conn", "config-file": "tests/mmodel/test_network_habana_vieja_and_its_connections/havana_vieja_conn.cnf.json", "network-file": "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json", "code-file": "tests/mmodel/test_network_habana_vieja_and_its_connections/havana_vieja_conn.py", "network-hash": "11ed67c36358f67cc3680dbda5ca3414353d9142"}
