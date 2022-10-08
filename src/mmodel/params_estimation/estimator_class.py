@@ -40,17 +40,29 @@ class estimator:
                         node.id, c).__next__()
         return output
 
-    def get_initial_values_SIR(self, json_file):
-        S0 = json_file["y"]["S"]
-        I0 = json_file["y"]["I"]
+    def get_initial_values_SIR(self, infected_by_munc, json_file):
+        I0 = infected_by_munc[0]
+        S0 = json_file["y"]["N"] - I0
         R0 = json_file["y"]["R"]
         N = json_file["y"]["N"]
 
         return {"S": S0, "I": I0, "R": R0, "N": N}
 
+    def get_initial_values_SIR_metamodel(self, infected_by_munc):
+        initial_v = self.api.import_params(self.params_path)
+        # its where the value of S is in the list for each muncp(order:S,I,R,N)
+        i = 0
+
+        while (i < len(initial_v)):
+            initial_v[i] = initial_v[i+3] - infected_by_munc[0]
+            initial_v[i+1] = infected_by_munc[0]
+            i += 4  # where the initial values of other munc start
+
+        return initial_v
+
     def set_initial_values(self, model, infected):
-        initial_v = self.get_initial_values_SIR(model)
         infected_by_munc = infected[model["label"]][START_INFECTED:]
+        initial_v = self.get_initial_values_SIR(infected_by_munc, model)
         munc = model["label"]
         time = np.linspace(0, len(infected_by_munc), len(infected_by_munc))
         id = int(model["id"])
