@@ -95,7 +95,7 @@ class estimator_calc:
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint_metamodel, time, ydata, p0=initial_guess, bounds=(0, 1), maxfev=100000)
+                estimator_calc.fit_odeint_metamodel, time, ydata, p0=initial_guess, bounds=(0, 1), maxfev=10)
 
         return get_params(params_names, muncps, fitted_params, id)
 
