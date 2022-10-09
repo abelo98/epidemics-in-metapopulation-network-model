@@ -127,7 +127,7 @@ class estimator:
         initial_v, guess, time = self.get_initial_values_SIR_metamodel(
             models_json, acc_infected_by_munc)
         muncps = [model["label"] for model in models_json]
-        params_names = models_json[0]["params"].values()
+        params_names = list(models_json[0]["params"].keys())
 
         new_params = self.opt_func.estimate_params_metamodel(
             acc_infected_combine, time, muncps, initial_v, guess, params_names, 0)
