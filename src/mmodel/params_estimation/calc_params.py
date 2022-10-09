@@ -1,4 +1,3 @@
-from ..json_manager.json_processor import read_json
 import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
