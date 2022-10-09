@@ -6,6 +6,7 @@ from mmodel.data_manager.data_operations import data_operator
 from mmodel.json_manager.json_processor import *
 import numpy as np
 from mmodel.constants import *
+from timeit import default_timer as timer
 
 
 def calc_params_with_acc_infected_combine(est: estimator, acc_infected):
@@ -46,9 +47,10 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = calc_params_with_acc_infected_combine(
+    start = timer()
+    new_paramas_to_save = calc_params_by_munc_model(
         est, acc_infected)
-
+    print(timer()-start)
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
 
 

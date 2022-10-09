@@ -103,13 +103,13 @@ class estimator:
     def build_json_params(self, models_json, infected):
         output = []
         for model in models_json:
-            params_names = model["params"].values()
-
-            initial_v, guess = self.get_initial_values_SIR(
-                infected_by_munc, model)
+            params_names = list(model["params"].keys())
 
             infected_by_munc, munc, time, _ = self.set_initial_values(
                 model, infected)
+
+            initial_v, guess = self.get_initial_values_SIR(
+                infected_by_munc, model)
 
             new_params = self.opt_func.estimate_params_single_model(
                 infected_by_munc, time, initial_v, guess, params_names, munc)

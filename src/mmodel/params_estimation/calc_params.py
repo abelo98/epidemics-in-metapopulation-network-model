@@ -4,6 +4,7 @@ from .model import SIR
 from ..constants import MUNCPS
 from lmfit import Parameters, minimize
 from .params_builder_answer import get_params
+from numba import jit
 
 
 class estimator_calc:
@@ -21,6 +22,7 @@ class estimator_calc:
     g_api = None
 
     @ staticmethod
+    @jit(nopython=True)
     def fit_odeint(x, beta, gamma):
         y_fit = integrate.odeint(
             SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
