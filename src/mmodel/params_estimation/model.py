@@ -1,6 +1,11 @@
 
+from numba import jit
+
+
 class SIR:
+
     @staticmethod
+    @jit()
     def sir_ecuations(y, x, beta, gamma):
         S, I, R, N = y
         dSdt = -beta * S * I / N
