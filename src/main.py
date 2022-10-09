@@ -9,9 +9,7 @@ from mmodel.constants import *
 
 
 def calc_params_with_acc_infected_combine(est: estimator, acc_infected):
-    acc_infected_combine = data_operator.combine_infected_all_mcps(
-        acc_infected)
-    return est.get_params_estimation_combine_infected(acc_infected_combine)
+    return est.get_params_estimation_combine_infected(acc_infected)
 
 
 def calc_params_with_acc_infected_by_muncps(est: estimator, acc_infected):
@@ -32,8 +30,8 @@ def main():
         "src/mmodel/params_estimation/params_guess.json", lmfit=False)
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    # paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/estimation_2_nodes/parameters_estimated_d{START_INFECTED}.json"
-    paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/parameters_estimated_curvefit_infected_all_mcp_SIR_Model_d{START_INFECTED}.json"
+    paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_d{START_INFECTED}.json"
+    # paramas_estimated_json = f"tests/mmodel/test_network_habana_vieja_and_its_connections/estimation/parameters_estimated_curvefit_infected_all_mcp_SIR_Model_d{START_INFECTED}.json"
 
     # ydata = get_data_simulation(est)['I']
 

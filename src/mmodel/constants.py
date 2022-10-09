@@ -14,6 +14,15 @@ MUNCPS = ["Playa",
           "Arroyo Naranjo",
           "Cotorro"]
 
+# MUNCPS = [
+#     "Centro Habana",
+#     "Habana Vieja",
+#     "Regla",
+#     "San Miguel del Padrón",
+#     "Diez de Octubre",
+#     "Cerro"]
+
+
 START_INFECTED = 29  # constant to get the infected from the day 15
 
 BETA = 0.17  # difusion rate

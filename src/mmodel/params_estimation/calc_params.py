@@ -1,4 +1,3 @@
-from ..json_manager.json_processor import read_json
 import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
@@ -51,11 +50,11 @@ class estimator_calc:
 
         return y_infected - y
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, id=0):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, initial_v, initial_guess, params_names, id=0):
         # imports and expand for mncps initial values
         global i_values
-        i_values, _ = self.api.import_params(self.params_path)
-        i_values = self.api.transform_input(i_values)
+        # i_values, _ = self.api.import_params(self.params_path)
+        i_values = self.api.transform_input(initial_v)
 
         # imports the metamodel
         global metamodel
@@ -63,22 +62,20 @@ class estimator_calc:
             self.api.model.name, self.api.model.code_file)
 
         # reads params initial guess json
-        initial_guess = read_json(self.guess_path)
+        # initial_guess = read_json(self.guess_path)
         total_params = len(initial_guess)
 
         params_to_est = Parameters()
         params_est_name = []
-        guess_for_muncps = []
-
-        # builds initial estimations for params*MUNCPS params
-        for i in range(len(MUNCPS) * total_params):
-            params_est_name.append(f'param_{i}')
-            guess_value = initial_guess["values"][str(i % total_params)]
-            guess_for_muncps.append(guess_value)
-            params_to_est.add(
-                f'param_{i}', value=guess_value, vary=True, min=0, max=1)
+        # guess_for_muncps = []
 
         if self.lmfit:
+            # builds initial estimations for params*MUNCPS params
+            for i in range(len(MUNCPS) * total_params):
+                params_est_name.append(f'param_{i}')
+                guess_value = initial_guess[i % total_params]
+                params_to_est.add(
+                    f'param_{i}', value=guess_value, vary=True, min=0, max=1)
             # methods = ['least_squares', 'differential_evolution', 'brute',
             #            'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cobyla', 'bfgs', 'tnc', 'slsqp', 'shgo', 'dual_annealing', 'leastsq']
 
@@ -97,35 +94,35 @@ class estimator_calc:
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess_for_muncps, bounds=(0, 1), maxfev=100000)
+                estimator_calc.fit_odeint_metamodel, time, ydata, p0=initial_guess, bounds=(0, 1), maxfev=5000)
 
-        return get_params(initial_guess["names"], muncps, fitted_params, id)
+        return get_params(params_names, muncps, fitted_params, id)
 
-    def estimate_params_single_model(self, ydata: np.array, time: np.array, initial_v: dict, munc):
+    def estimate_params_single_model(self, ydata: np.array, time: np.array, initial_v: dict, initial_guess, params_names, munc):
         global i_values
         i_values = tuple(initial_v.values())
 
         fitted_params = None
 
-        params_to_est = Parameters()
-
         # reads params initial guess json
-        initial_guess = read_json(self.guess_path)
+        # initial_guess = read_json(self.guess_path)
         total_params = len(initial_guess)
 
-        for i in range(total_params):
-            params_to_est.add(
-                initial_guess["names"][i], value=initial_guess["values"][str(i)], vary=True, min=0, max=1)
-
         if self.lmfit:
+            params_to_est = Parameters()
+
+            for i in range(total_params):
+                params_to_est.add(
+                    params_names[i], value=initial_guess[i], vary=True, min=0, max=1)
+
             fitted_params = minimize(
                 estimator_calc.fit_odeint_lmfit, params_to_est, args=(time, ydata,), method='least_squares')
 
             fitted_params = [
-                fitted_params.params[p].value for p in initial_guess["names"]]
+                fitted_params.params[p].value for p in params_names]
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint, time, ydata, p0=[g for g in initial_guess["values"].values()], maxfev=100000)
+                estimator_calc.fit_odeint, time, ydata, p0=initial_guess, maxfev=100000)
 
-        return get_params(initial_guess["names"], [munc], fitted_params)
+        return get_params(params_names, [munc], fitted_params)
