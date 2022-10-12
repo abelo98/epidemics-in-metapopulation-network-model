@@ -1,4 +1,3 @@
-from numba import jit
 from scipy.integrate import odeint
 
 

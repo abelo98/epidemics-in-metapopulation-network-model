@@ -6,7 +6,6 @@ from lmfit import Parameters, minimize
 from .params_builder_answer import get_params
 
 
-
 class estimator_calc:
     def __init__(self, guess_path, params_path, api, lmfit=False):
         self.guess_path = guess_path
@@ -29,9 +28,12 @@ class estimator_calc:
 
     @ staticmethod
     def fit_odeint_metamodel(x, *params):
-        y_fit = integrate.odeint(
-            metamodel.deriv, i_values, x, args=(params,)).T
-        y_infected = g_api.transform_ydata(y_fit)
+        try:
+            y_fit = integrate.odeint(
+                metamodel.deriv, i_values, x, args=(params,)).T
+            y_infected = g_api.transform_ydata(y_fit)
+        except:
+            print("error")
         return y_infected
 
     @ staticmethod
@@ -85,7 +87,7 @@ class estimator_calc:
             # print(f'***** {m} *****')
             # print(" ")
             fitted_params = minimize(
-                estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), max_nfev=100000)
+                estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), max_nfev=1000)
 
             fitted_params = [
                 fitted_params.params[p].value for p in params_est_name]
@@ -95,7 +97,7 @@ class estimator_calc:
 
         else:
             fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint_metamodel, time, ydata, p0=initial_guess, bounds=(0, 1), maxfev=5000)
+                estimator_calc.fit_odeint_metamodel, time, ydata, p0=initial_guess, bounds=(0, 1), check_finite=True, maxfev=1000)
 
         return get_params(params_names, muncps, fitted_params, id)
 
