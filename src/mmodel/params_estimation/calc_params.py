@@ -4,6 +4,7 @@ from .model import SIR
 from ..constants import MUNCPS
 from lmfit import Parameters, minimize
 from .params_builder_answer import get_params
+from pyswarms.single.global_best import GlobalBestPSO
 
 
 class estimator_calc:
@@ -50,6 +51,14 @@ class estimator_calc:
 
         return y_infected - y
 
+    @ staticmethod
+    def mse(x, time, ydata):
+        infected = estimator_calc.fit_odeint_metamodel(
+            time, x[0, 0], x[0, 1], x[0, 0], x[0, 1])
+
+        diff_square = sum((infected - ydata)**2)/len(ydata)
+        return diff_square
+
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, initial_v, initial_guess, params_names, id=0):
         # imports and expand for mncps initial values
         global i_values
@@ -70,24 +79,35 @@ class estimator_calc:
         # guess_for_muncps = []
 
         if self.lmfit:
-            # builds initial estimations for params*MUNCPS params
-            for i in range(len(MUNCPS) * total_params):
-                params_est_name.append(f'param_{i}')
-                guess_value = initial_guess[i % total_params]
-                params_to_est.add(
-                    f'param_{i}', value=guess_value, vary=True, min=0, max=1)
-            # methods = ['least_squares', 'differential_evolution', 'brute',
-            #            'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cobyla', 'bfgs', 'tnc', 'slsqp', 'shgo', 'dual_annealing', 'leastsq']
+            x_max = 1 * np.ones(2)
+            x_min = 0 * x_max
 
-            # for m in methods:
-            # print(" ")
-            # print(f'***** {m} *****')
-            # print(" ")
-            fitted_params = minimize(
-                estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), max_nfev=20000)
+            bounds = (x_min, x_max)
+            options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+            optimizer = GlobalBestPSO(n_particles=1, dimensions=2,
+                                      options=options, bounds=bounds)
 
-            fitted_params = [
-                fitted_params.params[p].value for p in params_est_name]
+            # now run the optimization, pass a=1 and b=100 as a tuple assigned to args
+            kwargs = {"time": time, "ydata": ydata}
+            cost, pos = optimizer.optimize(estimator_calc.mse, 50000, **kwargs)
+            # # builds initial estimations for params*MUNCPS params
+            # for i in range(len(MUNCPS) * total_params):
+            #     params_est_name.append(f'param_{i}')
+            #     guess_value = initial_guess[i % total_params]
+            #     params_to_est.add(
+            #         f'param_{i}', value=guess_value, vary=True, min=0, max=1)
+            # # methods = ['least_squares', 'differential_evolution', 'brute',
+            # #            'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cobyla', 'bfgs', 'tnc', 'slsqp', 'shgo', 'dual_annealing', 'leastsq']
+
+            # # for m in methods:
+            # # print(" ")
+            # # print(f'***** {m} *****')
+            # # print(" ")
+            # fitted_params = minimize(
+            #     estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), max_nfev=20000)
+
+            # fitted_params = [
+            #     fitted_params.params[p].value for p in params_est_name]
 
             # break  # kitar esto
             # _ = get_params(initial_guess["names"], muncps, fitted_params)
