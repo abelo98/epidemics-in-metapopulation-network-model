@@ -84,7 +84,7 @@ class estimator_calc:
             # print(f'***** {m} *****')
             # print(" ")
             fitted_params = minimize(
-                estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), max_nfev=10000)
+                estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), max_nfev=20000)
 
             fitted_params = [
                 fitted_params.params[p].value for p in params_est_name]
