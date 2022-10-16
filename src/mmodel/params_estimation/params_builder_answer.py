@@ -1,8 +1,7 @@
-def get_params(params, muncps, popt, id=0):
+def get_params(params, muncps, popt):
     params_estimated = []
-
-    for id, munc in enumerate(muncps):
-        start = id*len(params)
+    for i, munc in enumerate(muncps):
+        start = i*len(params)
         end = start+len(params)
         estimation = {}
 
