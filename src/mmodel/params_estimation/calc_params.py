@@ -86,7 +86,7 @@ class estimator_calc:
                                   options=options, bounds=bounds)
 
         kwargs = {"time": time, "ydata": ydata}
-        _, pos = optimizer.optimize(estimator_calc.__mse__, 1000, **kwargs)
+        _, pos = optimizer.optimize(estimator_calc.__mse__, 100, **kwargs)
 
         return pos
 
