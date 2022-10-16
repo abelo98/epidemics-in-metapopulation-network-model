@@ -50,6 +50,7 @@ class estimator_test:
 
         initial_v, guess, time = self.get_initial_values_SIR_metamodel(
             models_json, acc_infected_by_munc)
+
         muncps = [model["label"] for model in models_json]
         params_names = list(models_json[0]["params"].keys())
 

@@ -7,7 +7,7 @@ from mmodel.data_manager.data_operations import data_operator
 
 
 class estimator:
-    def __init__(self, guess_path, model_name="", file_path="", params="", lmfit=False):
+    def __init__(self, guess_path, model_name="", file_path="", params="", method='diff_evol'):
         self.model_name = "model_havana_d29"
 
         # self.file_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json"
@@ -26,7 +26,7 @@ class estimator:
         self.api = ApiConn(self.model_name, self.file_path)
 
         self.opt_func = estimator_calc(
-            guess_path,  self.params_path, self.api, lmfit)
+            guess_path,  self.params_path, self.api, method)
 
     def start_sim(self, days):
         self.api.simulate(self.params_path, days)
@@ -123,13 +123,16 @@ class estimator:
         output = []
         acc_infected_combine = data_operator.combine_infected_all_mcps(
             acc_infected_by_munc)[START_INFECTED:]
+
         initial_v, guess, time = self.get_initial_values_SIR_metamodel(
             models_json, acc_infected_by_munc)
+
         muncps = [model["label"] for model in models_json]
+
         params_names = list(models_json[0]["params"].keys())
 
         new_params = self.opt_func.estimate_params_metamodel(
-            acc_infected_combine, time, muncps, initial_v, guess, params_names, 0)
+            acc_infected_combine, time, muncps, initial_v, guess, params_names)
 
         for i, model in enumerate(models_json):
             model["params"] = new_params[i]

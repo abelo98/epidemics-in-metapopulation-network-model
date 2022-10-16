@@ -84,9 +84,8 @@ class estimator_calc:
         options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
         optimizer = GlobalBestPSO(n_particles=10, dimensions=len(guess),
                                   options=options, bounds=bounds)
-
         kwargs = {"time": time, "ydata": ydata}
-        _, pos = optimizer.optimize(estimator_calc.__mse__, 100, **kwargs)
+        _, pos = optimizer.optimize(estimator_calc.__mse__, 70000, **kwargs)
 
         return pos
 
