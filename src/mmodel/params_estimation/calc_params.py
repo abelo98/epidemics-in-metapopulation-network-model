@@ -1,4 +1,6 @@
+from ctypes import Array
 import numpy as np
+from pandas import array
 from scipy import integrate, optimize
 from .model import SIR
 from ..constants import MUNCPS
@@ -29,6 +31,9 @@ class estimator_calc:
 
     @ staticmethod
     def fit_odeint_metamodel(x, *params):
+        if len(params) == 1:
+            params = params[0]
+
         y_fit = integrate.odeint(
             metamodel.deriv, i_values, x, args=(params,)).T
         y_infected = g_api.transform_ydata(y_fit)
@@ -49,7 +54,7 @@ class estimator_calc:
         else:
             fitted_params = self.apply_optimization_func(guess, time, ydata)
 
-        return get_params(params_names, muncps, fitted_params, id)
+        return get_params(params_names, muncps, fitted_params)
 
     def estimate_params_single_model(self, ydata: np.array, time: np.array, initial_v: dict, initial_guess, params_names, munc):
         global i_values
