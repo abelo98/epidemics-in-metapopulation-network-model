@@ -74,47 +74,8 @@ class estimator_calc:
         # initial_guess = read_json(self.guess_path)
         total_params = len(initial_guess)
 
-        params_to_est = Parameters()
-        params_est_name = []
-        # guess_for_muncps = []
-
-        if self.lmfit:
-            x_max = 1 * np.ones(4)
-            x_min = 0 * x_max
-
-            bounds = (x_min, x_max)
-            options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
-            optimizer = GlobalBestPSO(n_particles=1, dimensions=4,
-                                      options=options, bounds=bounds)
-
-            # now run the optimization, pass a=1 and b=100 as a tuple assigned to args
-            kwargs = {"time": time, "ydata": ydata}
-            cost, pos = optimizer.optimize(estimator_calc.mse, 50000, **kwargs)
-            # # builds initial estimations for params*MUNCPS params
-            # for i in range(len(MUNCPS) * total_params):
-            #     params_est_name.append(f'param_{i}')
-            #     guess_value = initial_guess[i % total_params]
-            #     params_to_est.add(
-            #         f'param_{i}', value=guess_value, vary=True, min=0, max=1)
-            # # methods = ['least_squares', 'differential_evolution', 'brute',
-            # #            'basinhopping', 'ampgo', 'nelder', 'lbfgsb', 'powell', 'cobyla', 'bfgs', 'tnc', 'slsqp', 'shgo', 'dual_annealing', 'leastsq']
-
-            # # for m in methods:
-            # # print(" ")
-            # # print(f'***** {m} *****')
-            # # print(" ")
-            # fitted_params = minimize(
-            #     estimator_calc.fit_odeint_metamodel_lmfit, params_to_est, args=(time, ydata,), max_nfev=20000)
-
-            # fitted_params = [
-            #     fitted_params.params[p].value for p in params_est_name]
-
-            # break  # kitar esto
-            # _ = get_params(initial_guess["names"], muncps, fitted_params)
-
-        else:
-            fitted_params, _ = optimize.curve_fit(
-                estimator_calc.fit_odeint_metamodel, time, ydata, p0=initial_guess, bounds=(0, 1), maxfev=5000)
+        fitted_params, _ = optimize.curve_fit(
+            estimator_calc.fit_odeint_metamodel, time, ydata, p0=initial_guess, bounds=(0, 1), maxfev=5000)
 
         return get_params(params_names, muncps, fitted_params, id)
 
@@ -146,3 +107,17 @@ class estimator_calc:
                 estimator_calc.fit_odeint, time, ydata, p0=initial_guess, maxfev=100000)
 
         return get_params(params_names, [munc], fitted_params)
+
+    def pso(self, guess, time, ydata):
+        x_max = 1 * np.ones(len(guess))
+        x_min = 0 * x_max
+
+        bounds = (x_min, x_max)
+        options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+        optimizer = GlobalBestPSO(n_particles=1, dimensions=4,
+                                  options=options, bounds=bounds)
+
+        kwargs = {"time": time, "ydata": ydata}
+        cost, pos = optimizer.optimize(estimator_calc.mse, 1000, **kwargs)
+
+        return pos
