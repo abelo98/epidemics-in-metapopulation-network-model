@@ -2,6 +2,7 @@ from ctypes import Array
 import numpy as np
 from pandas import array
 from scipy import integrate, optimize
+from scipy.fftpack import diff
 from .model import SIR
 from ..constants import MUNCPS
 from lmfit import Parameters, minimize
@@ -67,10 +68,12 @@ class estimator_calc:
 
     @ staticmethod
     def __mse__(x, time, ydata):
-        infected = estimator_calc.fit_odeint_metamodel(
-            time, x[0, :])
+        diff_square = []
+        for particle in x:
+            infected = estimator_calc.fit_odeint_metamodel(
+                time, particle)
 
-        diff_square = sum((infected - ydata)**2)/len(ydata)
+            diff_square.append(sum((infected - ydata)**2)/len(ydata))
         return diff_square
 
     def apply_pso(self, guess, time, ydata):
@@ -79,7 +82,7 @@ class estimator_calc:
 
         bounds = (x_min, x_max)
         options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
-        optimizer = GlobalBestPSO(n_particles=1, dimensions=len(guess),
+        optimizer = GlobalBestPSO(n_particles=10, dimensions=len(guess),
                                   options=options, bounds=bounds)
 
         kwargs = {"time": time, "ydata": ydata}
