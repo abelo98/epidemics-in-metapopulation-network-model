@@ -8,13 +8,13 @@ from pyswarms.single.global_best import GlobalBestPSO
 
 
 class estimator_calc:
-    def __init__(self, guess_path, params_path, api, lmfit=False):
+    def __init__(self, guess_path, params_path, api, method='diff_evol'):
         self.guess_path = guess_path
         self.params_path = params_path
         global g_api
         g_api = api
         self.api = api
-        self.lmfit = lmfit
+        self.method = method
         # self.params_path = "tests/mmodel/simple/params/simple_params.json"
 
     i_values = None
@@ -34,7 +34,7 @@ class estimator_calc:
         y_infected = g_api.transform_ydata(y_fit)
         return y_infected
 
-    def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, initial_v, initial_guess, params_names, id=0):
+    def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, initial_v, guess, params_names):
         global i_values
         i_values = self.api.transform_input(initial_v)
 
@@ -42,8 +42,12 @@ class estimator_calc:
         metamodel = self.api.import_model(
             self.api.model.name, self.api.model.code_file)
 
-        fitted_params, _ = optimize.curve_fit(
-            estimator_calc.fit_odeint_metamodel, time, ydata, p0=initial_guess, bounds=(0, 1), maxfev=5000)
+        if self.method == 'pso':
+            fitted_params = self.apply_pso(guess, time, ydata)
+        elif self.method == 'curve_fit':
+            fitted_params = self.apply_curve_fit(guess, time, ydata)
+        else:
+            fitted_params = self.apply_optimization_func(guess, time, ydata)
 
         return get_params(params_names, muncps, fitted_params, id)
 
@@ -57,23 +61,32 @@ class estimator_calc:
         return get_params(params_names, [munc], fitted_params)
 
     @ staticmethod
-    def mse(x, time, ydata):
+    def __mse__(x, time, ydata):
         infected = estimator_calc.fit_odeint_metamodel(
             time, x[0, :])
 
         diff_square = sum((infected - ydata)**2)/len(ydata)
         return diff_square
 
-    def pso(self, guess, time, ydata):
+    def apply_pso(self, guess, time, ydata):
         x_max = 1 * np.ones(len(guess))
         x_min = 0 * x_max
 
         bounds = (x_min, x_max)
         options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
-        optimizer = GlobalBestPSO(n_particles=1, dimensions=4,
+        optimizer = GlobalBestPSO(n_particles=1, dimensions=len(guess),
                                   options=options, bounds=bounds)
 
         kwargs = {"time": time, "ydata": ydata}
-        _, pos = optimizer.optimize(estimator_calc.mse, 1000, **kwargs)
+        _, pos = optimizer.optimize(estimator_calc.__mse__, 1000, **kwargs)
 
         return pos
+
+    def apply_curve_fit(self, guess, time, ydata):
+        output, _ = optimize.curve_fit(
+            estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess, bounds=(0, 1), maxfev=5000)
+        return output
+
+    def apply_optimization_func(self, guess, time, ydata):
+        return optimize.differential_evolution(estimator_calc.__mse__, bounds=(
+            0, 1), x0=guess, args=(time, ydata), workers=-1)

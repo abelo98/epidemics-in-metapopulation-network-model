@@ -13,7 +13,7 @@ def get_data_simulation(est: estimator_test):
 
 def main():
     est = estimator_test(
-        "src/mmodel/params_estimation/params_guess.json", lmfit=True)
+        "src/mmodel/params_estimation/params_guess.json", method='pso')
 
     paramas_estimated_json = f"tests/mmodel/havana_metamodel_params_est/estimation_2_nodes/parameters_estimated_d{START_INFECTED}.json"
 

@@ -7,7 +7,7 @@ from mmodel.data_manager.data_operations import data_operator
 
 
 class estimator_test:
-    def __init__(self, guess_path, model_name="", file_path="", params="", lmfit=False):
+    def __init__(self, guess_path, model_name="", file_path="", params="", method='diff_evol'):
         self.model_name = "model_havana_d29"
         self.opt_func = None
 
@@ -18,7 +18,7 @@ class estimator_test:
         self.api = ApiConn(self.model_name, self.file_path)
 
         self.opt_func = estimator_calc(
-            guess_path,  self.params_path, self.api, lmfit)
+            guess_path,  self.params_path, self.api, method)
 
     def start_sim(self, days):
         self.api.simulate(self.params_path, days)
@@ -54,7 +54,7 @@ class estimator_test:
         params_names = list(models_json[0]["params"].keys())
 
         new_params = self.opt_func.estimate_params_metamodel(
-            acc_infected_by_munc, time, muncps, initial_v, guess, params_names, 0)
+            acc_infected_by_munc, time, muncps, initial_v, guess, params_names)
 
         for i, model in enumerate(models_json):
             model["params"] = new_params[i]
