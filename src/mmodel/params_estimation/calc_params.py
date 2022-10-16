@@ -54,7 +54,7 @@ class estimator_calc:
     @ staticmethod
     def mse(x, time, ydata):
         infected = estimator_calc.fit_odeint_metamodel(
-            time, x[0, 0], x[0, 1], x[0, 0], x[0, 1])
+            time, x[0, 0], x[0, 1], x[0, 2], x[0, 3])
 
         diff_square = sum((infected - ydata)**2)/len(ydata)
         return diff_square
@@ -79,12 +79,12 @@ class estimator_calc:
         # guess_for_muncps = []
 
         if self.lmfit:
-            x_max = 1 * np.ones(2)
+            x_max = 1 * np.ones(4)
             x_min = 0 * x_max
 
             bounds = (x_min, x_max)
             options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
-            optimizer = GlobalBestPSO(n_particles=1, dimensions=2,
+            optimizer = GlobalBestPSO(n_particles=1, dimensions=4,
                                       options=options, bounds=bounds)
 
             # now run the optimization, pass a=1 and b=100 as a tuple assigned to args
