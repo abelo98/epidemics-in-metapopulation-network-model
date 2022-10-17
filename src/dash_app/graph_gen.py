@@ -20,11 +20,16 @@ def show_simulation(model: MetaModel, result: Dict, time: np.ndarray):
 
 def show_sir_simulation(model: MetaModel, result: Dict, time: np.ndarray):
     s, i, r = (0, 0, 0)
-    for node in model.network.nodes:
-        idx = node.id
-        s += result[idx]["S"]
-        i += result[idx]["I"]
-        r += result[idx]["R"]
+    try:
+        for node in model.network.nodes:
+            idx = node.id
+            s += result[idx]["S"]
+            i += result[idx]["I"]
+            r += result[idx]["R"]
+    except:
+        s = result["S"]
+        i = result["I"]
+        r = result["R"]
 
     figure = make_subplots(rows=3, cols=1)
     figure.append_trace(go.Scatter(

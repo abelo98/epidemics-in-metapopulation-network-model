@@ -98,7 +98,8 @@ model_file_input = dbc.Row(
             md=2,
         ),
         dbc.Col(
-            dbc.Button(id="input-model-btn", children="Compile", color="primary"),
+            dbc.Button(id="input-model-btn",
+                       children="Compile", color="primary"),
             sm=12,
             md=3,
         ),
@@ -137,7 +138,8 @@ param_file_input = dbc.Row(
             md=4,
         ),
         dbc.Col(
-            dbc.Button(id="generate-params-btn", children="Generate", color="primary"),
+            dbc.Button(id="generate-params-btn",
+                       children="Generate", color="primary"),
             sm=12,
             md=3,
         ),
@@ -296,7 +298,8 @@ def load_input_model(n_clicks, file_path, model_name, model_type):
             model = FluxMetaModel(model_name, file_path)
         except (AttributeError, FileNotFoundError) as err:
             text = "Configuration file is not set." if file_path is None else ""
-            text = "File not found." if isinstance(err, FileNotFoundError) else ""
+            text = "File not found." if isinstance(
+                err, FileNotFoundError) else ""
             fail = dbc.Col(
                 dbc.Alert(
                     f"Could not load meta-model. {text}",
@@ -311,7 +314,8 @@ def load_input_model(n_clicks, file_path, model_name, model_type):
             model = SimpleTripMetaModel(model_name, file_path)
         except (AttributeError, FileNotFoundError) as err:
             text = "Configuration file is not set." if file_path is None else ""
-            text = "File not found." if isinstance(err, FileNotFoundError) else ""
+            text = "File not found." if isinstance(
+                err, FileNotFoundError) else ""
             fail = dbc.Col(
                 dbc.Alert(
                     f"Could not load meta-model. {text}",
@@ -323,7 +327,8 @@ def load_input_model(n_clicks, file_path, model_name, model_type):
             return fail, []
 
     success = dbc.Col(
-        dbc.Alert("Meta-Model loaded successfuly", color="success", dismissable=True),
+        dbc.Alert("Meta-Model loaded successfuly",
+                  color="success", dismissable=True),
         md=10,
     )
     elements = []
@@ -479,7 +484,7 @@ def simulate_network(_, input_params, input_time):
 )
 def simulate_node(node_data, time):
     print("Call to node show")
-    print(node_data)
+    # print(node_data)
 
     try:
         idx = node_data[0]["id"]
@@ -490,23 +495,25 @@ def simulate_node(node_data, time):
         return go.Figure()
 
     # Only SIR cmodel is assumed
-    print(idx)
+    # print(idx)
+    print(result[int(idx)])
+    input_time = np.linspace(0, time, time)
+    figure = show_simulation(model, result[int(idx)], input_time)
 
-    time = np.linspace(0, time, time)
-    figure = go.Figure()
+    # figure = go.Figure()
 
-    s = result[int(idx)]["S"]
-    i = result[int(idx)]["I"]
-    print(type(i))
+    # s = result[int(idx)]["S"]
+    # i = result[int(idx)]["I"]
+    # print(type(i))
 
-    figure.add_trace(go.Scatter(x=time, y=s, mode="lines", name="S"))
-    figure.add_trace(go.Scatter(x=time, y=i, mode="lines", name="I"))
+    # figure.add_trace(go.Scatter(x=time, y=s, mode="lines", name="S"))
+    # figure.add_trace(go.Scatter(x=time, y=i, mode="lines", name="I"))
 
-    try:
-        r = result[int(idx)]["R"]
-        figure.add_trace(go.Scatter(x=time, y=r, mode="lines", name="R"))
-    except KeyError:
-        pass
+    # try:
+    #     r = result[int(idx)]["R"]
+    #     figure.add_trace(go.Scatter(x=time, y=r, mode="lines", name="R"))
+    # except KeyError:
+    #     pass
 
     print("returning calculated figure")
     return figure
