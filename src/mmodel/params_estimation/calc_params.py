@@ -79,13 +79,16 @@ class estimator_calc:
     def apply_pso(self, guess, time, ydata):
         x_max = 1 * np.ones(len(guess))
         x_min = 0 * x_max
+        particles = 6
 
+        x0 = np.array([guess for _ in range(particles)])
         bounds = (x_min, x_max)
         options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
-        optimizer = GlobalBestPSO(n_particles=10, dimensions=len(guess),
-                                  options=options, bounds=bounds)
+        optimizer = GlobalBestPSO(n_particles=particles, dimensions=len(guess),
+                                  options=options, bounds=bounds, init_pos=x0)
         kwargs = {"time": time, "ydata": ydata}
-        _, pos = optimizer.optimize(estimator_calc.__mse__, 70000, **kwargs)
+        _, pos = optimizer.optimize(
+            estimator_calc.__mse__, 6000, n_processes=6, **kwargs)
 
         return pos
 
