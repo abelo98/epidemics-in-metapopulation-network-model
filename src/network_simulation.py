@@ -496,7 +496,7 @@ def simulate_node(node_data, time):
 
     # Only SIR cmodel is assumed
     # print(idx)
-    print(result[int(idx)])
+
     input_time = np.linspace(0, time, time)
     figure = show_simulation(model, result[int(idx)], input_time)
 
