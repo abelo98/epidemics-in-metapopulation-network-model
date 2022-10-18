@@ -14,9 +14,9 @@ def mse_for_params(params_est, real_params):
 
 
 def main():
-    est = estimator_test(method='curve_fit', iter=6000)
+    est = estimator_test(method='pso', iter=35000)
 
-    paramas_estimated_json = f"tests/mmodel/simple/estimation/parameters_estimated_diffEvol_d1.json"
+    paramas_estimated_json = f"tests/mmodel/simple/estimation/parameters_estimated_pso35000_d1.json"
 
     ydata = get_data_simulation(est)['I']
 
