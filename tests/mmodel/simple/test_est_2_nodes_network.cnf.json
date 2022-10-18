@@ -1,1 +1,0 @@
-{"name": "test_est_2_nodes_network", "config-file": "tests/mmodel/simple/test_est_2_nodes_network.cnf.json", "network-file": "tests/mmodel/simple/simple_network.json", "code-file": "tests/mmodel/simple/test_est_2_nodes_network.py", "network-hash": "f74640d97e23d323d3b8538a47c757b2ae6c3998"}

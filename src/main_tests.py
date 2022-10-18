@@ -10,19 +10,21 @@ def get_data_simulation(est: estimator_test):
 
 
 def mse_for_params(params_est, real_params):
-    return sum((params_est - real_params)**2)/len(real_params)
+    return print(sum((params_est - real_params)**2)/len(real_params))
 
 
 def main():
     est = estimator_test()
 
-    paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_d{START_INFECTED}.json"
+    paramas_estimated_json = f"tests/mmodel/simple/estimation/parameters_estimated_d1.json"
 
     ydata = get_data_simulation(est)['I']
 
-    new_paramas_to_save = est.get_params_estimation_combine_infected(ydata)
+    built_json, estimated_params = est.get_params_estimation_combine_infected(
+        ydata)
 
-    save_file_as_json(paramas_estimated_json, new_paramas_to_save)
+    mse_for_params(estimated_params, [0.25, 0.052, 0.25, 0.052])
+    save_file_as_json(paramas_estimated_json, built_json)
 
 
 if __name__ == "__main__":

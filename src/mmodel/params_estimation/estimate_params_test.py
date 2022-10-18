@@ -2,6 +2,7 @@ from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
 from .calc_params import estimator_calc
+import random as rnd
 
 
 class estimator_test:
@@ -34,10 +35,9 @@ class estimator_test:
                         node.id, c).__next__()
         return output
 
-    def get_initial_values_SIR_metamodel(self, models, infected):
+    def get_initial_values_SIR_metamodel(self, infected):
         initial_v, guess = self.api.import_params(self.params_path)
-        # its where the value of S is in the list for each muncp(order:S,I,R,N)
-        i = 0
+        [rnd.random() for _ in guess]
         time = len(infected)
 
         return initial_v, guess, np.linspace(0, time, time)
@@ -46,7 +46,7 @@ class estimator_test:
         output = []
 
         initial_v, guess, time = self.get_initial_values_SIR_metamodel(
-            models_json, acc_infected_by_munc)
+            acc_infected_by_munc)
 
         muncps = [model["label"] for model in models_json]
         params_names = list(models_json[0]["params"].keys())
