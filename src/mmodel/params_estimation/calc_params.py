@@ -74,12 +74,12 @@ class estimator_calc:
 
     @ staticmethod
     def __mse_for_pso__(x, time, ydata):
-        diff_square = []
-        for particle in x:
+        diff_square = np.zeros(shape=(x.shape[0]), dtype=np.float64)
+        for i, particle in enumerate(x):
             infected = estimator_calc.fit_odeint_metamodel(
                 time, particle)
 
-            diff_square.append(sum((infected - ydata)**2)/len(ydata))
+            diff_square[i] = (sum((infected - ydata)**2)/len(ydata))
         return diff_square
 
     @ staticmethod
@@ -102,7 +102,7 @@ class estimator_calc:
                                   options=options, bounds=bounds, init_pos=x0)
         kwargs = {"time": time, "ydata": ydata}
         _, pos = optimizer.optimize(
-            estimator_calc.__mse_for_pso__, iters=self.iter, n_processes=6, **kwargs)
+            estimator_calc.__mse_for_pso__, iters=self.iter, **kwargs)
 
         return pos
 

@@ -86,11 +86,12 @@ class SimpleTripMetaModel(MetaModel):
         def get_global_symbol(k, j):
             return "(" + "+".join([f"y[{local_pos(k,i,j)}]" for i in range(N)]) + ")"
 
-        code = "from numba import jit\n"
+        code = "from numba import njit\n"
+        code += "import numpy as np\n"
         code += "from scipy.integrate import odeint\n\n\n"
-        code += "@jit(target_backend='cuda')\n"
+        code += "@njit\n"
         code += "def deriv(y, t, params):\n"
-        code += "\tresult = [0] * len(y)\n"
+        code += "\tresult = np.zeros(shape = (len(y),), dtype=np.float64)\n"
 
         for k, s in enumerate(sets):
             for i in range(N):
