@@ -1,4 +1,4 @@
-from tracemalloc import stop
+import numba as nb
 import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
@@ -40,6 +40,8 @@ class estimator_calc:
     def fit_odeint_metamodel(x, *params):
         if len(params) == 1:
             params = params[0]
+
+        params = np.array(params, dtype=np.float64)
 
         y_fit = integrate.odeint(
             metamodel.deriv, i_values, x, args=(params,)).T
