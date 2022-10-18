@@ -12,4 +12,4 @@ def get_params(params, muncps, popt):
             estimation[params[i % len(params)]] = p
         params_estimated.append(estimation)
         print("")
-    return params_estimated
+    return popt

@@ -46,7 +46,7 @@ class estimator_calc:
         elif self.method == 'curve_fit':
             fitted_params = self.apply_curve_fit(guess, time, ydata)
         else:
-            fitted_params = self.apply_optimization_func(guess, time, ydata)
+            fitted_params = self.apply_optimization_func(guess, time, ydata).x
 
         return get_params(params_names, muncps, fitted_params)
 

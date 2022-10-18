@@ -11,12 +11,12 @@ class estimator_test:
         self.opt_func = None
 
         self.file_path = "tests/mmodel/simple/simple_network.json"
-        self.params_path = "tests/mmodel/simple/params/simple_params.json"
+        self.params_path = "tests/mmodel/simple/params/params.json"
 
         # compiles the model
         self.api = ApiConn(self.model_name, self.file_path)
 
-        self.opt_func = estimator_calc(self.api, method, iter=6000)
+        self.opt_func = estimator_calc(self.api, method, iter=iter)
 
     def start_sim(self, days):
         self.api.simulate(self.params_path, days)
