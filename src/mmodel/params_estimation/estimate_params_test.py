@@ -2,7 +2,7 @@ from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
 from .calc_params import estimator_calc
-import random as rnd
+from ..constants import GUESS
 
 
 class estimator_test:
@@ -18,8 +18,8 @@ class estimator_test:
 
         self.opt_func = estimator_calc(self.api, method, iter=iter)
 
-    def start_sim(self, days):
-        self.api.simulate(self.params_path, days)
+    def start_sim(self, days, numba):
+        self.api.simulate(self.params_path, days, numba)
         return self.__get_ydata__()
 
     def __get_ydata__(self):
@@ -37,7 +37,7 @@ class estimator_test:
 
     def get_initial_values_SIR_metamodel(self, infected):
         initial_v, guess = self.api.import_params(self.params_path)
-        guess = [rnd.random() for _ in guess]
+        guess = GUESS
         time = len(infected)
 
         return initial_v, guess, np.linspace(0, time, time)
@@ -51,14 +51,14 @@ class estimator_test:
         muncps = [model["label"] for model in models_json]
         params_names = list(models_json[0]["params"].keys())
 
-        new_params = self.opt_func.estimate_params_metamodel(
+        new_params, crono = self.opt_func.estimate_params_metamodel(
             acc_infected_by_munc, time, muncps, initial_v, guess, params_names)
 
         for i, model in enumerate(models_json):
             model["params"] = new_params[i]
             output.append(model)
 
-        return output, new_params
+        return output, new_params, crono
 
     def get_params_estimation_combine_infected(self, infected):
         models = read_json(self.params_path)

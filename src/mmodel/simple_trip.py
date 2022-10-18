@@ -75,7 +75,7 @@ class SimpleTripMetaModel(MetaModel):
 
         return cmodels, ady_matrix, node_map, params_map, local_pos, global_pos
 
-    def __generate_code__(self, structures):
+    def __generate_code__(self, structures, numba=False):
         network = self.network
         cmodels, ady_matrix, node_map, params_map, local_pos, global_pos = structures
 
@@ -86,10 +86,13 @@ class SimpleTripMetaModel(MetaModel):
         def get_global_symbol(k, j):
             return "(" + "+".join([f"y[{local_pos(k,i,j)}]" for i in range(N)]) + ")"
 
-        code = "from numba import njit\n"
-        code += "import numpy as np\n"
+        if numba:
+            code = "from numba import njit\n"
+        else:
+            code = "import numpy as np\n"
         code += "from scipy.integrate import odeint\n\n\n"
-        code += "@njit\n"
+        if numba:
+            code += "@njit\n"
         code += "def deriv(y, t, params):\n"
         code += "\tresult = np.zeros(shape = (len(y),), dtype=np.float64)\n"
 

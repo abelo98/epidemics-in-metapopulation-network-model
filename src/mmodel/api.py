@@ -7,8 +7,9 @@ class ApiConn:
         self.model = SimpleTripMetaModel(model_name, file_path)
         self.output_simulation = None
 
-    def simulate(self, input_params, input_time):
-        self.output_simulation = self.model.simulate(input_params, input_time)
+    def simulate(self, input_params, input_time, numba):
+        self.output_simulation = self.model.simulate(
+            input_params, input_time, numba)
 
     def get_ydata_for_node(self, idx: int, compartiments: list):
         for compart in compartiments:

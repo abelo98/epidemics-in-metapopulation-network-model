@@ -24,10 +24,11 @@ class estimator_calc:
             start = time.time()
             output = f(*args, **kargs)
             stop = time.time()
+            crono = stop-start
             print(" ")
-            print(f'elapsed time: {stop-start}')
+            print(f'elapsed time: {crono}')
             print(" ")
-            return output
+            return output, crono
         return wrapper_timer
 
     @ staticmethod
@@ -57,13 +58,14 @@ class estimator_calc:
             self.api.model.name, self.api.model.code_file)
 
         if self.method == 'pso':
-            fitted_params = self.apply_pso(guess, time, ydata)
+            fitted_params, crono = self.apply_pso(guess, time, ydata)
         elif self.method == 'curve_fit':
-            fitted_params = self.apply_curve_fit(guess, time, ydata)
+            fitted_params, crono = self.apply_curve_fit(guess, time, ydata)
         else:
-            fitted_params = self.apply_optimization_func(guess, time, ydata).x
+            fitted_params, crono = self.apply_optimization_func(
+                guess, time, ydata).x
 
-        return get_params(params_names, muncps, fitted_params)
+        return get_params(params_names, muncps, fitted_params), crono
 
     def estimate_params_single_model(self, ydata: np.array, time: np.array, initial_v: dict, initial_guess, params_names, munc):
         global i_values
@@ -104,7 +106,7 @@ class estimator_calc:
                                   options=options, bounds=bounds, init_pos=x0)
         kwargs = {"time": time, "ydata": ydata}
         _, pos = optimizer.optimize(
-            estimator_calc.__mse_for_pso__, iters=self.iter, **kwargs)
+            estimator_calc.__mse_for_pso__, iters=self.iter, n_processes=6, **kwargs)
 
         return pos
 
