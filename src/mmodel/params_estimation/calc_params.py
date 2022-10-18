@@ -11,13 +11,11 @@ from pyswarms.single.global_best import GlobalBestPSO
 
 
 class estimator_calc:
-    def __init__(self, params_path, api, method='diff_evol'):
-        self.params_path = params_path
+    def __init__(self, api, method='diff_evol'):
         global g_api
         g_api = api
         self.api = api
         self.method = method
-        # self.params_path = "tests/mmodel/simple/params/simple_params.json"
 
     i_values = None
     metamodel = None

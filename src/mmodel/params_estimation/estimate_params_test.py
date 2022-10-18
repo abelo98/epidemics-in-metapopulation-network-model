@@ -15,7 +15,7 @@ class estimator_test:
         # compiles the model
         self.api = ApiConn(self.model_name, self.file_path)
 
-        self.opt_func = estimator_calc(self.params_path, self.api, method)
+        self.opt_func = estimator_calc(self.api, method)
 
     def start_sim(self, days):
         self.api.simulate(self.params_path, days)
