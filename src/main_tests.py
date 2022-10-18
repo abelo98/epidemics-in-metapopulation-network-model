@@ -1,16 +1,20 @@
-from mmodel.params_estimation.estimator_class import estimator
+from mmodel.params_estimation.estimate_params_test import estimator_test
 from mmodel.json_manager.json_processor import *
 import numpy as np
 from mmodel.constants import *
 
 
-def get_data_simulation(est: estimator):
+def get_data_simulation(est: estimator_test):
     days = np.linspace(0, 300, 300)
     return est.start_sim(days)
 
 
+def mse_for_params(params_est, real_params):
+    return sum((params_est - real_params)**2)/len(real_params)
+
+
 def main():
-    est = estimator(method='pso')
+    est = estimator_test()
 
     paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_d{START_INFECTED}.json"
 

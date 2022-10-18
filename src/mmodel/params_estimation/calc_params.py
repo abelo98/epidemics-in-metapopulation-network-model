@@ -1,11 +1,6 @@
-from ctypes import Array
 import numpy as np
-from pandas import array
 from scipy import integrate, optimize
-from scipy.fftpack import diff
 from .model import SIR
-from ..constants import MUNCPS
-from lmfit import Parameters, minimize
 from .params_builder_answer import get_params
 from pyswarms.single.global_best import GlobalBestPSO
 
@@ -64,7 +59,7 @@ class estimator_calc:
         return get_params(params_names, [munc], fitted_params)
 
     @ staticmethod
-    def __mse__(x, time, ydata):
+    def __mse_for_pso__(x, time, ydata):
         diff_square = []
         for particle in x:
             infected = estimator_calc.fit_odeint_metamodel(
@@ -72,6 +67,13 @@ class estimator_calc:
 
             diff_square.append(sum((infected - ydata)**2)/len(ydata))
         return diff_square
+
+    @ staticmethod
+    def __mse__(x, time, ydata):
+        infected = estimator_calc.fit_odeint_metamodel(
+            time, x)
+
+        return sum((infected - ydata)**2)/len(ydata)
 
     def apply_pso(self, guess, time, ydata):
         x_max = 1 * np.ones(len(guess))
@@ -85,7 +87,7 @@ class estimator_calc:
                                   options=options, bounds=bounds, init_pos=x0)
         kwargs = {"time": time, "ydata": ydata}
         _, pos = optimizer.optimize(
-            estimator_calc.__mse__, 6000, n_processes=6, **kwargs)
+            estimator_calc.__mse_for_pso__, 6000, n_processes=6, **kwargs)
 
         return pos
 
@@ -95,5 +97,5 @@ class estimator_calc:
         return output
 
     def apply_optimization_func(self, guess, time, ydata):
-        return optimize.differential_evolution(estimator_calc.__mse__, bounds=(
-            0, 1), x0=guess, args=(time, ydata), workers=-1)
+        return optimize.differential_evolution(estimator_calc.__mse__, bounds=[(
+            0, 1)]*len(guess), x0=guess, args=(time, ydata), workers=-1)

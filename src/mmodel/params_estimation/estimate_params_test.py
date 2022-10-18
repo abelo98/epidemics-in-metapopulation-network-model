@@ -58,7 +58,7 @@ class estimator_test:
             model["params"] = new_params[i]
             output.append(model)
 
-        return output
+        return output, new_params
 
     def get_params_estimation_combine_infected(self, infected):
         models = read_json(self.params_path)
