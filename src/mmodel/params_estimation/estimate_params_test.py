@@ -6,7 +6,7 @@ import random as rnd
 
 
 class estimator_test:
-    def __init__(self, model_name="", file_path="", params="", method='diff_evol'):
+    def __init__(self, model_name="", file_path="", params="", method='diff_evol', iter=6000):
         self.model_name = "model_havana_d29"
         self.opt_func = None
 
@@ -16,7 +16,7 @@ class estimator_test:
         # compiles the model
         self.api = ApiConn(self.model_name, self.file_path)
 
-        self.opt_func = estimator_calc(self.api, method)
+        self.opt_func = estimator_calc(self.api, method, iter=6000)
 
     def start_sim(self, days):
         self.api.simulate(self.params_path, days)
@@ -37,7 +37,7 @@ class estimator_test:
 
     def get_initial_values_SIR_metamodel(self, infected):
         initial_v, guess = self.api.import_params(self.params_path)
-        [rnd.random() for _ in guess]
+        guess = [rnd.random() for _ in guess]
         time = len(infected)
 
         return initial_v, guess, np.linspace(0, time, time)

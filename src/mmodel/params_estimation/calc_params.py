@@ -6,11 +6,12 @@ from pyswarms.single.global_best import GlobalBestPSO
 
 
 class estimator_calc:
-    def __init__(self, api, method='diff_evol'):
+    def __init__(self, api, method='diff_evol', iter=6000):
         global g_api
         g_api = api
         self.api = api
         self.method = method
+        self.iter = iter
 
     i_values = None
     metamodel = None
@@ -87,15 +88,15 @@ class estimator_calc:
                                   options=options, bounds=bounds, init_pos=x0)
         kwargs = {"time": time, "ydata": ydata}
         _, pos = optimizer.optimize(
-            estimator_calc.__mse_for_pso__, 6000, n_processes=6, **kwargs)
+            estimator_calc.__mse_for_pso__, iters=self.iter, n_processes=6, **kwargs)
 
         return pos
 
     def apply_curve_fit(self, guess, time, ydata):
         output, _ = optimize.curve_fit(
-            estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess, bounds=(0, 1), maxfev=5000)
+            estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess, bounds=(0, 1), maxfev=self.iter)
         return output
 
     def apply_optimization_func(self, guess, time, ydata):
         return optimize.differential_evolution(estimator_calc.__mse__, bounds=[(
-            0, 1)]*len(guess), x0=guess, args=(time, ydata), workers=-1)
+            0, 1)]*len(guess), x0=guess, args=(time, ydata), workers=-1, maxiter=self.iter)
