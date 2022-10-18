@@ -1,8 +1,10 @@
+from tracemalloc import stop
 import numpy as np
 from scipy import integrate, optimize
 from .model import SIR
 from .params_builder_answer import get_params
 from pyswarms.single.global_best import GlobalBestPSO
+import time
 
 
 class estimator_calc:
@@ -16,6 +18,17 @@ class estimator_calc:
     i_values = None
     metamodel = None
     g_api = None
+
+    def timer(f):
+        def wrapper_timer(*args, **kargs):
+            start = time.time()
+            output = f(*args, **kargs)
+            stop = time.time()
+            print(" ")
+            print(f'elapsed time: {stop-start}')
+            print(" ")
+            return output
+        return wrapper_timer
 
     @ staticmethod
     def fit_odeint(x, beta, gamma):
@@ -76,6 +89,7 @@ class estimator_calc:
 
         return sum((infected - ydata)**2)/len(ydata)
 
+    @timer
     def apply_pso(self, guess, time, ydata):
         x_max = 1 * np.ones(len(guess))
         x_min = 0 * x_max
@@ -92,11 +106,13 @@ class estimator_calc:
 
         return pos
 
+    @timer
     def apply_curve_fit(self, guess, time, ydata):
         output, _ = optimize.curve_fit(
             estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess, bounds=(0, 1), maxfev=self.iter)
         return output
 
+    @timer
     def apply_optimization_func(self, guess, time, ydata):
         return optimize.differential_evolution(estimator_calc.__mse__, bounds=[(
-            0, 1)]*len(guess), x0=guess, args=(time, ydata), workers=-1, maxiter=self.iter)
+            0, 1)]*len(guess), x0=guess, args=(time, ydata), updating='deferred', workers=-1, maxiter=self.iter)
