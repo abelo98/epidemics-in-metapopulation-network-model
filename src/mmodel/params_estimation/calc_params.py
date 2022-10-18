@@ -11,8 +11,7 @@ from pyswarms.single.global_best import GlobalBestPSO
 
 
 class estimator_calc:
-    def __init__(self, guess_path, params_path, api, method='diff_evol'):
-        self.guess_path = guess_path
+    def __init__(self, params_path, api, method='diff_evol'):
         self.params_path = params_path
         global g_api
         g_api = api

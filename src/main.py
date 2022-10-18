@@ -1,5 +1,4 @@
 from mmodel.params_estimation.estimator_class import estimator
-# from mmodel.params_estimation.calc_params_lmfit import *
 from mmodel.data_manager.data_reader import Reader
 from mmodel.data_manager.data_cleaner import Cleaner
 from mmodel.data_manager.data_operations import data_operator
@@ -26,8 +25,7 @@ def get_data_simulation(est: estimator):
 
 
 def main():
-    est = estimator(
-        "src/mmodel/params_estimation/params_guess.json", method='pso')
+    est = estimator(method='pso')
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
     paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_d{START_INFECTED}.json"
