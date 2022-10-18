@@ -1,9 +1,7 @@
 from ..api import ApiConn
 from ..json_manager.json_processor import read_json
 import numpy as np
-from ..constants import START_INFECTED
 from .calc_params import estimator_calc
-from mmodel.data_manager.data_operations import data_operator
 
 
 class estimator_test:
