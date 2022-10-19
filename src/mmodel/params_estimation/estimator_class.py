@@ -7,8 +7,8 @@ from mmodel.data_manager.data_operations import data_operator
 
 
 class estimator:
-    def __init__(self, model_name="", file_path="", params="", method='diff_evol'):
-        self.model_name = "model_havana_d29"
+    def __init__(self, model_name="", file_path="", params="", method='diff_evol', iter=6000, numba=False):
+        self.model_name = f"model_havana_d{START_INFECTED}"
 
         # self.file_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json"
         # self.params_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/params/parameters_estimated_d16.json"
@@ -23,12 +23,13 @@ class estimator:
         # self.params_path = "tests/mmodel/simple/params/simple_params.json"
 
         # compiles the model
-        self.api = ApiConn(self.model_name, self.file_path)
+        # compiles the model
+        self.api = ApiConn(self.model_name, self.file_path, numba)
 
-        self.opt_func = estimator_calc(self.api, method)
+        self.opt_func = estimator_calc(self.api, method, iter=iter)
 
-    def start_sim(self, days):
-        self.api.simulate(self.params_path, days)
+    def start_sim(self, days, numba):
+        self.api.simulate(self.params_path, days, numba)
         return self.__get_ydata__()
 
     def __get_ydata__(self):
