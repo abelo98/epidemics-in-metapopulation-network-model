@@ -3,8 +3,8 @@ from utils.imports import import_from_file
 
 
 class ApiConn:
-    def __init__(self, model_name: str, file_path: str) -> None:
-        self.model = SimpleTripMetaModel(model_name, file_path)
+    def __init__(self, model_name: str, file_path: str, numba: bool) -> None:
+        self.model = SimpleTripMetaModel(model_name, file_path, numba)
         self.output_simulation = None
 
     def simulate(self, input_params, input_time, numba):

@@ -1,4 +1,4 @@
-from locale import currency
+import sys
 from mmodel.params_estimation.estimate_params_test import estimator_test
 from mmodel.json_manager.json_processor import *
 import numpy as np
@@ -20,19 +20,19 @@ def run_test():
     methods = ['pso', 'curve_fit', 'diff_evol']
     json_names = ['psoNumba', 'curve_fitNumba',
                   'diff_EvolNumba', 'pso', 'curve_fit', 'diff_Evol']
-    with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions.txt", "a") as f:
+    with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions.txt", "a") as sys.stdout:
 
         for i, exec in enumerate(json_names):
-            m = methods[i % len(json_names)]
+            m = methods[i % len(methods)]
             apply_numba = exec.__contains__('Numba')
-            est = estimator_test(method=m, iter=6000)
+            est = estimator_test(method=m, iter=6000, numba=apply_numba)
             ydata = get_data_simulation(est, numba=apply_numba)['I']
             paramas_estimated_json = f"tests/mmodel/simple/estimation/parameters_estimated_{exec}_d1.json"
-            print(" ", file=f)
-            print(exec, file=f)
-            print(" ", file=f)
-            print(m, file=f)
-            print("*********************************************", file=f)
+            print(" ")
+            print(exec)
+            print(" ")
+            print(m)
+            print("*********************************************")
             total_time = 0
             total_mse = 0
             best_mse = np.inf
@@ -50,11 +50,10 @@ def run_test():
                     best_mse = current_mse
                     save_file_as_json(paramas_estimated_json, built_json)
 
-            print(" ", file=f)
-            print(f"mean_time{total_time/30}", file=f)
-            print(f"mean_time{total_mse/30}", file=f)
-            print("*********************************************", file=f)
-        f.close()
+            print(" ")
+            print(f"mean_time{total_time/30}")
+            print(f"mean_time{total_mse/30}")
+            print("*********************************************")
 
 
 def main():

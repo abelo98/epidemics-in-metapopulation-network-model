@@ -6,7 +6,7 @@ from ..constants import GUESS
 
 
 class estimator_test:
-    def __init__(self, model_name="", file_path="", params="", method='diff_evol', iter=6000):
+    def __init__(self, model_name="", file_path="", params="", method='diff_evol', iter=6000, numba=False):
         self.model_name = "model_havana_d29"
         self.opt_func = None
 
@@ -14,7 +14,7 @@ class estimator_test:
         self.params_path = "tests/mmodel/simple/params/params.json"
 
         # compiles the model
-        self.api = ApiConn(self.model_name, self.file_path)
+        self.api = ApiConn(self.model_name, self.file_path, numba)
 
         self.opt_func = estimator_calc(self.api, method, iter=iter)
 

@@ -25,9 +25,9 @@ class estimator_calc:
             output = f(*args, **kargs)
             stop = time.time()
             crono = stop-start
-            print(" ")
-            print(f'elapsed time: {crono}')
-            print(" ")
+            # print(" ")
+            # print(f'elapsed time: {crono}')
+            # print(" ")
             return output, crono
         return wrapper_timer
 
@@ -63,7 +63,8 @@ class estimator_calc:
             fitted_params, crono = self.apply_curve_fit(guess, time, ydata)
         else:
             fitted_params, crono = self.apply_optimization_func(
-                guess, time, ydata).x
+                guess, time, ydata)
+            fitted_params = fitted_params.x
 
         return get_params(params_names, muncps, fitted_params), crono
 
