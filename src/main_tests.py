@@ -51,8 +51,8 @@ def run_test():
                     save_file_as_json(paramas_estimated_json, built_json)
 
             print(" ")
-            print(f"mean_time{total_time/30}")
-            print(f"mean_time{total_mse/30}")
+            print(f"mean_time {total_time/30}")
+            print(f"mean_error {total_mse/30}")
             print("*********************************************")
 
 
