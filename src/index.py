@@ -14,7 +14,8 @@ navbar = dbc.NavbarSimple(
 )
 
 app.layout = html.Div(
-    [dcc.Location(id="url", refresh=False), navbar, html.Div(id="page-content")]
+    [dcc.Location(id="url", refresh=False), navbar,
+     html.Div(id="page-content")]
 )
 
 

@@ -32,8 +32,7 @@ class MetaModel:
         if len(args) == 1:
             self.__load_model__(args[0])
             self.network = Network(self.net_file)
-        elif len(args) == 3:
-            self.numba = args[2]
+        elif len(args) >= 2:
             self.name = args[0]
             self.net_file = args[1]
             self.net_file_hash = None
@@ -44,7 +43,13 @@ class MetaModel:
             self.config_file = f"{self.path}/{self.name}.cnf.json"
 
             self.network = Network(self.net_file)
-            self.compile(self.numba)
+
+            try:
+                self.numba = args[2]
+                self.compile(self.numba)
+            except IndexError:
+                self.compile()
+
         else:
             raise Exception("Paremeter exception")
 
