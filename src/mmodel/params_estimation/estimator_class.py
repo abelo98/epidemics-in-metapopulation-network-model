@@ -7,7 +7,7 @@ from mmodel.data_manager.data_operations import data_operator
 
 
 class estimator:
-    def __init__(self, guess_path, model_name="", file_path="", params="", method='diff_evol'):
+    def __init__(self, model_name="", file_path="", params="", method='diff_evol'):
         self.model_name = "model_havana_d29"
 
         # self.file_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json"
@@ -25,8 +25,7 @@ class estimator:
         # compiles the model
         self.api = ApiConn(self.model_name, self.file_path)
 
-        self.opt_func = estimator_calc(
-            guess_path,  self.params_path, self.api, method)
+        self.opt_func = estimator_calc(self.api, method)
 
     def start_sim(self, days):
         self.api.simulate(self.params_path, days)
@@ -79,26 +78,6 @@ class estimator:
         id = int(model["id"])
 
         return infected_by_munc, munc, time, id
-
-    # def build_json_params_metamodel(self, models_json, infected):
-    #     output = []
-
-    #     initial_v, guess = self.get_initial_values_SIR_metamodel(
-    #         models_json, infected)
-
-    #     for model in models_json:
-    #         params_names = model["params"].values()
-
-    #         infected_by_munc, munc, time, id = self.set_initial_values(
-    #             model, infected)
-
-    #         new_params = self.opt_func.estimate_params_metamodel(
-    #             infected_by_munc, time, [munc], initial_v, guess, params_names, id)
-
-    #         model["params"] = new_params[0]  # revisar esto
-    #         output.append(model)
-
-    #     return output
 
     def build_json_params(self, models_json, infected):
         output = []
