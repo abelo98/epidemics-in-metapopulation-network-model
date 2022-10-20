@@ -96,6 +96,20 @@
         "edges": [
             {
                 "source": "0",
+                "target": "6",
+                "metadata": {
+                    "weight": 0.00468979992243287
+                }
+            },
+            {
+                "source": "6",
+                "target": "0",
+                "metadata": {
+                    "weight": 0.009593268299947874
+                }
+            },
+            {
+                "source": "0",
                 "target": "14",
                 "metadata": {
                     "weight": 0.020038236032213174
@@ -228,13 +242,6 @@
                 }
             },
             {
-                "source": "11",
-                "target": "14",
-                "metadata": {
-                    "weight": 0.01597356340632114
-                }
-            },
-            {
                 "source": "5",
                 "target": "6",
                 "metadata": {
@@ -337,6 +344,20 @@
                 "target": "11",
                 "metadata": {
                     "weight": 0.003076408446373889
+                }
+            },
+            {
+                "source": "10",
+                "target": "14",
+                "metadata": {
+                    "weight": 0.006665551633810092
+                }
+            },
+            {
+                "source": "14",
+                "target": "10",
+                "metadata": {
+                    "weight": 0.06854918853363995
                 }
             },
             {
