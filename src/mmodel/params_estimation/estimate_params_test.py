@@ -6,17 +6,15 @@ from ..constants import GUESS
 
 
 class estimator_test:
-    def __init__(self, model_name="", file_path="", params="", method='diff_evol', iter=6000, numba=False):
-        self.model_name = "model_havana_d29"
+    def __init__(self, model_name="model_havana_d29", network_path="", params="", method='diff_evol', iter=6000, numba=False):
         self.opt_func = None
-
-        self.file_path = "tests/mmodel/simple/simple_network.json"
-        self.params_path = "tests/mmodel/simple/params/params.json"
-
+        self.params_path = params
+        self.file_path = network_path
+        self.model_name = model_name
+        self.method = method
+        self.iter = iter
         # compiles the model
         self.api = ApiConn(self.model_name, self.file_path, numba)
-
-        self.opt_func = estimator_calc(self.api, method, iter=iter)
 
     def start_sim(self, days, numba):
         self.api.simulate(self.params_path, days, numba)
@@ -43,6 +41,7 @@ class estimator_test:
         return initial_v, guess, np.linspace(0, time, time)
 
     def build_json_params_metamodel_combine(self, models_json, acc_infected_by_munc):
+        opt_func = estimator_calc(self.api, self.method, iter=self.iter)
         output = []
 
         initial_v, guess, time = self.get_initial_values_SIR_metamodel(
@@ -51,7 +50,7 @@ class estimator_test:
         muncps = [model["label"] for model in models_json]
         params_names = list(models_json[0]["params"].keys())
 
-        new_params, crono = self.opt_func.estimate_params_metamodel(
+        new_params, crono = opt_func.estimate_params_metamodel(
             acc_infected_by_munc, time, muncps, initial_v, guess, params_names)
 
         for i, model in enumerate(models_json):

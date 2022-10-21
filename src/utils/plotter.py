@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 
 
-def plot(curves: dict, time):
-    for c in curves:
-        plt.plot(time, curves[c], label=f'{c}')
+def plot(curve_paires: list, time):
+    for pair in curve_paires:
+        for c in pair:
+            plt.plot(time, pair[c], label=f'{c}')
 
-    plt.legend()
-    plt.show()
+        plt.legend()
+        plt.show()

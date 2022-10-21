@@ -1,5 +1,9 @@
 import numpy as np
 from scipy.integrate import odeint
+from numba import njit
+
+
+@njit
 def deriv(y, t, params):
 	result = np.zeros(shape = (len(y),), dtype=np.float64)
 	result[0] =  -(params[0] * y[0] * (y[4]+y[6])) / ((y[12]+y[14])) + 0.5 * y[1] - 0.5 * y[0]
