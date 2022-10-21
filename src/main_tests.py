@@ -57,18 +57,12 @@ def run_test():
 
 
 def main():
-    run_test()
-    # est = estimator_test(method='pso', iter=6000)
+    # run_test()
+    est = estimator_test(method='pso', iter=6000)
 
     # paramas_estimated_json = f"tests/mmodel/simple/estimation/parameters_estimated_pso_d1.json"
 
-    # ydata = get_data_simulation(est)['I']
-
-    # built_json, estimated_params, _ = est.get_params_estimation_combine_infected(
-    #     ydata)
-
-    # mse_for_params(estimated_params, [0.25, 0.052, 0.25, 0.052])
-    # save_file_as_json(paramas_estimated_json, built_json)
+    ydata = get_data_simulation(est)['I']
 
 
 if __name__ == "__main__":
