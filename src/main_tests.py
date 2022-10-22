@@ -7,7 +7,7 @@ from mmodel.constants import *
 from utils.plotter import plot
 
 from os import listdir
-from os.path import isfile, join
+from os.path import join
 
 
 def get_data_simulation(est: estimator_test, numba):
@@ -22,7 +22,7 @@ def mse_for_params(params_est, real_params):
 
 def plot_est_and_original():
     network = 'tests/mmodel/simple/simple_network.json'
-    params_original = 'tests/mmodel/simple/params/original.json'
+    params_original = 'tests/mmodel/simple/params/params.json'
     estimations_path = 'tests/mmodel/simple/estimation'
 
     files = [join(estimations_path, f) for f in listdir(estimations_path)]
@@ -44,17 +44,21 @@ def plot_est_and_original():
 
 def convert_estimation_to_list(set_of_est_values):
     output = []
-    for d in set_of_est_values():
+    for d in set_of_est_values:
         output += list(d.values())
-    return output
+    return np.array(output)
 
 
 def run_test():
     network = 'tests/mmodel/simple/simple_network.json'
-    params_original = 'tests/mmodel/simple/params/original.json'
-    methods = ['pso', 'curve_fit', 'diff_evol']
-    json_names = ['psoNumba', 'curve_fitNumba',
-                  'diff_EvolNumba', 'pso', 'curve_fit', 'diff_Evol']
+    params_original = 'tests/mmodel/simple/params/params.json'
+    # 'pso', 'curve_fit',
+    # 'psoNumba', 'curve_fitNumba',
+    #               'diff_EvolNumba', 'pso', 'curve_fit',
+    methods = ['diff_evol']
+    json_names = ['diff_Evol']
+    original = np.array([0.25, 0.052, 0.25, 0.052])
+
     with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions.txt", "a") as sys.stdout:
 
         for i, exec in enumerate(json_names):
@@ -79,7 +83,7 @@ def run_test():
                 total_time += crono
                 estimated_params = convert_estimation_to_list(estimated_params)
                 current_mse = mse_for_params(
-                    estimated_params, [0.25, 0.052, 0.25, 0.052])
+                    estimated_params, original)
 
                 total_mse += current_mse
 
