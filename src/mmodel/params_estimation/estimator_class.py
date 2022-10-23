@@ -111,14 +111,14 @@ class estimator:
 
         params_names = list(models_json[0]["params"].keys())
 
-        new_params = self.opt_func.estimate_params_metamodel(
+        new_params, time = self.opt_func.estimate_params_metamodel(
             acc_infected_combine, time, muncps, initial_v, guess, params_names)
 
         for i, model in enumerate(models_json):
             model["params"] = new_params[i]
             output.append(model)
 
-        return output
+        return output, time
 
     def get_params_estimation(self, infected):
         models = read_json(self.params_path)

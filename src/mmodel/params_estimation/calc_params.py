@@ -25,9 +25,6 @@ class estimator_calc:
             output = f(*args, **kargs)
             stop = time.time()
             crono = stop-start
-            # print(" ")
-            # print(f'elapsed time: {crono}')
-            # print(" ")
             return output, crono
         return wrapper_timer
 

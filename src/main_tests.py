@@ -35,9 +35,11 @@ def plot_est_and_original():
         est = estimator_test(network_path=network, params=file)
         label = file.split(sep='.')[0]
         label = label.split(sep='/')[-1]
-
-        original_plus_ests.append({'curva original': ydata_original, 'curva empleando' +
-                                   label: get_data_simulation(est, False)['I']})
+        y_est = get_data_simulation(est, False)['I']
+        original_plus_ests.append({'curva original': ydata_original, 'curva empleando ' +
+                                   label: y_est})
+        print(
+            f'MSE original and {label}: {mse_for_params(y_est,ydata_original)}')
 
     plot(original_plus_ests, np.linspace(0, 300, 300))
 
@@ -52,11 +54,11 @@ def convert_estimation_to_list(set_of_est_values):
 def run_test():
     network = 'tests/mmodel/simple/simple_network.json'
     params_original = 'tests/mmodel/simple/params/params.json'
-    # 'pso', 'curve_fit',
-    # 'psoNumba', 'curve_fitNumba',
-    #               'diff_EvolNumba', 'pso', 'curve_fit',
-    methods = ['diff_evol']
-    json_names = ['diff_Evol']
+
+    methods = ['pso', 'curve_fit', 'diff_evol']
+    json_names = ['psoNumba', 'curve_fitNumba',
+                  'diff_EvolNumba', 'pso', 'curve_fit', 'diff_Evol']
+
     original = np.array([0.25, 0.052, 0.25, 0.052])
 
     with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions.txt", "a") as sys.stdout:
@@ -98,8 +100,8 @@ def run_test():
 
 
 def main():
-    # plot_est_and_original()
-    run_test()
+    plot_est_and_original()
+    # run_test()
 
 
 if __name__ == "__main__":

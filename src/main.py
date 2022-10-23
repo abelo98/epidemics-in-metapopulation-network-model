@@ -19,19 +19,11 @@ def calc_params_by_munc_model(est: estimator, acc_infected):
     return est.get_params_estimation(acc_infected)
 
 
-def get_data_simulation(est: estimator):
-    days = np.linspace(0, 300, 300)
-    return est.start_sim(days)
-
-
 def main():
-    est = estimator(method='pso')
+    est = estimator(method='pso', numba=True)
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_d{START_INFECTED}.json"
-    # paramas_estimated_json = f"tests/mmodel/test_network_habana_vieja_and_its_connections/estimation/parameters_estimated_curvefit_infected_all_mcp_SIR_Model_d{START_INFECTED}.json"
-
-    # ydata = get_data_simulation(est)['I']
+    paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_pso_Numba_d{START_INFECTED}.json"
 
     df_conf = Reader.get_data(data_conf_path)
     df_dead = Reader.get_data(data_dead_path)
@@ -44,9 +36,10 @@ def main():
 
     acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
 
-    new_paramas_to_save = calc_params_with_acc_infected_combine(
+    new_paramas_to_save, time = calc_params_with_acc_infected_combine(
         est, acc_infected)
 
+    print(f'elapsed time: {time} s')
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
 
 

@@ -1,1 +1,0 @@
-{"name": "full_network_fixed", "config-file": "tests/mmodel/havana_full_network/full_network_fixed.cnf.json", "network-file": "tests/mmodel/havana_full_network/network.json", "code-file": "tests/mmodel/havana_full_network/full_network_fixed.py", "network-hash": "43ab754b2be0a2a63f9bd84cdcf7772fc74ada76"}

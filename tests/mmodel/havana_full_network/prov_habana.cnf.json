@@ -1,1 +1,0 @@
-{"name": "prov_habana", "config-file": "tests/mmodel/havana_full_network/prov_habana.cnf.json", "network-file": "tests/mmodel/havana_full_network/network.json", "code-file": "tests/mmodel/havana_full_network/prov_habana.py", "network-hash": "893d2238e39a8ae079da6d1088d92121b056a733"}
