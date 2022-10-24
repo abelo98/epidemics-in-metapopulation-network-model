@@ -20,10 +20,11 @@ def calc_params_by_munc_model(est: estimator, acc_infected):
 
 
 def main():
-    est = estimator(method='pso', numba=True)
+    iters = 100000
+    est = estimator(method='curve_fit', iter=iters, numba=True)
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_pso_Numba_d{START_INFECTED}.json"
+    paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_Levenberg-Marquardt_Numba_d{START_INFECTED}_iter-{iters}.json"
 
     df_conf = Reader.get_data(data_conf_path)
     df_dead = Reader.get_data(data_dead_path)

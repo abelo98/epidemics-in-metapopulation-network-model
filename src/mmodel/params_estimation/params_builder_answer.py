@@ -5,11 +5,11 @@ def get_params(params, muncps, popt):
         end = start+len(params)
         estimation = {}
 
-        # print(munc)
-        # print("params: ")
+        print(munc)
+        print("params: ")
         for i, p in enumerate(popt[start:end]):
-            # print(f'{params[i%len(params)]}: {p}')
+            print(f'{params[i%len(params)]}: {p}')
             estimation[params[i % len(params)]] = p
         params_estimated.append(estimation)
-        # print("")
+        print("")
     return params_estimated
