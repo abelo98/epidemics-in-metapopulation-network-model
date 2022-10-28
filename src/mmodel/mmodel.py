@@ -59,8 +59,6 @@ class MetaModel:
                 f"hash of network file {self.net_file} changed, recompiling...")
             self.network = Network(self.net_file)
             self.compile(numba)
-        else:
-            print("hash matched")
 
         try:
             y, params = self.import_input(input_file)

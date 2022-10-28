@@ -79,7 +79,7 @@ def run_test():
             total_time = 0
             total_mse = 0
             best_mse = np.inf
-            for _ in range(1):
+            for _ in range(30):
                 current_mse = 0
                 built_json, estimated_params, crono = est.get_params_estimation_combine_infected(
                     ydata)
