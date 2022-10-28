@@ -16,7 +16,7 @@
     },
     {
         "id": "0",
-        "label": "node1",
+        "label": "node2",
         "model": "SIR",
         "y": {
             "S": 999,

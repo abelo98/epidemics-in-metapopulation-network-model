@@ -57,11 +57,12 @@ def run_test():
 
     methods = ['pso', 'curve_fit', 'diff_evol']
     json_names = ['psoNumba', 'curve_fitNumba',
-                  'diff_EvolNumba', 'pso', 'curve_fit', 'diff_Evol']
+                  'diff_EvolNumba']
+    #   , 'pso', 'curve_fit', 'diff_Evol'
 
     original = np.array([0.25, 0.052, 0.25, 0.052])
 
-    with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions.txt", "a") as sys.stdout:
+    with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions2.txt", "a") as sys.stdout:
 
         for i, exec in enumerate(json_names):
             m = methods[i % len(methods)]
@@ -78,7 +79,7 @@ def run_test():
             total_time = 0
             total_mse = 0
             best_mse = np.inf
-            for _ in range(30):
+            for _ in range(1):
                 current_mse = 0
                 built_json, estimated_params, crono = est.get_params_estimation_combine_infected(
                     ydata)
@@ -91,7 +92,7 @@ def run_test():
 
                 if current_mse < best_mse:
                     best_mse = current_mse
-                    save_file_as_json(paramas_estimated_json, built_json)
+                    # save_file_as_json(paramas_estimated_json, built_json)
 
             print(" ")
             print(f"mean_time {total_time/30}")
@@ -100,8 +101,8 @@ def run_test():
 
 
 def main():
-    plot_est_and_original()
-    # run_test()
+    # plot_est_and_original()
+    run_test()
 
 
 if __name__ == "__main__":
