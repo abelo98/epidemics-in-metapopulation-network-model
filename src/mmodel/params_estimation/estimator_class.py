@@ -105,7 +105,8 @@ class estimator:
 
     def build_json_params_metamodel_combine(self, models_json, acc_infected_by_munc):
         output = []
-        acc_infected_combine = data_operator.combine_infected_all_mcps(
+        d_op = data_operator()
+        acc_infected_combine = d_op.combine_infected_all_mcps(
             acc_infected_by_munc)[START_INFECTED:]
 
         initial_v, guess, time = self.get_initial_values_SIR_metamodel(

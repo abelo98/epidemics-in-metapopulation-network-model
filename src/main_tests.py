@@ -1,13 +1,12 @@
 import sys
+from mmodel.data_manager.data_operations import data_operator
+
 from mmodel.params_estimation.estimate_params_test import estimator_test
 from mmodel.json_manager.json_processor import *
 import numpy as np
 from mmodel.constants import *
 
-from utils.plotter import plot
-
-from os import listdir
-from os.path import join
+from utils.error_functions import mse, get_error
 
 
 def get_data_simulation(est: estimator_test, numba):
@@ -15,40 +14,24 @@ def get_data_simulation(est: estimator_test, numba):
     return est.start_sim(days, numba)
 
 
-def mse_for_params(params_est, real_params):
-    mse = sum((params_est - real_params)**2)/len(real_params)
-    return mse
-
-
-def plot_est_and_original():
-    network = 'tests/mmodel/simple/simple_network.json'
-    params_original = 'tests/mmodel/simple/params/params.json'
-    estimations_path = 'tests/mmodel/simple/estimation'
-
-    files = [join(estimations_path, f) for f in listdir(estimations_path)]
-
-    est = estimator_test(network_path=network, params=params_original)
-    ydata_original = get_data_simulation(est, False)['I']
-    original_plus_ests = []
-
-    for file in files:
-        est = estimator_test(network_path=network, params=file)
-        label = file.split(sep='.')[0]
-        label = label.split(sep='/')[-1]
-        y_est = get_data_simulation(est, False)['I']
-        original_plus_ests.append({'curva original': ydata_original, 'curva empleando ' +
-                                   label: y_est})
-        print(
-            f'MSE original and {label}: {mse_for_params(y_est,ydata_original)}')
-
-    plot(original_plus_ests, np.linspace(0, 300, 300))
-
-
 def convert_estimation_to_list(set_of_est_values):
     output = []
     for d in set_of_est_values:
         output += list(d.values())
     return np.array(output)
+
+
+def compare_est_with_org():
+    d_op = data_operator()
+    network = 'tests/mmodel/simple/simple_network.json'
+    act_path = 'data_cov/cv19_conf_mun.xlsx'
+    death_path = 'data_cov/cv19_fall_mun.xlsx'
+    p_est = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d29_iter-130000.json'
+
+    acc_infected = d_op.get_infected_by_muncps(act_path, death_path)
+    acc_infected_combine = d_op.combine_infected_all_mcps(acc_infected)
+
+    print('error:', get_error(network, p_est, acc_infected_combine))
 
 
 def run_test():
@@ -85,14 +68,13 @@ def run_test():
                     ydata)
                 total_time += crono
                 estimated_params = convert_estimation_to_list(estimated_params)
-                current_mse = mse_for_params(
-                    estimated_params, original)
+                current_mse = mse(estimated_params, original)
 
                 total_mse += current_mse
 
                 if current_mse < best_mse:
                     best_mse = current_mse
-                    # save_file_as_json(paramas_estimated_json, built_json)
+                    save_file_as_json(paramas_estimated_json, built_json)
 
             print(" ")
             print(f"mean_time {total_time/30}")
@@ -102,7 +84,8 @@ def run_test():
 
 def main():
     # plot_est_and_original()
-    run_test()
+    # run_test()
+    compare_est_with_org()
 
 
 if __name__ == "__main__":
