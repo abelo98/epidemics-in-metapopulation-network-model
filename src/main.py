@@ -20,7 +20,7 @@ def calc_params_by_munc_model(est: estimator, acc_infected):
 
 
 def main():
-    iters = 130000
+    iters = 200000
     est = estimator(method='curve_fit', iter=iters, numba=True)
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
