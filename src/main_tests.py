@@ -7,6 +7,17 @@ import numpy as np
 from mmodel.constants import *
 
 from utils.error_functions import mse, get_error
+from utils.plotter import plot_values
+
+
+def plot_est_and_original(network, active_path, death_path, params_est):
+    d_op = data_operator()
+    est = estimator_test(network_path=network, params=params_est)
+
+    acc_infected = d_op.get_infected_by_muncps(active_path, death_path)
+    acc_infected_combine = d_op.combine_infected_all_mcps(acc_infected)
+    y_est = est.start_sim(len(acc_infected_combine), False)
+    plot_values(acc_infected_combine, y_est)
 
 
 def get_data_simulation(est: estimator_test, numba):
@@ -21,17 +32,13 @@ def convert_estimation_to_list(set_of_est_values):
     return np.array(output)
 
 
-def compare_est_with_org():
+def compare_est_with_org(network, active_path, death_path, params_est):
     d_op = data_operator()
-    network = 'tests/mmodel/simple/simple_network.json'
-    act_path = 'data_cov/cv19_conf_mun.xlsx'
-    death_path = 'data_cov/cv19_fall_mun.xlsx'
-    p_est = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d29_iter-130000.json'
 
-    acc_infected = d_op.get_infected_by_muncps(act_path, death_path)
+    acc_infected = d_op.get_infected_by_muncps(active_path, death_path)
     acc_infected_combine = d_op.combine_infected_all_mcps(acc_infected)
 
-    print('error:', get_error(network, p_est, acc_infected_combine))
+    print('error:', get_error(network, params_est, acc_infected_combine))
 
 
 def run_test():
@@ -83,9 +90,12 @@ def run_test():
 
 
 def main():
-    # plot_est_and_original()
+    network = 'tests/mmodel/havana_all_connections/havana_network_correct_perc.json'
+    active_path = 'data_cov/cv19_conf_mun.xlsx'
+    death_path = 'data_cov/cv19_fall_mun.xlsx'
+    params_est = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d29_iter-500000.json'
     # run_test()
-    compare_est_with_org()
+    compare_est_with_org(network, active_path, death_path, params_est)
 
 
 if __name__ == "__main__":

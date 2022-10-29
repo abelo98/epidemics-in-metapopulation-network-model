@@ -1,5 +1,4 @@
 import numpy as np
-from sympy import im
 from .data_reader import Reader
 from .data_cleaner import Cleaner
 from ..constants import MUNCPS

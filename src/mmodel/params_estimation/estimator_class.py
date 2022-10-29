@@ -13,11 +13,11 @@ class estimator:
         # self.file_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json"
         # self.params_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/params/parameters_estimated_d16.json"
 
-        self.file_path = "tests/mmodel/havana_full_network/network.json"
-        self.params_path = "tests/mmodel/havana_full_network/params/parameters_d16.json"
+        # self.file_path = "tests/mmodel/havana_full_network/network.json"
+        # self.params_path = "tests/mmodel/havana_full_network/params/parameters_d16.json"
 
-        # self.file_path = "tests/mmodel/havana_all_connections/havana_network_correct_perc.json"
-        # self.params_path = "tests/mmodel/havana_all_connections/params/parameters_d16.json"
+        self.file_path = "tests/mmodel/havana_all_connections/havana_network_correct_perc.json"
+        self.params_path = "tests/mmodel/havana_all_connections/params/parameters_d16.json"
 
         self.opt_func = None
         # self.file_path = "tests/mmodel/simple/one_node_network.json"

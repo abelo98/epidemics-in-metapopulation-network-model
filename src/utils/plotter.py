@@ -3,7 +3,6 @@ from os import listdir
 from os.path import join
 from .error_functions import mse
 
-from sympy import im
 from ..mmodel.params_estimation.estimate_params_test import estimator_test
 
 import numpy as np
@@ -26,7 +25,7 @@ def plot(curve_paires: list, time):
         plt.show()
 
 
-def plot_est_and_original():
+def plot_network_est_and_original():
     network = 'tests/mmodel/simple/simple_network.json'
     params_original = 'tests/mmodel/simple/params/params.json'
     estimations_path = 'tests/mmodel/simple/estimation'
@@ -48,3 +47,11 @@ def plot_est_and_original():
             f'MSE original and {label}: {mse(y_est,ydata_original)}')
 
     plot(original_plus_ests, np.linspace(0, 300, 300))
+
+
+def plot_values(data_org, data_est, time):
+    t = np.linspace(0, time, time)
+    plt.plot(t, data_org, label='original', linestyle='--')
+    plt.plot(t, data_est, label='estimation')
+    plt.xlabel("tiempo en días")
+    plt.ylabel("activos por día")
