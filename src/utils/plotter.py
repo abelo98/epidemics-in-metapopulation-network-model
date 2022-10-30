@@ -1,11 +1,9 @@
+import numpy as np
+from mmodel.params_estimation.estimate_params_test import estimator_test
 import matplotlib.pyplot as plt
 from os import listdir
 from os.path import join
 from .error_functions import mse
-
-from ..mmodel.params_estimation.estimate_params_test import estimator_test
-
-import numpy as np
 
 
 def get_data_simulation(est: estimator_test, numba):
@@ -50,8 +48,9 @@ def plot_network_est_and_original():
 
 
 def plot_values(data_org, data_est, time):
-    t = np.linspace(0, time, time)
-    plt.plot(t, data_org, label='original', linestyle='--')
-    plt.plot(t, data_est, label='estimation')
+    plt.plot(time, data_org, label='original', linestyle='--')
+    plt.plot(time, data_est, label='estimation')
     plt.xlabel("tiempo en días")
     plt.ylabel("activos por día")
+    plt.legend()
+    plt.show()

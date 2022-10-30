@@ -16,8 +16,12 @@ def plot_est_and_original(network, active_path, death_path, params_est):
 
     acc_infected = d_op.get_infected_by_muncps(active_path, death_path)
     acc_infected_combine = d_op.combine_infected_all_mcps(acc_infected)
-    y_est = est.start_sim(len(acc_infected_combine), False)
-    plot_values(acc_infected_combine, y_est)
+    days = np.linspace(0, len(acc_infected_combine), len(acc_infected_combine))
+    y_est = est.start_sim(days, False)['I']
+    print(f'day with the most infected people: {y_est.argmax()}')
+    print(f'most infected people reported: {y_est.max()}')
+
+    plot_values(acc_infected_combine, y_est, days)
 
 
 def get_data_simulation(est: estimator_test, numba):
@@ -93,9 +97,10 @@ def main():
     network = 'tests/mmodel/havana_all_connections/havana_network_correct_perc.json'
     active_path = 'data_cov/cv19_conf_mun.xlsx'
     death_path = 'data_cov/cv19_fall_mun.xlsx'
-    params_est = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d29_iter-500000.json'
+    params_est = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d29_iter-1000000.json'
     # run_test()
-    compare_est_with_org(network, active_path, death_path, params_est)
+    # compare_est_with_org(network, active_path, death_path, params_est)
+    plot_est_and_original(network, active_path, death_path, params_est)
 
 
 if __name__ == "__main__":

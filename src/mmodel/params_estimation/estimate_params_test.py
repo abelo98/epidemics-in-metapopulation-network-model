@@ -9,12 +9,12 @@ class estimator_test:
     def __init__(self, model_name="model_havana_d29", network_path="", params="", method='diff_evol', iter=6000, numba=False):
         self.opt_func = None
         self.params_path = params
-        self.file_path = network_path
+        self.network_path = network_path
         self.model_name = model_name
         self.method = method
         self.iter = iter
         # compiles the model
-        self.api = ApiConn(self.model_name, self.file_path, numba)
+        self.api = ApiConn(self.model_name, self.network_path, numba)
 
     def start_sim(self, days, numba):
         self.api.simulate(self.params_path, days, numba)
