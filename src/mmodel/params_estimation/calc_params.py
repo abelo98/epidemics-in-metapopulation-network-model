@@ -111,7 +111,7 @@ class estimator_calc:
     @timer
     def apply_curve_fit(self, guess, time, ydata):
         output, _ = optimize.curve_fit(
-            estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess, bounds=(0, 1), maxfev=self.iter)
+            estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess, maxfev=self.iter)
         return output
 
     @timer
