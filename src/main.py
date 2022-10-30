@@ -17,13 +17,13 @@ def calc_params_by_munc_model(est: estimator, acc_infected):
 
 
 def main():
-    iters = 1000000
-    est = estimator(method='curve_fit', iter=iters, numba=True)
+    iters = 1
+    est = estimator(method='pso', iter=iters, numba=True)
     d_op = data_operator()
 
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    paramas_estimated_json = f"tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"
+    paramas_estimated_json = f"tests/mmodel/havana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"
 
     acc_infected = d_op.get_infected_by_muncps(data_conf_path, data_dead_path)
 

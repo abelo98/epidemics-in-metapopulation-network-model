@@ -56,7 +56,7 @@ def run_test():
 
     original = np.array([0.25, 0.052, 0.25, 0.052])
 
-    with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions2.txt", "a") as sys.stdout:
+    with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions3.txt", "a") as sys.stdout:
 
         for i, exec in enumerate(json_names):
             m = methods[i % len(methods)]
@@ -98,9 +98,9 @@ def main():
     active_path = 'data_cov/cv19_conf_mun.xlsx'
     death_path = 'data_cov/cv19_fall_mun.xlsx'
     params_est = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d29_iter-1000000.json'
-    # run_test()
+    run_test()
     # compare_est_with_org(network, active_path, death_path, params_est)
-    plot_est_and_original(network, active_path, death_path, params_est)
+    # plot_est_and_original(network, active_path, death_path, params_est)
 
 
 if __name__ == "__main__":
