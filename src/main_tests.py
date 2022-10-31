@@ -9,6 +9,8 @@ from mmodel.constants import *
 from utils.error_functions import mse, get_error
 from utils.plotter import plot_values
 
+import os
+
 
 def plot_est_and_original(network, active_path, death_path, params_est):
     d_op = data_operator()
@@ -39,7 +41,8 @@ def convert_estimation_to_list(set_of_est_values):
 def compare_est_with_org(network, active_path, death_path, params_est):
     d_op = data_operator()
 
-    acc_infected = d_op.get_infected_by_muncps(active_path, death_path)
+    acc_infected = d_op.get_infected_by_muncps(
+        active_path, death_path, params_est)
     acc_infected_combine = d_op.combine_infected_all_mcps(acc_infected)
 
     print('error:', get_error(network, params_est, acc_infected_combine))
@@ -56,7 +59,10 @@ def run_test():
 
     original = np.array([0.25, 0.052, 0.25, 0.052])
 
-    with open("/media/abel/TERA/School/5to/Tesis/My work/correctness_fitting_functions3.txt", "a") as sys.stdout:
+    results_path = os.path.join(os.path.abspath(
+        os.getcwd()), "correctness_fitting_functions3.txt")
+
+    with open(results_path, "a") as sys.stdout:
 
         for i, exec in enumerate(json_names):
             m = methods[i % len(methods)]
@@ -98,8 +104,8 @@ def main():
     active_path = 'data_cov/cv19_conf_mun.xlsx'
     death_path = 'data_cov/cv19_fall_mun.xlsx'
     params_est = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d29_iter-1000000.json'
-    run_test()
-    # compare_est_with_org(network, active_path, death_path, params_est)
+    # run_test()
+    compare_est_with_org(network, active_path, death_path, params_est)
     # plot_est_and_original(network, active_path, death_path, params_est)
 
 
