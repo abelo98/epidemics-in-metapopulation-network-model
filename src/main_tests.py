@@ -104,8 +104,8 @@ def main():
     active_path = 'data_cov/cv19_conf_mun.xlsx'
     death_path = 'data_cov/cv19_fall_mun.xlsx'
     params_est = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_Levenberg-Marquardt_Numba_GPU_d29_iter-1000000.json'
-    run_test()
-    # compare_est_with_org(network, active_path, death_path, params_est)
+    # run_test()
+    compare_est_with_org(network, active_path, death_path, params_est)
     # plot_est_and_original(network, active_path, death_path, params_est)
 
 
