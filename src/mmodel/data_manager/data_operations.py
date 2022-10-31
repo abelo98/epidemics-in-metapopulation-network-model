@@ -3,7 +3,6 @@ import numpy as np
 from mmodel.json_manager.json_processor import read_json
 from .data_reader import Reader
 from .data_cleaner import Cleaner
-from ..constants import MUNCPS
 
 
 class data_operator:
