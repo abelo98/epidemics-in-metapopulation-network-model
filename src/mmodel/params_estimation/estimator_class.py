@@ -7,7 +7,7 @@ from mmodel.data_manager.data_operations import data_operator
 
 
 class estimator:
-    def __init__(self, model_name="", file_path="", params="", method='diff_evol', iter=6000, numba=False):
+    def __init__(self, model_name="", network_path="", params="", method='diff_evol', iter=6000, numba=False):
         self.model_name = f"model_havana_d{START_INFECTED}"
 
         # self.file_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json"
@@ -16,9 +16,9 @@ class estimator:
         # self.file_path = "tests/mmodel/havana_full_network/network.json"
         # self.params_path = "tests/mmodel/havana_full_network/params/parameters_d16.json"
 
-        self.file_path = "tests/mmodel/havana_all_connections/havana_network_correct_perc.json"
-        self.params_path = "tests/mmodel/havana_all_connections/params/parameters_d16.json"
-
+        # self.network_path = "tests/mmodel/havana_all_connections/havana_network_correct_perc.json"
+        # self.params_path = "tests/mmodel/havana_all_connections/params/parameters_d16.json"
+        self.params_path = params
         self.opt_func = None
         # self.file_path = "tests/mmodel/simple/one_node_network.json"
         # self.params_path = "tests/mmodel/simple/params/simple_params_one_node.json"
@@ -28,7 +28,7 @@ class estimator:
 
         # compiles the model
         # compiles the model
-        self.api = ApiConn(self.model_name, self.file_path, numba)
+        self.api = ApiConn(self.model_name, network_path, numba)
 
         self.opt_func = estimator_calc(self.api, method, iter=iter)
 
