@@ -1,6 +1,10 @@
 import numpy as np
 from scipy.integrate import odeint
-def deriv(y, t, params):
+from numba import jit, vectorize
+
+
+@vectorize
+def deriv(y:np.ndarray, t:np.ndarray, params:np.ndarray):
 	result = np.zeros(shape = (len(y),), dtype=np.float64)
 	result[0] =  -(params[0] * y[0] * (y[4]+y[6])) / ((y[12]+y[14])) + 0.5 * y[1] - 0.5 * y[0]
 	result[1] =  -(params[2] * y[1] * (y[5]+y[7])) / ((y[13]+y[15])) + 0.5 * y[0] - 0.5 * y[1]

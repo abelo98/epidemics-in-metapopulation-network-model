@@ -90,8 +90,8 @@ class SimpleTripMetaModel(MetaModel):
         code += "from scipy.integrate import odeint\n"
 
         if numba:
-            code += "from numba import njit\n\n\n"
-            code += "@njit\n"
+            code += "from numba import jit, cuda\n\n\n"
+            code += "@jit(target_backend='cuda')\n"
 
         code += "def deriv(y, t, params):\n"
         code += "\tresult = np.zeros(shape = (len(y),), dtype=np.float64)\n"

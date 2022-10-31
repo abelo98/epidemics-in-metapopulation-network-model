@@ -1,9 +1,6 @@
 from mmodel.params_estimation.estimator_class import estimator
-from mmodel.data_manager.data_reader import Reader
-from mmodel.data_manager.data_cleaner import Cleaner
 from mmodel.data_manager.data_operations import data_operator
 from mmodel.json_manager.json_processor import *
-import numpy as np
 from mmodel.constants import *
 
 
@@ -19,34 +16,25 @@ def calc_params_by_munc_model(est: estimator, acc_infected):
     return est.get_params_estimation(acc_infected)
 
 
-def get_data_simulation(est: estimator):
-    days = np.linspace(0, 300, 300)
-    return est.start_sim(days)
-
-
 def main():
-    est = estimator(method='pso')
+    iters = 100000
+
+    network = 'tests/mmodel/plaza_all_connections/havana_network_correct_perc.json'
+    params = 'tests/mmodel/plaza_all_connections/params/parameters_d16.json'
+    est = estimator(method='pso', network_path=network,
+                    params=params, iter=iters, numba=True)
+    d_op = data_operator()
+
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_d{START_INFECTED}.json"
-    # paramas_estimated_json = f"tests/mmodel/test_network_habana_vieja_and_its_connections/estimation/parameters_estimated_curvefit_infected_all_mcp_SIR_Model_d{START_INFECTED}.json"
+    paramas_estimated_json = f"tests/mmodel/plaza_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"
 
-    # ydata = get_data_simulation(est)['I']
+    acc_infected = d_op.get_infected_by_muncps(data_conf_path, data_dead_path)
 
-    df_conf = Reader.get_data(data_conf_path)
-    df_dead = Reader.get_data(data_dead_path)
-
-    df_conf_havana = Cleaner.select_rows(df_conf, MUNCPS)
-    df_dead_havana = Cleaner.select_rows(df_dead, MUNCPS)
-
-    df_conf_less_dead_havana = data_operator.get_conf_less_dead(
-        df_conf_havana, df_dead_havana)
-
-    acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
-
-    new_paramas_to_save = calc_params_with_acc_infected_combine(
+    new_paramas_to_save, time = calc_params_with_acc_infected_combine(
         est, acc_infected)
 
+    print(f'elapsed time: {time} s')
     save_file_as_json(paramas_estimated_json, new_paramas_to_save)
 
 

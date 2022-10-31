@@ -136,21 +136,6 @@
   },
   {
     "id": 9,
-    "label": "Centro Habana",
-    "model": "SIR",
-    "y": {
-      "S": 133898,
-      "I": 0,
-      "R": 0,
-      "N": 133898
-    },
-    "params": {
-      "beta": 0.5,
-      "gamma": 0.071428571
-    }
-  },
-  {
-    "id": 10,
     "label": "Habana Vieja",
     "model": "SIR",
     "y": {
@@ -165,7 +150,7 @@
     }
   },
   {
-    "id": 11,
+    "id": 10,
     "label": "San Miguel del Padrón",
     "model": "SIR",
     "y": {
@@ -180,7 +165,7 @@
     }
   },
   {
-    "id": 12,
+    "id": 11,
     "label": "Cotorro",
     "model": "SIR",
     "y": {
@@ -195,7 +180,7 @@
     }
   },
   {
-    "id": 13,
+    "id": 12,
     "label": "Guanabacoa",
     "model": "SIR",
     "y": {
@@ -210,7 +195,7 @@
     }
   },
   {
-    "id": 14,
+    "id": 13,
     "label": "Habana del Este",
     "model": "SIR",
     "y": {

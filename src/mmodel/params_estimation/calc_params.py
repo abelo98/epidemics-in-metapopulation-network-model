@@ -5,6 +5,7 @@ from .model import SIR
 from .params_builder_answer import get_params
 from pyswarms.single.global_best import GlobalBestPSO
 import time
+from numba import cuda
 
 
 class estimator_calc:
@@ -25,9 +26,6 @@ class estimator_calc:
             output = f(*args, **kargs)
             stop = time.time()
             crono = stop-start
-            # print(" ")
-            # print(f'elapsed time: {crono}')
-            # print(" ")
             return output, crono
         return wrapper_timer
 
@@ -84,7 +82,7 @@ class estimator_calc:
             infected = estimator_calc.fit_odeint_metamodel(
                 time, particle)
 
-            diff_square[i] = (sum((infected - ydata)**2)/len(ydata))
+            diff_square[i] = (sum((infected - ydata)**2))
         return diff_square
 
     @ staticmethod
@@ -98,7 +96,7 @@ class estimator_calc:
     def apply_pso(self, guess, time, ydata):
         x_max = 1 * np.ones(len(guess))
         x_min = 0 * x_max
-        particles = 6
+        particles = 15
 
         x0 = np.array([guess for _ in range(particles)])
         bounds = (x_min, x_max)
@@ -107,14 +105,14 @@ class estimator_calc:
                                   options=options, bounds=bounds, init_pos=x0)
         kwargs = {"time": time, "ydata": ydata}
         _, pos = optimizer.optimize(
-            estimator_calc.__mse_for_pso__, iters=self.iter, n_processes=6, **kwargs)
+            estimator_calc.__mse_for_pso__, iters=self.iter, **kwargs)
 
         return pos
 
     @timer
     def apply_curve_fit(self, guess, time, ydata):
         output, _ = optimize.curve_fit(
-            estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess, bounds=(0, 1), maxfev=self.iter)
+            estimator_calc.fit_odeint_metamodel, time, ydata, p0=guess, maxfev=self.iter)
         return output
 
     @timer

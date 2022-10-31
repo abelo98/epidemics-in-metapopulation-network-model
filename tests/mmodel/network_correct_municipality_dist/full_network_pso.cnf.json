@@ -1,0 +1,1 @@
+{"name": "full_network_pso", "config-file": "tests/mmodel/network_correct_municipality_dist/full_network_pso.cnf.json", "network-file": "tests/mmodel/network_correct_municipality_dist/habana_network2.json", "code-file": "tests/mmodel/network_correct_municipality_dist/full_network_pso.py", "network-hash": "43ab754b2be0a2a63f9bd84cdcf7772fc74ada76"}

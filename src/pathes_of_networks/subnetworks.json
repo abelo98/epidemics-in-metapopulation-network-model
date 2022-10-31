@@ -1,0 +1,15 @@
+[
+    {
+        "label": "Habana Vieja",
+        "network_path": "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json",
+        "params_path": "tests/mmodel/test_network_habana_vieja_and_its_connections/params/parameters.json",
+        "params_estimated": "tests/mmodel/test_network_habana_vieja_and_its_connections/estimation",
+        "info": "Segundo municipio con mayor densidad poblacional"
+    },
+    {
+        "label": "Centro Habana",
+        "network_path": "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json",
+        "params_path": "tests/mmodel/test_network_habana_vieja_and_its_connections/params/parameters.json",
+        "params_estimated": "tests/mmodel/test_network_habana_vieja_and_its_connections/estimation"
+    }
+]

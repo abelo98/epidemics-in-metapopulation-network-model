@@ -7,14 +7,18 @@ from mmodel.data_manager.data_operations import data_operator
 
 
 class estimator:
-    def __init__(self, model_name="", file_path="", params="", method='diff_evol', iter=6000, numba=False):
+    def __init__(self, model_name="", network_path="", params="", method='diff_evol', iter=6000, numba=False):
         self.model_name = f"model_havana_d{START_INFECTED}"
 
         # self.file_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/network.json"
         # self.params_path = "tests/mmodel/test_network_habana_vieja_and_its_connections/params/parameters_estimated_d16.json"
 
-        self.file_path = "tests/mmodel/havana_full_network/network.json"
-        self.params_path = "tests/mmodel/havana_full_network/params/parameters_d16.json"
+        # self.file_path = "tests/mmodel/havana_full_network/network.json"
+        # self.params_path = "tests/mmodel/havana_full_network/params/parameters_d16.json"
+
+        # self.network_path = "tests/mmodel/havana_all_connections/havana_network_correct_perc.json"
+        # self.params_path = "tests/mmodel/havana_all_connections/params/parameters_d16.json"
+        self.params_path = params
         self.opt_func = None
         # self.file_path = "tests/mmodel/simple/one_node_network.json"
         # self.params_path = "tests/mmodel/simple/params/simple_params_one_node.json"
@@ -24,7 +28,7 @@ class estimator:
 
         # compiles the model
         # compiles the model
-        self.api = ApiConn(self.model_name, self.file_path, numba)
+        self.api = ApiConn(self.model_name, network_path, numba)
 
         self.opt_func = estimator_calc(self.api, method, iter=iter)
 
@@ -101,7 +105,8 @@ class estimator:
 
     def build_json_params_metamodel_combine(self, models_json, acc_infected_by_munc):
         output = []
-        acc_infected_combine = data_operator.combine_infected_all_mcps(
+        d_op = data_operator()
+        acc_infected_combine = d_op.combine_infected_all_mcps(
             acc_infected_by_munc)[START_INFECTED:]
 
         initial_v, guess, time = self.get_initial_values_SIR_metamodel(
@@ -111,14 +116,14 @@ class estimator:
 
         params_names = list(models_json[0]["params"].keys())
 
-        new_params = self.opt_func.estimate_params_metamodel(
+        new_params, time = self.opt_func.estimate_params_metamodel(
             acc_infected_combine, time, muncps, initial_v, guess, params_names)
 
         for i, model in enumerate(models_json):
             model["params"] = new_params[i]
             output.append(model)
 
-        return output
+        return output, time
 
     def get_params_estimation(self, infected):
         models = read_json(self.params_path)

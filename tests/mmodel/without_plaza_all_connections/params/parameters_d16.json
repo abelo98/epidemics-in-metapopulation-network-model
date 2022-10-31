@@ -121,21 +121,6 @@
   },
   {
     "id": 8,
-    "label": "Plaza de la Revolución",
-    "model": "SIR",
-    "y": {
-      "S": 141780,
-      "I": 1,
-      "R": 0,
-      "N": 141781
-    },
-    "params": {
-      "beta": 0.5,
-      "gamma": 0.071428571
-    }
-  },
-  {
-    "id": 9,
     "label": "Centro Habana",
     "model": "SIR",
     "y": {
@@ -150,7 +135,7 @@
     }
   },
   {
-    "id": 10,
+    "id": 9,
     "label": "Habana Vieja",
     "model": "SIR",
     "y": {
@@ -165,7 +150,7 @@
     }
   },
   {
-    "id": 11,
+    "id": 10,
     "label": "San Miguel del Padrón",
     "model": "SIR",
     "y": {
@@ -180,7 +165,7 @@
     }
   },
   {
-    "id": 12,
+    "id": 11,
     "label": "Cotorro",
     "model": "SIR",
     "y": {
@@ -195,7 +180,7 @@
     }
   },
   {
-    "id": 13,
+    "id": 12,
     "label": "Guanabacoa",
     "model": "SIR",
     "y": {
@@ -210,7 +195,7 @@
     }
   },
   {
-    "id": 14,
+    "id": 13,
     "label": "Habana del Este",
     "model": "SIR",
     "y": {
