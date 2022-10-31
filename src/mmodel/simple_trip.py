@@ -80,7 +80,6 @@ class SimpleTripMetaModel(MetaModel):
         cmodels, ady_matrix, node_map, params_map, local_pos, global_pos = structures
 
         N = len(network.nodes)
-        print(network.nodes)
         sets = cmodels[network.nodes[0].cmodel].sets
         K = len(sets)
 
