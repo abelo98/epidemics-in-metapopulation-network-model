@@ -17,25 +17,36 @@ def calc_params_by_munc_model(est: estimator, acc_infected):
 
 
 def main():
-    iters = 100000
+    iters = 50000
 
-    network = 'tests/mmodel/plaza_all_connections/havana_network_correct_perc.json'
-    params = 'tests/mmodel/plaza_all_connections/params/parameters_d16.json'
-    est = estimator(method='pso', network_path=network,
-                    params=params, iter=iters, numba=True)
-    d_op = data_operator()
+    networks = ['tests/mmodel/havana_all_connections/havana_network_correct_perc.json',
+                'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json',
+                'tests/mmodel/network_correct_municipality_dist/habana_network_geographic.json']
 
-    data_conf_path = "data_cov/cv19_conf_mun.xlsx"
-    data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    paramas_estimated_json = f"tests/mmodel/plaza_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"
+    params = ['tests/mmodel/havana_all_connections/params/parameters_d16.json',
+              'tests/mmodel/without_centro_habana_all_connections/params/parameters_d16.json',
+              'tests/mmodel/network_correct_municipality_dist/parameters_estimated_d16.json']
 
-    acc_infected = d_op.get_infected_by_muncps(data_conf_path, data_dead_path)
+    paramas_estimated_jsons = [f"tests/mmodel/havana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json",
+                               f"tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json",
+                               f"tests/mmodel/network_correct_municipality_dist/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
 
-    new_paramas_to_save, time = calc_params_with_acc_infected_combine(
-        est, acc_infected)
+    for i, n in enumerate(networks):
+        est = estimator(method='pso', network_path=n,
+                        params=params[i], iter=iters, numba=True)
+        d_op = data_operator()
 
-    print(f'elapsed time: {time} s')
-    save_file_as_json(paramas_estimated_json, new_paramas_to_save)
+        data_conf_path = "data_cov/cv19_conf_mun.xlsx"
+        data_dead_path = "data_cov/cv19_fall_mun.xlsx"
+
+        acc_infected = d_op.get_infected_by_muncps(
+            data_conf_path, data_dead_path, params[i])
+
+        new_paramas_to_save, time = calc_params_with_acc_infected_combine(
+            est, acc_infected)
+
+        print(f'elapsed time: {time} s')
+        save_file_as_json(paramas_estimated_jsons[i], new_paramas_to_save)
 
 
 if __name__ == "__main__":

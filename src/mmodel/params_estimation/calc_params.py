@@ -50,6 +50,7 @@ class estimator_calc:
     def estimate_params_metamodel(self, ydata: np.array, time: np.array, muncps: list, initial_v, guess, params_names):
         global i_values
         i_values = self.api.transform_input(initial_v)
+        i_values = np.array(i_values, dtype=np.float64)
 
         global metamodel
         metamodel = self.api.import_model(
@@ -69,6 +70,7 @@ class estimator_calc:
     def estimate_params_single_model(self, ydata: np.array, time: np.array, initial_v: dict, initial_guess, params_names, munc):
         global i_values
         i_values = tuple(initial_v.values())
+        i_values = np.array(i_values, dtype=np.float64)
 
         fitted_params, _ = optimize.curve_fit(
             estimator_calc.fit_odeint, time, ydata, p0=initial_guess, maxfev=100000)
@@ -82,7 +84,7 @@ class estimator_calc:
             infected = estimator_calc.fit_odeint_metamodel(
                 time, particle)
 
-            diff_square[i] = (sum((infected - ydata)**2))
+            diff_square[i] = (sum((infected - ydata)**2))/len(ydata)
         return diff_square
 
     @ staticmethod

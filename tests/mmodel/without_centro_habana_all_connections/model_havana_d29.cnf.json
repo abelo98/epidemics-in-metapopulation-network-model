@@ -1,0 +1,1 @@
+{"name": "model_havana_d29", "config-file": "tests/mmodel/without_centro_habana_all_connections/model_havana_d29.cnf.json", "network-file": "tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json", "code-file": "tests/mmodel/without_centro_habana_all_connections/model_havana_d29.py", "network-hash": "3b907fb347f88aaffa24e64a524ec88475d325d5"}

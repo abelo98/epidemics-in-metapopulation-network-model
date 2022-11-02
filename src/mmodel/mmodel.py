@@ -5,6 +5,7 @@ from utils.hashing import hash_file
 import importlib
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+import numpy as np
 
 # Meta Model input constants
 NAME = "name"
@@ -69,6 +70,9 @@ class MetaModel:
         y_, params_ = self.__transform_input__(y, params)
 
         model = import_from_file(self.name, self.code_file)
+
+        y_ = np.array(y_, np.float64)
+        params_ = np.array(params_, np.float64)
 
         ret = model.solve(y_, t, params_).T
 
