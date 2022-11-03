@@ -19,17 +19,17 @@ def calc_params_by_munc_model(est: estimator, acc_infected):
 def main():
     iters = 50000
 
-    networks = ['tests/mmodel/havana_all_connections/havana_network_correct_perc.json',
-                'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json',
-                'tests/mmodel/network_correct_municipality_dist/habana_network_geographic.json']
+    networks = [
+        'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json',
+        'tests/mmodel/network_correct_municipality_dist/habana_network_geographic.json']
 
-    params = ['tests/mmodel/havana_all_connections/params/parameters_d16.json',
-              'tests/mmodel/without_centro_habana_all_connections/params/parameters_d16.json',
-              'tests/mmodel/network_correct_municipality_dist/parameters_estimated_d16.json']
+    params = [
+        'tests/mmodel/without_centro_habana_all_connections/params/parameters_d16.json',
+        'tests/mmodel/network_correct_municipality_dist/parameters_estimated_d16.json']
 
-    paramas_estimated_jsons = [f"tests/mmodel/havana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json",
-                               f"tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json",
-                               f"tests/mmodel/network_correct_municipality_dist/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
+    paramas_estimated_jsons = [
+        f"tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json",
+        f"tests/mmodel/network_correct_municipality_dist/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
 
     for i, n in enumerate(networks):
         est = estimator(method='pso', network_path=n,
