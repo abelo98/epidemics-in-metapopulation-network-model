@@ -1,0 +1,1 @@
+{"name": "model_havana_d29", "config-file": "tests/mmodel/network_correct_municipality_dist/model_havana_d29.cnf.json", "network-file": "tests/mmodel/network_correct_municipality_dist/habana_network_geographic.json", "code-file": "tests/mmodel/network_correct_municipality_dist/model_havana_d29.py", "network-hash": "966d60301204885540262dfb8b5eee90f61ce015"}
