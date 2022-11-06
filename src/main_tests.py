@@ -18,11 +18,11 @@ def plot_est_and_original(y1, y2, label_y1, label_y2):
     min_len = min(len(y1), len(y2))
     days = np.linspace(0, min_len, min_len)
 
-    print(f'day with the most infected people {label_y1}: {y1.argmax()}')
-    print(f'most infected people reported {label_y1}: {y1.max()}')
+    print(f'max x {label_y1}: {y1.argmax()}')
+    print(f'max y {label_y1}: {y1.max()}')
 
-    print(f'day with the most infected people {label_y2}: {y2.argmax()}')
-    print(f'most infected people reported {label_y2}: {y2.max()}')
+    print(f'max x {label_y2}: {y2.argmax()}')
+    print(f'max y {label_y2}: {y2.max()}')
 
     plot_values(y1[:min_len], y2[:min_len], days, label_y1, label_y2)
 
@@ -30,9 +30,9 @@ def plot_est_and_original(y1, y2, label_y1, label_y2):
 def plot_est_and_especial_points(y_est):
     days = np.linspace(0, len(y_est), len(y_est))
 
-    ranges = [(1, 170), (120, 500), (int(y_est.argmax()), int(y_est.argmax())),
+    ranges = [(int(y_est.argmax()), int(y_est.argmax())),
               (int(y_est.argmax()), len(y_est)-1)]
-    min_maxs = [1, -1, 1, -1]
+    min_maxs = [1, -1]
 
     points = get_points_in_range(ranges, y_est, min_maxs)
     epidemic_start = date(2020, 3, 20)
@@ -52,12 +52,11 @@ def convert_estimation_to_list(set_of_est_values):
     return np.array(output)
 
 
-def get_real_data(active_path, death_path, params_est):
-    d_op = data_operator()
-
-    acc_infected = d_op.get_infected_by_muncps(
-        active_path, death_path, params_est)
+def get_infected_combine(params_est, d_op: data_operator):
+    acc_infected = d_op.get_infected_by_muncps(params_est)
     return np.array(d_op.combine_infected_all_mcps(acc_infected))
+
+# def get_death()
 
 
 def compare_est_with_org(y1, y2):
@@ -117,28 +116,31 @@ def run_test():
 
 
 def main():
-    network1 = 'tests/mmodel/without_plaza_all_connections/havana_network_correct_perc.json'
     active_path = 'data_cov/cv19_conf_mun.xlsx'
     death_path = 'data_cov/cv19_fall_mun.xlsx'
-    params_est1 = 'tests/mmodel/without_plaza_all_connections/estimation/parameters_estimated_PSO_Numba_d29_iter-50000.json'
+    network1 = 'tests/mmodel/network_correct_municipality_dist/habana_network_geographic.json'
+    params_est1 = 'tests/mmodel/network_correct_municipality_dist/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
     network2 = 'tests/mmodel/havana_all_connections/havana_network_correct_perc.json'
     params_est2 = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
     # arreglar q numba se pide en est y sim
-    days = np.linspace(0, 5000, 5000)
+    days = np.linspace(0, 1111, 1111)
+    d_op = data_operator(death_path, active_path)
+
     # est = estimator_test(network_path=network1,
     #                      params=params_est1, numba=False)
     # y_estimated = get_data_simulation(est, False, days, 'I')
-    real_data = get_real_data(active_path, death_path, params_est1)
+    # infected_all_combine = get_infected_combine(params_est1, d_op)
 
     est2 = estimator_test(network_path=network2,
                           params=params_est2, numba=False)
     y_estimated2 = get_data_simulation(est2, False, days, 'I')
-    label1 = 'I(t) real'
-    label2 = 'I(t) estimado toda la Habana'
-    # run_test()
-    compare_est_with_org(real_data, y_estimated2)
-    plot_est_and_original(real_data, y_estimated2, label1, label2)
-    plot_est_and_especial_points(y_estimated2)
+
+    # label1 = 'I(t) estimado todos los municipios conectados'
+    # label2 = 'I(t) estimado municipios colindantes conectados'
+    # # run_test()
+    # compare_est_with_org(y_estimated2, y_estimated)
+    # plot_est_and_original(y_estimated2, y_estimated, label1, label2)
+    # plot_est_and_especial_points(y_estimated)
 
 
 if __name__ == "__main__":

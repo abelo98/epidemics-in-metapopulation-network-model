@@ -1,9 +1,5 @@
 import numpy as np
 from scipy.integrate import odeint
-from numba import njit, jit, cuda
-
-
-@jit(target_backend='cuda')
 def deriv(y, t, params):
 	result = np.zeros(shape = (y.size,), dtype=np.float64)
 	result[0] =  -(params[0] * y[0] * (y[225]+y[240]+y[255]+y[270]+y[285]+y[300]+y[315]+y[330]+y[345]+y[360]+y[375]+y[390]+y[405]+y[420]+y[435])) / ((y[675]+y[690]+y[705]+y[720]+y[735]+y[750]+y[765]+y[780]+y[795]+y[810]+y[825]+y[840]+y[855]+y[870]+y[885])) + 0.362 * y[0] + 0.021 * y[6] + 0.033 * y[10] + 0.04 * y[11] + 0.098 * y[13] + 0.063 * y[14] - 0.6280000000000001 * y[0]

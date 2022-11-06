@@ -6,7 +6,7 @@ from mmodel.mmodel import MetaModel
 from typing import Dict
 
 
-def show_simulation(model: MetaModel, result: Dict, time: np.ndarray):
+def show_simulation(model: MetaModel, result, time: np.ndarray):
     cmodel = get_compartimental_model_type(model).lower()
     if cmodel in {"sir", "sirs"}:
         return show_sir_simulation(model, result, time)
@@ -18,7 +18,7 @@ def show_simulation(model: MetaModel, result: Dict, time: np.ndarray):
         f"No visualization for {cmodel} compartimental models")
 
 
-def show_sir_simulation(model: MetaModel, result: Dict, time: np.ndarray):
+def show_sir_simulation(model: MetaModel, result, time: np.ndarray):
     s, i, r = (0, 0, 0)
     try:
         for node in model.network.nodes:
