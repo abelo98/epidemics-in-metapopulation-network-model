@@ -1,18 +1,18 @@
-from mmodel.params_estimation.estimator_class import estimator
+from mmodel.params_estimation.estimator_class import estimator_SIR
 from mmodel.data_manager.data_operations import data_operator
 from mmodel.json_manager.json_processor import *
 from mmodel.constants import *
 
 
-def calc_params_with_acc_infected_combine(est: estimator, acc_infected, d_op):
+def calc_params_with_acc_infected_combine(est: estimator_SIR, acc_infected, d_op):
     return est.get_params_estimation_combine_infected(acc_infected, d_op)
 
 
-def calc_params_with_acc_infected_by_muncps(est: estimator, acc_infected):
+def calc_params_with_acc_infected_by_muncps(est: estimator_SIR, acc_infected):
     return est.get_params_estimation_metamodel(acc_infected)
 
 
-def calc_params_by_munc_model(est: estimator, acc_infected):
+def calc_params_by_munc_model(est: estimator_SIR, acc_infected):
     return est.get_params_estimation(acc_infected)
 
 
@@ -32,8 +32,8 @@ def main():
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
 
     for i, n in enumerate(networks):
-        est = estimator(method='pso', network_path=n,
-                        params=params[i], iter=iters, numba=True)
+        est = estimator_SIR(model_name=f"model_havana_d{START_INFECTED}", method='pso', network_path=n,
+                            params_path=params[i], iter=iters, numba=True)
 
         d_op = data_operator(data_dead_path, data_conf_path)
 
