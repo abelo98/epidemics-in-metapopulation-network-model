@@ -42,7 +42,7 @@ def plot_est_and_especial_points(y_est):
     sigle_plot_and_itresting_points(days, y_est, points, labels_for_points)
 
 
-def get_data_simulation(est: estimator_test, numba, days, comp):
+def get_data_simulation(est: estimator_SIR, numba, days, comp):
     return est.start_sim(days, numba)[comp]
 
 
