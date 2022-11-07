@@ -1,0 +1,1 @@
+{"name": "L-M_Numba", "config-file": "tests/mmodel/havana_full_network/L-M_Numba.cnf.json", "network-file": "tests/mmodel/havana_full_network/network.json", "code-file": "tests/mmodel/havana_full_network/L-M_Numba.py", "network-hash": "43ab754b2be0a2a63f9bd84cdcf7772fc74ada76"}

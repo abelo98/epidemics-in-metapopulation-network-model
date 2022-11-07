@@ -1,55 +1,41 @@
-from mmodel.params_estimation.estimator_class import estimator
-# from mmodel.params_estimation.calc_params_lmfit import *
-from mmodel.data_manager.data_reader import Reader
-from mmodel.data_manager.data_cleaner import Cleaner
+from mmodel.params_estimation.estimator_class import estimator_SIR
 from mmodel.data_manager.data_operations import data_operator
 from mmodel.json_manager.json_processor import *
-import numpy as np
 from mmodel.constants import *
 
 
-def calc_params_with_acc_infected_combine(est: estimator, acc_infected):
-    return est.get_params_estimation_combine_infected(acc_infected)
-
-
-def calc_params_with_acc_infected_by_muncps(est: estimator, acc_infected):
-    return est.get_params_estimation_metamodel(acc_infected)
-
-
-def calc_params_by_munc_model(est: estimator, acc_infected):
-    return est.get_params_estimation(acc_infected)
-
-
-def get_data_simulation(est: estimator):
-    days = np.linspace(0, 300, 300)
-    return est.start_sim(days)
+def calc_params_with_acc_infected_combine(est: estimator_SIR, acc_infected, d_op):
+    return est.get_params_estimation_combine_infected(acc_infected, d_op)
 
 
 def main():
-    est = estimator(
-        "src/mmodel/params_estimation/params_guess.json", method='pso')
+    iters = 1
+
+    networks = [
+        'tests/mmodel/havana_geo_connections/havana_geo_correct_perc.json']
+
+    params = [
+        'tests/mmodel/havana_geo_connections/params/parameters_d16.json']
+
+    paramas_estimated_jsons = [
+        f"tests/mmodel/havana_geo_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
+
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    paramas_estimated_json = f"tests/mmodel/havana_full_network/estimation/parameters_estimated_d{START_INFECTED}.json"
-    # paramas_estimated_json = f"tests/mmodel/test_network_habana_vieja_and_its_connections/estimation/parameters_estimated_curvefit_infected_all_mcp_SIR_Model_d{START_INFECTED}.json"
 
-    # ydata = get_data_simulation(est)['I']
+    for i, n in enumerate(networks):
+        est = estimator_SIR(model_name=f"model_havana_d{START_INFECTED}", method='pso', network_path=n,
+                            params_path=params[i], iter=iters, numba=True)
 
-    df_conf = Reader.get_data(data_conf_path)
-    df_dead = Reader.get_data(data_dead_path)
+        d_op = data_operator(data_dead_path, data_conf_path)
 
-    df_conf_havana = Cleaner.select_rows(df_conf, MUNCPS)
-    df_dead_havana = Cleaner.select_rows(df_dead, MUNCPS)
+        acc_infected = d_op.get_infected_by_muncps(params[i])
 
-    df_conf_less_dead_havana = data_operator.get_conf_less_dead(
-        df_conf_havana, df_dead_havana)
+        new_paramas_to_save, time = calc_params_with_acc_infected_combine(
+            est, acc_infected, d_op)
 
-    acc_infected = data_operator.calc_infected(df_conf_less_dead_havana)
-
-    new_paramas_to_save = calc_params_with_acc_infected_combine(
-        est, acc_infected)
-
-    save_file_as_json(paramas_estimated_json, new_paramas_to_save)
+        print(f'elapsed time: {time} s')
+        save_file_as_json(paramas_estimated_jsons[i], new_paramas_to_save)
 
 
 if __name__ == "__main__":

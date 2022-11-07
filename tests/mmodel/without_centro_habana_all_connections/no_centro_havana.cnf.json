@@ -1,0 +1,1 @@
+{"name": "no_centro_havana", "config-file": "tests/mmodel/without_centro_habana_all_connections/no_centro_havana.cnf.json", "network-file": "tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json", "code-file": "tests/mmodel/without_centro_habana_all_connections/no_centro_havana.py", "network-hash": "3b907fb347f88aaffa24e64a524ec88475d325d5"}

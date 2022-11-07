@@ -1,0 +1,1 @@
+{"name": "havana_all_conn2", "config-file": "tests/mmodel/havana_all_connections/havana_all_conn2.cnf.json", "network-file": "tests/mmodel/havana_all_connections/havana_network_correct_perc.json", "code-file": "tests/mmodel/havana_all_connections/havana_all_conn2.py", "network-hash": "abe0a5a3ea4a8515ee064a5ba73b3a3836cbe106"}

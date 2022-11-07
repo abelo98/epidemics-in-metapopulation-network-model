@@ -47,7 +47,7 @@ amount_workers_per_munc = {'0': 18688,
                            '13': 50424,
                            '14': 80422}
 
-with open("tests/mmodel/network_correct_municipality_dist/habana_network.json", 'r') as f:
+with open("tests/mmodel/havana_geo_connections/habana_network_geographic.json", 'r') as f:
     edges_json_file = json.load(f)
     new_edges_json = []
     for edge in edges_json_file['graph']['edges']:
@@ -64,6 +64,6 @@ with open("tests/mmodel/network_correct_municipality_dist/habana_network.json", 
         })
     edges_json_file['graph']['edges'] = new_edges_json
     f.close()
-with open("tests/mmodel/network_correct_municipality_dist/habana_network2.json", 'w') as f:
+with open("tests/mmodel/havana_geo_connections/havana_geo_correct_perc.json", 'w') as f:
     serialized_json = json.dumps(edges_json_file, indent=4)
     f.write(serialized_json)
