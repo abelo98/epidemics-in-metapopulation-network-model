@@ -1,7 +1,8 @@
 import sys
 from mmodel.data_manager.data_operations import data_operator
 
-from mmodel.params_estimation.estimate_params_test import estimator_test
+# from mmodel.params_estimation.estimate_params_test import estimator_test
+from mmodel.params_estimation.estimator_class import estimator_SIR
 from mmodel.json_manager.json_processor import *
 import numpy as np
 from mmodel.constants import *
@@ -69,22 +70,22 @@ def run_test():
     network = 'tests/mmodel/simple/simple_network.json'
     params_original = 'tests/mmodel/simple/params/params.json'
 
-    methods = ['pso', 'curve_fit', 'diff_evol']
-    json_names = ['psoNumba']
+    methods = ['pso', 'lm', 'diff_evol']
+    json_names = ['psoNumba', 'lmNumba', 'diff_EvolNumba']
     #  , 'curve_fitNumba','diff_EvolNumba' , 'pso', 'curve_fit', 'diff_Evol'
 
     original = np.array([0.25, 0.052, 0.25, 0.052])
 
     results_path = os.path.join(os.path.abspath(
-        os.getcwd()), "correctness_fitting_functions3.txt")
+        os.getcwd()), "correctness_fitting_functions4.txt")
 
     with open(results_path, "a") as sys.stdout:
 
         for i, exec in enumerate(json_names):
             m = methods[i % len(methods)]
             apply_numba = exec.__contains__('Numba')
-            est = estimator_test(method=m, iter=6000, network_path=network,
-                                 params=params_original, numba=apply_numba)
+            est = estimator_SIR(model_name=f"model_havana_d{START_INFECTED}", method=m, iter=2, network_path=network,
+                                params_path=params_original, numba=apply_numba)
             ydata = get_data_simulation(est, numba=apply_numba)['I']
             paramas_estimated_json = f"tests/mmodel/simple/estimation/parameters_estimated_{exec}_d1.json"
             print(" ")
@@ -116,30 +117,30 @@ def run_test():
 
 
 def main():
-    active_path = 'data_cov/cv19_conf_mun.xlsx'
-    death_path = 'data_cov/cv19_fall_mun.xlsx'
+    # active_path = 'data_cov/cv19_conf_mun.xlsx'
+    # death_path = 'data_cov/cv19_fall_mun.xlsx'
     # network1 = 'tests/mmodel/network_correct_municipality_dist/habana_network_geographic.json'
     # params_est1 = 'tests/mmodel/network_correct_municipality_dist/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
-    network2 = 'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json'
-    params_est2 = 'tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
+    # network2 = 'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json'
+    # params_est2 = 'tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
     # arreglar q numba se pide en est y sim
-    days = np.linspace(0, 1111, 1111)
-    d_op = data_operator(death_path, active_path)
+    # days = np.linspace(0, 1111, 1111)
+    # d_op = data_operator(death_path, active_path)
 
     # est = estimator_test(network_path=network1,
     #                      params=params_est1, numba=False)
     # y_estimated = get_data_simulation(est, False, days, 'I')
-    infected_all_combine = get_infected_combine(params_est2, d_op)
+    # infected_all_combine = get_infected_combine(params_est2, d_op)
 
-    est2 = estimator_test(network_path=network2,
-                          params=params_est2, numba=False)
-    y_estimated2 = get_data_simulation(est2, False, days, 'I')
+    # est2 = estimator_test(network_path=network2,
+    #                       params=params_est2, numba=False)
+    # y_estimated2 = get_data_simulation(est2, False, days, 'I')
 
-    label1 = 'I(t) estimado todos los municipios conectados'
-    label2 = 'I(t) estimado municipios colindantes conectados'
-    # # run_test()
+    # label1 = 'I(t) estimado todos los municipios conectados'
+    # label2 = 'I(t) estimado municipios colindantes conectados'
+    run_test()
     # compare_est_with_org(y_estimated2, y_estimated)
-    plot_est_and_original(y_estimated2, infected_all_combine, label1, label2)
+    # plot_est_and_original(y_estimated2, infected_all_combine, label1, label2)
     # plot_est_and_especial_points(y_estimated)
 
 

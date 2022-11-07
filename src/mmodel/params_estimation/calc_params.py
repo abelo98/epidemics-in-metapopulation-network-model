@@ -104,6 +104,7 @@ class estimator_calc_LM(estimator_calc_base):
 
         return get_params(params_names, muncps, fitted_params), crono
 
+    @timer
     def __apply_method__(self, guess, time, ydata):
         output, _ = optimize.curve_fit(
             estimator_calc_LM.fit_odeint_metamodel, time, ydata, p0=guess, maxfev=self.iter)
@@ -141,7 +142,7 @@ class estimator_calc_Diff_Evol(estimator_calc_base):
         metamodel = self.api.import_model(
             self.api.model.name, self.api.model.code_file)
 
-        fitted_params, crono = self.apply_pso(guess, time, ydata)
+        fitted_params, crono = self.__apply_method__(guess, time, ydata)
 
         return get_params(params_names, muncps, fitted_params), crono
 
@@ -151,6 +152,7 @@ class estimator_calc_Diff_Evol(estimator_calc_base):
 
         return sum((infected - ydata)**2)/len(ydata)
 
-    def apply_optimization_func(self, guess, time, ydata):
+    @timer
+    def __apply_method__(self, guess, time, ydata):
         return optimize.differential_evolution(estimator_calc_Diff_Evol.__error_func__, bounds=[(
             0, 1)]*len(guess), x0=guess, args=(time, ydata), updating='deferred', workers=-1, maxiter=self.iter, popsize=100)
