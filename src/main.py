@@ -8,16 +8,8 @@ def calc_params_with_acc_infected_combine(est: estimator_SIR, acc_infected, d_op
     return est.get_params_estimation_combine_infected(acc_infected, d_op)
 
 
-def calc_params_with_acc_infected_by_muncps(est: estimator_SIR, acc_infected):
-    return est.get_params_estimation_metamodel(acc_infected)
-
-
-def calc_params_by_munc_model(est: estimator_SIR, acc_infected):
-    return est.get_params_estimation(acc_infected)
-
-
 def main():
-    iters = 50000
+    iters = 1
 
     networks = [
         'tests/mmodel/havana_geo_connections/havana_geo_correct_perc.json']

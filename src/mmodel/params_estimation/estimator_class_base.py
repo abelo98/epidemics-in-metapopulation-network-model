@@ -1,23 +1,28 @@
 from ..api import ApiConn
-from ..json_manager.json_processor import read_json
-import numpy as np
-from ..constants import START_INFECTED
-from .calc_params import estimator_calc
-from mmodel.data_manager.data_operations import data_operator
+from .calc_params import *
 
 
 class estimator_base:
     def __init__(self, model_name: str, network_path: str, params_path: str, method='diff_evol', iter=6000, numba=False):
         self.model_name = model_name
         self.params_path = params_path
-
+        self.method_name = method
+        self.iter = iter
         # compiles the model
         self.api = ApiConn(self.model_name, network_path, numba)
-        self.opt_func = estimator_calc(self.api, method, iter=iter)
+        self.opt_func = self.__opt_selector__()
 
     def start_sim(self, days, numba):
         self.api.simulate(self.params_path, days, numba)
         return self.__get_ydata__()
+
+    def __opt_selector__(self):
+        if self.method_name == 'pso':
+            return estimator_calc_PSO(self.api, self.iter)
+        elif self.method_name == 'lm':
+            return estimator_calc_LM(self.api, self.iter)
+
+        return estimator_calc_Diff_Evol(self.api, self.iter)
 
     def __get_ydata__(self):
         output = {}
