@@ -103,9 +103,8 @@ class estimator:
 
         return output
 
-    def build_json_params_metamodel_combine(self, models_json, acc_infected_by_munc):
+    def build_json_params_metamodel_combine(self, models_json, acc_infected_by_munc, d_op):
         output = []
-        d_op = data_operator()
         acc_infected_combine = d_op.combine_infected_all_mcps(
             acc_infected_by_munc)[START_INFECTED:]
 
@@ -133,6 +132,6 @@ class estimator:
         models = read_json(self.params_path)
         return self.build_json_params_metamodel(models, infected)
 
-    def get_params_estimation_combine_infected(self, infected):
+    def get_params_estimation_combine_infected(self, infected, d_op):
         models = read_json(self.params_path)
-        return self.build_json_params_metamodel_combine(models, infected)
+        return self.build_json_params_metamodel_combine(models, infected, d_op)
