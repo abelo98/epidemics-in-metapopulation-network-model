@@ -28,9 +28,9 @@ class ApiConn:
     def get_network_nodes(self):
         return self.model.network.nodes
 
-    def transform_ydata(self, result):
+    def transform_ydata(self, result, compartiment='I'):
         output = self.model.__transform_output__(result)
         y_infected = 0
         for m in output.values():
-            y_infected += m['I']
+            y_infected += m[compartiment]
         return y_infected

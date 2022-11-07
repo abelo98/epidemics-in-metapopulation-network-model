@@ -30,12 +30,6 @@ class estimator_calc:
         return wrapper_timer
 
     @ staticmethod
-    def fit_odeint(x, beta, gamma):
-        y_fit = integrate.odeint(
-            SIR.sir_ecuations, i_values, x, args=(beta, gamma))[:, 1]
-        return y_fit
-
-    @ staticmethod
     def fit_odeint_metamodel(x, *params):
         if len(params) == 1:
             params = params[0]
@@ -66,16 +60,6 @@ class estimator_calc:
             fitted_params = fitted_params.x
 
         return get_params(params_names, muncps, fitted_params), crono
-
-    def estimate_params_single_model(self, ydata: np.array, time: np.array, initial_v: dict, initial_guess, params_names, munc):
-        global i_values
-        i_values = tuple(initial_v.values())
-        i_values = np.array(i_values, dtype=np.float64)
-
-        fitted_params, _ = optimize.curve_fit(
-            estimator_calc.fit_odeint, time, ydata, p0=initial_guess, maxfev=100000)
-
-        return get_params(params_names, [munc], fitted_params)
 
     @ staticmethod
     def __mse_for_pso__(x, time, ydata):
