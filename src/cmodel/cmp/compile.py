@@ -4,6 +4,8 @@ from .codegen import CodeGenerator
 
 # Compiles a system of equations given by text
 # to a file called model_name.py located at path
+
+
 def compile_model(text, model_name, path):
     p = Parser()
     ast = p.parse(text)
@@ -44,7 +46,8 @@ def compile_model(text, model_name, path):
     code += "\t\t" + ", ".join(parameters) + " = params\n"
     for e in equations:
         code += "\t\t" + e + "\n"
-    code += "\t\treturn " + ", ".join(f"d{s}d{c.variable}" for s in c.sets) + "\n\n"
+    code += "\t\treturn " + \
+        ", ".join(f"d{s}d{c.variable}" for s in c.sets) + "\n\n"
     code += "\t@staticmethod\n"
     code += "\tdef solve(y, t, params):\n"
     code += f"\t\treturn odeint({model_name}.deriv, y, t, args=(params,))\n"
