@@ -97,8 +97,8 @@ class estimator_calc_LM(estimator_calc_base):
         i_values = np.array(i_values, dtype=np.float64)
 
         global metamodel
-        metamodel = self.api.import_model(
-            self.api.model.name, self.api.model.code_file)
+        metamodel = g_api.import_model(
+            g_api.model.name, g_api.model.code_file)
 
         fitted_params, crono = self.__apply_method__(guess, time, ydata)
 
@@ -139,12 +139,12 @@ class estimator_calc_Diff_Evol(estimator_calc_base):
         i_values = np.array(i_values, dtype=np.float64)
 
         global metamodel
-        metamodel = self.api.import_model(
-            self.api.model.name, self.api.model.code_file)
+        metamodel = g_api.import_model(
+            g_api.model.name, g_api.model.code_file)
 
         fitted_params, crono = self.__apply_method__(guess, time, ydata)
 
-        return get_params(params_names, muncps, fitted_params), crono
+        return get_params(params_names, muncps, fitted_params.x), crono
 
     @ staticmethod
     def __error_func__(x, time, ydata):
