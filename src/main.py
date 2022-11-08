@@ -2,55 +2,71 @@ from mmodel.params_estimation.estimator_class import estimator_SIR
 from mmodel.data_manager.data_operations import data_operator
 from mmodel.json_manager.json_processor import *
 from mmodel.constants import *
-from cmodel.cmp.compile import compile_model
+# from cmodel.cmp.compile import compile_model
+import os
+import sys
 
 
 def calc_params_with_acc_infected_combine(est: estimator_SIR, acc_infected, d_op):
     return est.get_params_estimation_combine_infected(acc_infected, d_op)
 
 
-def create_SEAIR():
-    save_path = 'src/cmodel/repo'
+# def create_SEAIR():
+#     save_path = 'src/cmodel/repo'
 
-    model = r"""
-        \frac{dS}{dt} = - \frac{\beta ( I + A ) S}{N}\\
-        \frac{dE}{dt} = \frac{ \beta ( I + A ) S }{N} - \alpha E\\
-        \frac{dA}{dt} = (1 - \frac{1}{7}) \alpha E - \gamma A\\
-        \frac{dI}{dt} = (\frac{1}{7}) \alpha E - \gamma I\\
-        \frac{dR}{dt} = \gamma ( I + A )"""
-    model_name = "SEAIR"
-    compile_model(text=model, model_name=model_name, path=save_path)
+#     model = r"""
+#         \frac{dS}{dt} = - \frac{\beta ( I + A ) S}{N}\\
+#         \frac{dE}{dt} = \frac{ \beta ( I + A ) S }{N} - \alpha E\\
+#         \frac{dA}{dt} = (1 - \frac{1}{7}) \alpha E - \gamma A\\
+#         \frac{dI}{dt} = (\frac{1}{7}) \alpha E - \gamma I\\
+#         \frac{dR}{dt} = \gamma ( I + A )"""
+#     model_name = "SEAIR"
+#     compile_model(text=model, model_name=model_name, path=save_path)
 
 
 def main():
-    create_SEAIR()
-    # iters = 10000
+    iters = 60000
 
-    # networks = [
-    #     'tests/mmodel/havana_geo_connections/havana_geo_correct_perc.json']
+    networks = [
+        'tests/mmodel/havana_all_connections/havana_network_correct_perc.json',
+        'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json',
+        'tests/mmodel/havana_geo_connections/havana_geo_correct_perc.json',
+        'tests/mmodel/without_plaza_all_connections/havana_network_correct_perc.json']
 
-    # params = [
-    #     'tests/mmodel/havana_geo_connections/params/parameters_d16.json']
+    params = [
+        'tests/mmodel/havana_all_connections/params/parameters_d16.json',
+        'tests/mmodel/without_centro_habana_all_connections/params/parameters_d16.json',
+        'tests/mmodel/havana_geo_connections/params/parameters_d16.json',
+        'tests/mmodel/without_plaza_all_connections/params/parameters_d16.json']
 
-    # paramas_estimated_jsons = [
-    #     f"tests/mmodel/havana_geo_connections/estimation/parameters_estimated_PSO_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
+    paramas_estimated_jsons = [
+        f"tests/mmodel/havana_all_connections/estimation/parameters_estimated_DE_Numba_GPU_d{START_INFECTED}_iter-{iters}.json",
+        f"tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_DE_Numba_GPU_d{START_INFECTED}_iter-{iters}.json",
+        f"tests/mmodel/havana_geo_connections/estimation/parameters_estimated_DE_Numba_GPU_d{START_INFECTED}_iter-{iters}.json",
+        f"tests/mmodel/without_plaza_all_connections/estimation/parameters_estimated_DE_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
 
-    # data_conf_path = "data_cov/cv19_conf_mun.xlsx"
-    # data_dead_path = "data_cov/cv19_fall_mun.xlsx"
+    data_conf_path = "data_cov/cv19_conf_mun.xlsx"
+    data_dead_path = "data_cov/cv19_fall_mun.xlsx"
+    results_path = os.path.join(os.path.abspath(
+        os.getcwd()), "out_DE.txt")
 
-    # for i, n in enumerate(networks):
-    #     est = estimator_SIR(model_name=f"model_havana_d{START_INFECTED}", method='pso', network_path=n,
-    #                         params_path=params[i], iter=iters, numba=True)
+    with open(results_path, "a") as sys.stdout:
 
-    #     d_op = data_operator(data_dead_path, data_conf_path)
+        for i, n in enumerate(networks):
+            est = estimator_SIR(model_name=f"model_havana_d{START_INFECTED}", network_path=n,
+                                params_path=params[i], iter=iters, numba=True)
 
-    #     acc_infected = d_op.get_infected_by_muncps(params[i])
+            d_op = data_operator(data_dead_path, data_conf_path)
 
-    #     new_paramas_to_save, time = calc_params_with_acc_infected_combine(
-    #         est, acc_infected, d_op)
+            acc_infected = d_op.get_infected_by_muncps(params[i])
 
-    #     print(f'elapsed time: {time} s')
-    #     save_file_as_json(paramas_estimated_jsons[i], new_paramas_to_save)
+            new_paramas_to_save, time = calc_params_with_acc_infected_combine(
+                est, acc_infected, d_op)
+
+            print(f'elapsed time: {time} s')
+            save_file_as_json(paramas_estimated_jsons[i], new_paramas_to_save)
+
+    os.system("shutdown /s /t 1")
 
 
 if __name__ == "__main__":
