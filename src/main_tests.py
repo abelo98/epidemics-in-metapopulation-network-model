@@ -70,8 +70,8 @@ def run_test():
     network = 'tests/mmodel/simple/simple_network.json'
     params_original = 'tests/mmodel/simple/params/params.json'
 
-    methods = ['diff_evol']
-    json_names = ['diff_EvolNumba']
+    methods = ['pso']
+    json_names = ['psoNumba']
     #  , 'curve_fitNumba','diff_EvolNumba' , 'pso', 'curve_fit', 'diff_Evol'
 
     original = np.array([0.25, 0.052, 0.25, 0.052])

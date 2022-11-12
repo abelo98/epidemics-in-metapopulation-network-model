@@ -23,8 +23,8 @@ class estimator_calc_PSO(estimator_calc_base):
 
         params = np.array(params, dtype=np.float64)
 
-        y_fit = integrate.odeint(
-            metamodel.deriv, i_values, x, args=(params,)).T
+        y_fit = integrate.solve_ivp(
+            metamodel.deriv, x, i_values, args=(0.5, 0.1, 0.5, 0.1)).T
         y_infected = g_api.transform_ydata(y_fit)
         return y_infected
 
@@ -128,8 +128,8 @@ class estimator_calc_Diff_Evol(estimator_calc_base):
 
         params = np.array(params, dtype=np.float64)
 
-        y_fit = integrate.odeint(
-            metamodel.deriv, i_values, x, args=(params,)).T
+        y_fit = integrate.solve_ivp(
+            metamodel.deriv, x, i_values, args=(params,)).T
         y_infected = g_api.transform_ydata(y_fit)
         return y_infected
 

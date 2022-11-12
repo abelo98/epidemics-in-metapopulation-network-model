@@ -2,7 +2,7 @@ from mmodel.params_estimation.estimator_class import estimator_SIR
 from mmodel.data_manager.data_operations import data_operator
 from mmodel.json_manager.json_processor import *
 from mmodel.constants import *
-# from cmodel.cmp.compile import compile_model
+from cmodel.cmp.compile import compile_model
 import os
 import sys
 
@@ -11,17 +11,17 @@ def calc_params_with_acc_infected_combine(est: estimator_SIR, acc_infected, d_op
     return est.get_params_estimation_combine_infected(acc_infected, d_op)
 
 
-# def create_SEAIR():
-#     save_path = 'src/cmodel/repo'
+def create_SEAIR():
+    save_path = 'src/cmodel/repo'
 
-#     model = r"""
-#         \frac{dS}{dt} = - \frac{\beta ( I + A ) S}{N}\\
-#         \frac{dE}{dt} = \frac{ \beta ( I + A ) S }{N} - \alpha E\\
-#         \frac{dA}{dt} = (1 - \frac{1}{7}) \alpha E - \gamma A\\
-#         \frac{dI}{dt} = (\frac{1}{7}) \alpha E - \gamma I\\
-#         \frac{dR}{dt} = \gamma ( I + A )"""
-#     model_name = "SEAIR"
-#     compile_model(text=model, model_name=model_name, path=save_path)
+    model = r"""
+        \frac{dS}{dt} = - \frac{\beta ( I + A ) S}{N}\\
+        \frac{dE}{dt} = \frac{ \beta ( I + A ) S }{N} - \alpha E\\
+        \frac{dA}{dt} = (1 - \frac{1}{7}) \alpha E - \gamma A\\
+        \frac{dI}{dt} = (\frac{1}{7}) \alpha E - \gamma I\\
+        \frac{dR}{dt} = \gamma ( I + A )"""
+    model_name = "SEAIR"
+    compile_model(text=model, model_name=model_name, path=save_path)
 
 
 def main():
