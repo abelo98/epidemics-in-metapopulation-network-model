@@ -1,0 +1,1 @@
+{"name": "havana_geo_conn", "config-file": "tests/mmodel/havana_geo_connections/havana_geo_conn.cnf.json", "network-file": "tests/mmodel/havana_geo_connections/havana_geo_correct_perc.json", "code-file": "tests/mmodel/havana_geo_connections/havana_geo_conn.py", "network-hash": "740468858bb77e755c35a97a4e49ce62ebd831ff"}
