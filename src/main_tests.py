@@ -1,7 +1,7 @@
 import sys
 from mmodel.data_manager.data_operations import data_operator
 
-from mmodel.params_estimation.estimate_params_test import estimator_test
+from mmodel.params_estimation.estimate_params_test import estimator_SEAIR, estimator_test
 from mmodel.params_estimation.estimator_class import estimator_SIR
 from mmodel.json_manager.json_processor import *
 import numpy as np
@@ -85,8 +85,8 @@ def run_test():
         for i, exec in enumerate(json_names):
             m = methods[i % len(methods)]
             apply_numba = exec.__contains__('Numba')
-            est = estimator_test(method=m, iter=6000, network_path=network,
-                                 params=params_original, numba=apply_numba)
+            est = estimator_SEAIR(model_name="model_havana_d29", method=m, iter=6000, network_path=network,
+                                  params_path=params_original, numba=apply_numba)
             ydata = get_data_simulation(
                 est, numba=apply_numba, days=days, comp="I")
             paramas_estimated_json = f"tests/mmodel/simple/estimation/parameters_estimated_{exec}_d1.json"
