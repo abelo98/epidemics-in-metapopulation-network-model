@@ -70,8 +70,8 @@ def run_test():
     network = 'tests/mmodel/simple/simple_network.json'
     params_original = 'tests/mmodel/simple/params/params.json'
 
-    methods = ['diff_evol']
-    json_names = ['diff_EvolNumba']
+    methods = ['pso']
+    json_names = ['psoNumba']
     #  , 'curve_fitNumba','diff_EvolNumba' , 'pso', 'curve_fit', 'diff_Evol'
 
     original = np.array([0.25, 0.052, 0.25, 0.052])
@@ -85,7 +85,7 @@ def run_test():
         for i, exec in enumerate(json_names):
             m = methods[i % len(methods)]
             apply_numba = exec.__contains__('Numba')
-            est = estimator_test(method=m, iter=2, network_path=network,
+            est = estimator_test(method=m, iter=6000, network_path=network,
                                  params=params_original, numba=apply_numba)
             ydata = get_data_simulation(
                 est, numba=apply_numba, days=days, comp="I")
@@ -98,7 +98,8 @@ def run_test():
             total_time = 0
             total_mse = 0
             best_mse = np.inf
-            for _ in range(1):
+            iters = 10
+            for _ in range(iters):
                 current_mse = 0
                 built_json, estimated_params, crono = est.get_params_estimation_combine_infected(
                     ydata)
@@ -113,8 +114,8 @@ def run_test():
                     save_file_as_json(paramas_estimated_json, built_json)
 
             print(" ")
-            print(f"mean_time {total_time/30}")
-            print(f"mean_error {total_mse/30}")
+            print(f"mean_time {total_time/iters}")
+            print(f"mean_error {total_mse/iters}")
             print("*********************************************")
 
 
