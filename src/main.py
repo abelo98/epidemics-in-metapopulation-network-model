@@ -13,7 +13,11 @@ def calc_params_with_acc_infected_combine(est: estimator_SIR, acc_infected, d_op
 
 def create_SEAIR():
     save_path = 'src/cmodel/repo'
-
+    text = r"""
+            \frac{dS}{dt} = - \frac{\beta S I}{N}\\
+            \frac{dI}{dt} = \frac{\beta S I}{N} - \gamma I\\
+            \frac{dR}{dt} = \gamma I
+            """
     model = r"""
         \frac{dS}{dt} = - \frac{\beta ( I + A ) S}{N}\\
         \frac{dE}{dt} = \frac{ \beta ( I + A ) S }{N} - \alpha E\\
@@ -21,8 +25,8 @@ def create_SEAIR():
         \frac{dI}{dt} = (\frac{1}{7}) \alpha E - \gamma I\\
         \frac{dR}{dt} = \gamma ( I + A )\\
         \frac{dN}{dt} = 0"""
-    model_name = "SEAIR"
-    compile_model(text=model, model_name=model_name, path=save_path)
+    model_name = "SEAIRada"
+    compile_model(text=text, model_name=model_name, path=save_path)
 
 
 def main():
