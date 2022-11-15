@@ -6,8 +6,8 @@ class SEAIR:
     sets = ['S', 'E', 'A', 'I', 'R', 'N']
     params = ['alpha', 'gamma', 'beta']
     equations = {
-        'S': lambda S, E, A, I, R, N, _S, _E, _A, _I, _R, _N, alpha, gamma, beta: f' -({beta} * ({I} + {A}) * {S}) / ({N})',
-        'E': lambda S, E, A, I, R, N, _S, _E, _A, _I, _R, _N, alpha, gamma, beta: f' ({beta} * ({I} + {A}) * {S}) / ({N}) - {alpha} * {E}',
+        'S': lambda S, E, A, I, R, N, _S, _E, _A, _I, _R, _N, alpha, gamma, beta: f' -({beta} * ({I} + {A}) * {S}) / ({_N})',
+        'E': lambda S, E, A, I, R, N, _S, _E, _A, _I, _R, _N, alpha, gamma, beta: f' ({beta} * ({I} + {A}) * {S}) / ({_N}) - {alpha} * {E}',
         'A': lambda S, E, A, I, R, N, _S, _E, _A, _I, _R, _N, alpha, gamma, beta: f' (1 - (1) / (7)) * {alpha} * {E} - {gamma} * {A}',
         'I': lambda S, E, A, I, R, N, _S, _E, _A, _I, _R, _N, alpha, gamma, beta: f' ((1) / (7)) * {alpha} * {E} - {gamma} * {I}',
         'R': lambda S, E, A, I, R, N, _S, _E, _A, _I, _R, _N, alpha, gamma, beta: f' {gamma} * ({I} + {A})',

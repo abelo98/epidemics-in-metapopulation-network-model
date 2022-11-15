@@ -74,24 +74,8 @@ class estimator_test:
 class estimator_SEAIR(estimator_base):
     def get_initial_values_metamodel(self, models, infected):
         initial_v, guess = self.api.import_params(self.params_path)
-        # its where the value of S is in the list for each muncp(order:S,E,A,I,R,N)
-        time = -np.inf
-        index_N = len(models[0]['model'])
-        index_S = models[0]['model'].index('S')
-
-        for model in models:
-            infected_by_munc = infected[model["label"]][START_INFECTED:]
-            if (len(infected_by_munc) > time):
-                time = len(infected_by_munc)
-
-            initial_v[index_S] = initial_v[index_S +
-                                           index_N] - infected_by_munc[0]
-
-            index_I = index_S+1
-
-            initial_v[index_I] = infected_by_munc[0]
-            # where the initial values of other munc start
-            index_S += len(model["y"])
+        guess = GUESS
+        time = len(infected)
 
         return initial_v, guess, np.linspace(0, time, time)
 
