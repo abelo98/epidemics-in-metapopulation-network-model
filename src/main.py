@@ -61,7 +61,7 @@ def main():
             print(f'elapsed time: {time} s')
             save_file_as_json(paramas_estimated_jsons[i], new_paramas_to_save)
 
-    os.system("shutdown /s /t 1")
+    # os.system("shutdown /s /t 1")
 
 
 if __name__ == "__main__":
