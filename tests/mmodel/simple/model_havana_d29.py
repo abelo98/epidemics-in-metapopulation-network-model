@@ -3,7 +3,6 @@ from scipy.integrate import odeint
 from numba import njit, jit, cuda
 
 
-@njit
 def deriv(y, t, params):
 	result = np.zeros(shape = (y.size,), dtype=np.float64)
 	result[0] =  -(params[2] * (y[12] + y[8]) * y[0]) / (y[20]) + 0.5 * y[1] - 0.5 * y[0]

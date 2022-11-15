@@ -95,7 +95,7 @@ class estimator_SEAIR(estimator_base):
 
         return initial_v, guess, np.linspace(0, time, time)
 
-    def build_json_params_metamodel(self, models_json, acc_infected_by_munc, d_op):
+    def build_json_params_metamodel(self, models_json, acc_infected_by_munc):
         output = []
         acc_infected_combine = acc_infected_by_munc
         # d_op.combine_infected_all_mcps(
@@ -117,6 +117,6 @@ class estimator_SEAIR(estimator_base):
 
         return output, time
 
-    def get_params_estimation_combine_infected(self, infected, d_op):
+    def get_params_estimation_combine_infected(self, infected):
         models = read_json(self.params_path)
-        return self.build_json_params_metamodel(models, infected, d_op)
+        return self.build_json_params_metamodel(models, infected)

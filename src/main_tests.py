@@ -67,8 +67,8 @@ def compare_est_with_org(y1, y2):
 
 
 def run_test():
-    network = 'tests/mmodel/simple/simple_network.json'
-    params_original = 'tests/mmodel/simple/params/params.json'
+    network = 'tests/mmodel/simple_sirs/simple_network.json'
+    params_original = 'tests/mmodel/simple_sirs/params/simple_params.json'
 
     methods = ['pso']
     json_names = ['psoNumba']
