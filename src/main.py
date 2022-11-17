@@ -21,8 +21,8 @@ def create_SEAIR():
     model = r"""
         \frac{dS}{dt} = - \frac{\beta ( I + A ) S}{N}\\
         \frac{dE}{dt} = \frac{ \beta ( I + A ) S }{N} - \alpha E\\
-        \frac{dA}{dt} = (1 - \frac{1}{7}) \alpha E - \gamma A\\
-        \frac{dI}{dt} = (\frac{1}{7}) \alpha E - \gamma I\\
+        \frac{dA}{dt} = (\frac{1}{7}) \alpha E - \gamma A\\
+        \frac{dI}{dt} = (1 - \frac{1}{7}) \alpha E - \gamma I\\
         \frac{dR}{dt} = \gamma ( I + A )\\
         \frac{dN}{dt} = 0"""
     model_name = "SEAIRada"
