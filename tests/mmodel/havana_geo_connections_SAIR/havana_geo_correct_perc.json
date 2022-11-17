@@ -1,0 +1,589 @@
+{
+    "graph": {
+        "directed": false,
+        "nodes": {
+            "0": {
+                "label": "Regla",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "1": {
+                "label": "La Lisa",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "2": {
+                "label": "Playa",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "3": {
+                "label": "Marianao",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "4": {
+                "label": "Boyeros",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "5": {
+                "label": "Arroyo Naranjo",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "6": {
+                "label": "Diez de Octubre",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "7": {
+                "label": "Cerro",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "8": {
+                "label": "Plaza de la Revoluci\u00f3n",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "9": {
+                "label": "Centro Habana",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "10": {
+                "label": "La Habana Vieja",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "11": {
+                "label": "San Miguel del Padr\u00f3n",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "12": {
+                "label": "Cotorro",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "13": {
+                "label": "Guanabacoa",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            },
+            "14": {
+                "label": "Habana del Este",
+                "metadata": {
+                    "cmodel": "SAIR"
+                }
+            }
+        },
+        "edges": [
+            {
+                "source": "0",
+                "target": "6",
+                "metadata": {
+                    "weight": 0.00468979992243287
+                }
+            },
+            {
+                "source": "6",
+                "target": "0",
+                "metadata": {
+                    "weight": 0.009593268299947874
+                }
+            },
+            {
+                "source": "0",
+                "target": "14",
+                "metadata": {
+                    "weight": 0.020038236032213174
+                }
+            },
+            {
+                "source": "0",
+                "target": "13",
+                "metadata": {
+                    "weight": 0.01705381789975589
+                }
+            },
+            {
+                "source": "0",
+                "target": "11",
+                "metadata": {
+                    "weight": 0.005116145369926768
+                }
+            },
+            {
+                "source": "0",
+                "target": "10",
+                "metadata": {
+                    "weight": 0.06650988980904797
+                }
+            },
+            {
+                "source": "14",
+                "target": "0",
+                "metadata": {
+                    "weight": 0.028983885084693406
+                }
+            },
+            {
+                "source": "14",
+                "target": "13",
+                "metadata": {
+                    "weight": 0.014261911708341199
+                }
+            },
+            {
+                "source": "13",
+                "target": "14",
+                "metadata": {
+                    "weight": 0.040515059426262115
+                }
+            },
+            {
+                "source": "13",
+                "target": "0",
+                "metadata": {
+                    "weight": 0.03931164181954146
+                }
+            },
+            {
+                "source": "13",
+                "target": "11",
+                "metadata": {
+                    "weight": 0.01163303686496635
+                }
+            },
+            {
+                "source": "13",
+                "target": "12",
+                "metadata": {
+                    "weight": 0.006017088033603284
+                }
+            },
+            {
+                "source": "12",
+                "target": "11",
+                "metadata": {
+                    "weight": 0.0067037014466964865
+                }
+            },
+            {
+                "source": "12",
+                "target": "13",
+                "metadata": {
+                    "weight": 0.006284720106277956
+                }
+            },
+            {
+                "source": "12",
+                "target": "5",
+                "metadata": {
+                    "weight": 0.020949067020926523
+                }
+            },
+            {
+                "source": "11",
+                "target": "0",
+                "metadata": {
+                    "weight": 0.01638314195520117
+                }
+            },
+            {
+                "source": "11",
+                "target": "5",
+                "metadata": {
+                    "weight": 0.016792720504081197
+                }
+            },
+            {
+                "source": "11",
+                "target": "6",
+                "metadata": {
+                    "weight": 0.01597356340632114
+                }
+            },
+            {
+                "source": "11",
+                "target": "10",
+                "metadata": {
+                    "weight": 0.04464406182792318
+                }
+            },
+            {
+                "source": "11",
+                "target": "12",
+                "metadata": {
+                    "weight": 0.01597356340632114
+                }
+            },
+            {
+                "source": "11",
+                "target": "13",
+                "metadata": {
+                    "weight": 0.013516092113040964
+                }
+            },
+            {
+                "source": "5",
+                "target": "6",
+                "metadata": {
+                    "weight": 0.010296148292910583
+                }
+            },
+            {
+                "source": "5",
+                "target": "7",
+                "metadata": {
+                    "weight": 0.030030432520989206
+                }
+            },
+            {
+                "source": "5",
+                "target": "4",
+                "metadata": {
+                    "weight": 0.006606695154617624
+                }
+            },
+            {
+                "source": "5",
+                "target": "11",
+                "metadata": {
+                    "weight": 0.005148074146455291
+                }
+            },
+            {
+                "source": "5",
+                "target": "12",
+                "metadata": {
+                    "weight": 0.006006086504197841
+                }
+            },
+            {
+                "source": "6",
+                "target": "4",
+                "metadata": {
+                    "weight": 0.03289120559982128
+                }
+            },
+            {
+                "source": "6",
+                "target": "5",
+                "metadata": {
+                    "weight": 0.010963735199940428
+                }
+            },
+            {
+                "source": "6",
+                "target": "7",
+                "metadata": {
+                    "weight": 0.038373073199791496
+                }
+            },
+            {
+                "source": "6",
+                "target": "10",
+                "metadata": {
+                    "weight": 0.05207774219971703
+                }
+            },
+            {
+                "source": "6",
+                "target": "11",
+                "metadata": {
+                    "weight": 0.006852334499962767
+                }
+            },
+            {
+                "source": "10",
+                "target": "0",
+                "metadata": {
+                    "weight": 0.01692024645505639
+                }
+            },
+            {
+                "source": "10",
+                "target": "6",
+                "metadata": {
+                    "weight": 0.006152816892747778
+                }
+            },
+            {
+                "source": "10",
+                "target": "7",
+                "metadata": {
+                    "weight": 0.023073063347804162
+                }
+            },
+            {
+                "source": "10",
+                "target": "9",
+                "metadata": {
+                    "weight": 0.027687676017364996
+                }
+            },
+            {
+                "source": "10",
+                "target": "11",
+                "metadata": {
+                    "weight": 0.003076408446373889
+                }
+            },
+            {
+                "source": "10",
+                "target": "14",
+                "metadata": {
+                    "weight": 0.006665551633810092
+                }
+            },
+            {
+                "source": "14",
+                "target": "10",
+                "metadata": {
+                    "weight": 0.06854918853363995
+                }
+            },
+            {
+                "source": "9",
+                "target": "7",
+                "metadata": {
+                    "weight": 0.02929334269369221
+                }
+            },
+            {
+                "source": "9",
+                "target": "8",
+                "metadata": {
+                    "weight": 0.13133181974338676
+                }
+            },
+            {
+                "source": "9",
+                "target": "10",
+                "metadata": {
+                    "weight": 0.07372157911245875
+                }
+            },
+            {
+                "source": "7",
+                "target": "2",
+                "metadata": {
+                    "weight": 0.08906836962277169
+                }
+            },
+            {
+                "source": "7",
+                "target": "3",
+                "metadata": {
+                    "weight": 0.013453034995106142
+                }
+            },
+            {
+                "source": "7",
+                "target": "4",
+                "metadata": {
+                    "weight": 0.028761661024020023
+                }
+            },
+            {
+                "source": "7",
+                "target": "5",
+                "metadata": {
+                    "weight": 0.007422364135230974
+                }
+            },
+            {
+                "source": "7",
+                "target": "6",
+                "metadata": {
+                    "weight": 0.013453034995106142
+                }
+            },
+            {
+                "source": "7",
+                "target": "8",
+                "metadata": {
+                    "weight": 0.10530479116858944
+                }
+            },
+            {
+                "source": "7",
+                "target": "9",
+                "metadata": {
+                    "weight": 0.02273099016414486
+                }
+            },
+            {
+                "source": "7",
+                "target": "10",
+                "metadata": {
+                    "weight": 0.05102875342971294
+                }
+            },
+            {
+                "source": "8",
+                "target": "2",
+                "metadata": {
+                    "weight": 0.09848036055606887
+                }
+            },
+            {
+                "source": "8",
+                "target": "3",
+                "metadata": {
+                    "weight": 0.010238057285531912
+                }
+            },
+            {
+                "source": "8",
+                "target": "7",
+                "metadata": {
+                    "weight": 0.020476114571063825
+                }
+            },
+            {
+                "source": "8",
+                "target": "9",
+                "metadata": {
+                    "weight": 0.023401273795501516
+                }
+            },
+            {
+                "source": "2",
+                "target": "1",
+                "metadata": {
+                    "weight": 0.011060669702111931
+                }
+            },
+            {
+                "source": "2",
+                "target": "3",
+                "metadata": {
+                    "weight": 0.021660478166635865
+                }
+            },
+            {
+                "source": "2",
+                "target": "7",
+                "metadata": {
+                    "weight": 0.015208420840403905
+                }
+            },
+            {
+                "source": "2",
+                "target": "8",
+                "metadata": {
+                    "weight": 0.08802449637930744
+                }
+            },
+            {
+                "source": "1",
+                "target": "2",
+                "metadata": {
+                    "weight": 0.16067586520758775
+                }
+            },
+            {
+                "source": "1",
+                "target": "3",
+                "metadata": {
+                    "weight": 0.027443260724160996
+                }
+            },
+            {
+                "source": "1",
+                "target": "4",
+                "metadata": {
+                    "weight": 0.02611536101170159
+                }
+            },
+            {
+                "source": "3",
+                "target": "1",
+                "metadata": {
+                    "weight": 0.016531934752655672
+                }
+            },
+            {
+                "source": "3",
+                "target": "2",
+                "metadata": {
+                    "weight": 0.13822534334859327
+                }
+            },
+            {
+                "source": "3",
+                "target": "4",
+                "metadata": {
+                    "weight": 0.04178905729143517
+                }
+            },
+            {
+                "source": "3",
+                "target": "7",
+                "metadata": {
+                    "weight": 0.026175563358371484
+                }
+            },
+            {
+                "source": "3",
+                "target": "8",
+                "metadata": {
+                    "weight": 0.07485292679674652
+                }
+            },
+            {
+                "source": "4",
+                "target": "1",
+                "metadata": {
+                    "weight": 0.011033326153491656
+                }
+            },
+            {
+                "source": "4",
+                "target": "3",
+                "metadata": {
+                    "weight": 0.013155119644547745
+                }
+            },
+            {
+                "source": "4",
+                "target": "5",
+                "metadata": {
+                    "weight": 0.014852554437392617
+                }
+            },
+            {
+                "source": "4",
+                "target": "6",
+                "metadata": {
+                    "weight": 0.005516663076745828
+                }
+            },
+            {
+                "source": "4",
+                "target": "7",
+                "metadata": {
+                    "weight": 0.01909614141950479
+                }
+            }
+        ]
+    }
+}
