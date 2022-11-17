@@ -19,6 +19,22 @@ def plot_values(data_org, data_est, time, label_y1, label_y2):
     plt.plot(time, data_org,
              label=label_y1, linestyle='--')
     plt.plot(time, data_est, label=label_y2)
+
+    idx = np.argwhere(np.diff(np.sign(data_org - data_est))).flatten()
+    idx = idx[-1]
+    # plt.plot(time[idx], data_est[idx], 'ro')
+    intercept_date = datetime.date(
+        year=2020, month=3, day=20) + datetime.timedelta(days=int(time[idx]))
+
+    plt.plot(int(time[idx]), int(data_est[idx]), marker="o", color="green",
+             label=f'p0: {intercept_date}')
+
+    plt.annotate(f'p0{(int(time[idx]), int(data_est[idx]))}',
+                 (int(time[idx]), int(data_est[idx])),
+                 textcoords="offset points",
+                 xytext=(0, 3),
+                 ha='center')
+
     plt.xlabel("tiempo en días")
     plt.ylabel("activos por día")
     plt.legend()
