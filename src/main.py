@@ -20,13 +20,12 @@ def create_SEAIR():
             """
     model = r"""
         \frac{dS}{dt} = - \frac{\beta ( I + A ) S}{N}\\
-        \frac{dE}{dt} = \frac{ \beta ( I + A ) S }{N} - \alpha E\\
-        \frac{dA}{dt} = (\frac{1}{7}) \alpha E - \gamma A\\
-        \frac{dI}{dt} = (1 - \frac{1}{7}) \alpha E - \gamma I\\
+        \frac{dA}{dt} =  \frac{\beta ( I + A ) S}{N} - (\frac{1}{7}) A - \gamma A\\
+        \frac{dI}{dt} = (\frac{1}{7}) A - \gamma I\\
         \frac{dR}{dt} = \gamma ( I + A )\\
         \frac{dN}{dt} = 0"""
-    model_name = "SEAIRada"
-    compile_model(text=text, model_name=model_name, path=save_path)
+    model_name = "SAIR"
+    compile_model(text=model, model_name=model_name, path=save_path)
 
 
 def main():
@@ -65,5 +64,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
-    # create_SEAIR()
+    # main()
+    create_SEAIR()
