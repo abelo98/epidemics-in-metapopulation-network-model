@@ -30,15 +30,15 @@ def create_SEAIR():
 
 
 def main():
-    iters = 50000
+    iters = 10000
     networks = [
-        'tests/mmodel/havana_all_connections_SEAIR/havana_network_correct_perc.json']
+        'tests/mmodel/havana_geo_connections SEAIR/havana_geo_correct_perc.json']
 
     params = [
-        'tests/mmodel/havana_all_connections_SEAIR/params/parameters_d16.json']
+        'tests/mmodel/havana_geo_connections SEAIR/params/parameters_d16.json']
 
     paramas_estimated_jsons = [
-        f"tests/mmodel/havana_all_connections/estimation/parameters_estimated_pso_SEAIR_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
+        f"tests/mmodel/havana_geo_connections SEAIR/estimation/parameters_estimated_pso_SEAIR_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
 
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
