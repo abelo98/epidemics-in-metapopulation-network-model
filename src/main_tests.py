@@ -122,12 +122,12 @@ def run_test():
 def main():
     active_path = 'data_cov/cv19_conf_mun.xlsx'
     death_path = 'data_cov/cv19_fall_mun.xlsx'
-    network1 = 'tests/mmodel/havana_geo_connections SEAIR/havana_geo_correct_perc.json'
-    params_est1 = 'tests/mmodel/havana_geo_connections SEAIR/params/parameters_d16.json'
+    network1 = 'tests/mmodel/havana_geo_connections_SAIR/havana_geo_correct_perc.json'
+    params_est1 = 'tests/mmodel/havana_geo_connections_SAIR/params/parameters_d16_SAIR.json'
     # network2 = 'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json'
     # params_est2 = 'tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
     # arreglar q numba se pide en est y sim
-    days = np.linspace(0, 2500, 2500)
+    days = np.linspace(0, 500, 500)
     d_op = data_operator(death_path, active_path)
 
     est = estimator_test(network_path=network1,

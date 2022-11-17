@@ -2,7 +2,7 @@
   {
     "id": 0,
     "label": "Regla",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 43833,
       "E": 0,
@@ -20,7 +20,7 @@
   {
     "id": 1,
     "label": "La Lisa",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 145022,
       "E": 0,
@@ -38,7 +38,7 @@
   {
     "id": 2,
     "label": "Playa",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 178556,
       "E": 0,
@@ -56,11 +56,9 @@
   {
     "id": 3,
     "label": "Marianao",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 134994,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 134994
@@ -74,11 +72,9 @@
   {
     "id": 4,
     "label": "Boyeros",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 199633,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 199633
@@ -92,11 +88,9 @@
   {
     "id": 5,
     "label": "Arroyo Naranjo",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 205701,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 205701
@@ -110,11 +104,9 @@
   {
     "id": 6,
     "label": "Diez de Octubre",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 201435,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 201435
@@ -128,11 +120,9 @@
   {
     "id": 7,
     "label": "Cerro",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 124646,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 124646
@@ -146,11 +136,9 @@
   {
     "id": 8,
     "label": "Plaza de la Revolución",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 141780,
-      "E": 0,
-      "A": 0,
       "I": 1,
       "R": 0,
       "N": 141781
@@ -164,11 +152,9 @@
   {
     "id": 9,
     "label": "Centro Habana",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 133898,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 133898
@@ -182,11 +168,9 @@
   {
     "id": 10,
     "label": "Habana Vieja",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 81312,
-      "E": 0,
-      "A": 0,
       "I": 1,
       "R": 0,
       "N": 81313
@@ -200,11 +184,9 @@
   {
     "id": 11,
     "label": "San Miguel del Padrón",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 159022,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 159022
@@ -218,11 +200,9 @@
   {
     "id": 12,
     "label": "Cotorro",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 82049,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 82049
@@ -236,11 +216,9 @@
   {
     "id": 13,
     "label": "Guanabacoa",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 125702,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 125702
@@ -254,11 +232,9 @@
   {
     "id": 14,
     "label": "Habana del Este",
-    "model": "SEAIR",
+    "model": "SEAIRada",
     "y": {
       "S": 174807,
-      "E": 0,
-      "A": 0,
       "I": 0,
       "R": 0,
       "N": 174807

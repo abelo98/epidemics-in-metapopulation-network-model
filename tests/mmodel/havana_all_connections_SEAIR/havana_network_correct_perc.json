@@ -5,91 +5,91 @@
             "0": {
                 "label": "Regla",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "1": {
                 "label": "La Lisa",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "2": {
                 "label": "Playa",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "3": {
                 "label": "Marianao",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "4": {
                 "label": "Boyeros",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "5": {
                 "label": "Arroyo Naranjo",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "6": {
                 "label": "Diez de Octubre",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "7": {
                 "label": "Cerro",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "8": {
                 "label": "Plaza de la Revoluci\u00f3n",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "9": {
                 "label": "Centro Habana",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "10": {
                 "label": "La Habana Vieja",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "11": {
                 "label": "San Miguel del Padr\u00f3n",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "12": {
                 "label": "Cotorro",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "13": {
                 "label": "Guanabacoa",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             },
             "14": {
                 "label": "Habana del Este",
                 "metadata": {
-                    "cmodel": "SEAIR"
+                    "cmodel": "SEAIRada"
                 }
             }
         },
