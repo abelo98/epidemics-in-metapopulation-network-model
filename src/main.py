@@ -29,7 +29,7 @@ def create_SEAIR():
 
 
 def main():
-    iters = 13000
+    iters = 12000
     networks = [
         'tests/mmodel/havana_geo_connections_SAIR/havana_geo_correct_perc.json']
 
