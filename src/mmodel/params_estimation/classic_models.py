@@ -40,19 +40,19 @@ class estimator_SIR_classic(estimator_base):
         initial_v, guess, time = self.get_initial_values_metamodel(
             models_json, acc_infected_by_munc)
 
-        muncps = [model["label"] for model in models_json]
+        muncps = ["Habana"]
 
         params_names = list(models_json[0]["params"].keys())[:2]
 
         new_params, time = self.opt_func.estimate_params_metamodel(
             acc_infected_combine, time, muncps, initial_v, guess, params_names)
 
-        models_json[0]["params"] = new_params.pop()
+        models_json[0]["params"] = new_params[0]
         models_json[0]["label"] = "Habana"
-        models_json[0]["y"]["S"] = initial_v[0]
-        models_json[0]["y"]["I"] = initial_v[1]
-        models_json[0]["y"]["R"] = initial_v[2]
-        models_json[0]["y"]["N"] = initial_v[3]
+        models_json[0]["y"]["S"] = int(initial_v[0])
+        models_json[0]["y"]["I"] = int(initial_v[1])
+        models_json[0]["y"]["R"] = int(initial_v[2])
+        models_json[0]["y"]["N"] = int(initial_v[3])
 
         output.append(models_json[0])
 

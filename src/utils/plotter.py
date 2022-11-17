@@ -54,18 +54,18 @@ def get_points_in_range(ranges: list, data, min_maxs: list):
     points = []
     for i, min_max in enumerate(min_maxs):
         if min_max == -1:
-            best = np.inf
+            best = 100000000
         else:
-            best = -np.inf
+            best = -100000000
 
         start = ranges[i][0]
         end = ranges[i][1]
         day = 0
         while start <= end:
-            if min_max == -1 and data[start] < best:
+            if min_max == -1 and int(data[start]) < int(best):
                 best = data[start]
                 day = start
-            elif min_max == 1 and data[start] > best:
+            elif min_max == 1 and int(data[start]) > int(best):
                 best = data[start]
                 day = start
             start += 1

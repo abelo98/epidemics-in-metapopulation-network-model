@@ -122,28 +122,28 @@ def run_test():
 def main():
     active_path = 'data_cov/cv19_conf_mun.xlsx'
     death_path = 'data_cov/cv19_fall_mun.xlsx'
-    network1 = 'tests/mmodel/without_plaza_all_connections/havana_network_correct_perc.json'
-    params_est1 = 'tests/mmodel/without_plaza_all_connections/estimation/parameters_estimated_PSO_Numba_d29_iter-50000.json'
-    # network2 = 'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json'
-    # params_est2 = 'tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
+    network1 = 'tests/mmodel/havana_all_Conn_Classic_SIR/simple_network.json'
+    params_est1 = 'tests/mmodel/havana_all_Conn_Classic_SIR/estimation/parameters_estimated_pso_SIR_Classic_Numba_GPU_d29_iter-50000.json'
+    network2 = 'tests/mmodel/havana_all_connections/havana_network_correct_perc.json'
+    params_est2 = 'tests/mmodel/havana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
     # arreglar q numba se pide en est y sim
-    days = np.linspace(0, 2500, 2500)
+    days = np.linspace(0, 5000, 5000)
     d_op = data_operator(death_path, active_path)
 
     est = estimator_test(network_path=network1,
                          params=params_est1, numba=False)
     y_estimated = get_data_simulation(est, False, days, 'I')
-    infected_all_combine = get_infected_combine(params_est1, d_op)
+    # infected_all_combine = get_infected_combine(params_est1, d_op)
 
-    # est2 = estimator_test(network_path=network2,
-    #                       params=params_est2, numba=False)
-    # y_estimated2 = get_data_simulation(est2, False, days, 'I')
+    est2 = estimator_test(network_path=network2,
+                          params=params_est2, numba=False)
+    y_estimated2 = get_data_simulation(est2, False, days, 'I')
 
-    label1 = 'I(t) Sin plaza'
-    label2 = 'I(t) datos reales'
+    label1 = 'I(t) SIR clasico todos los municipios conectados'
+    label2 = 'I(t) SIR metapoblaciones todos los municipios conectados'
     # run_test()
-    compare_est_with_org(y_estimated, infected_all_combine)
-    plot_est_and_original(y_estimated, infected_all_combine, label1, label2)
+    compare_est_with_org(y_estimated, y_estimated2)
+    plot_est_and_original(y_estimated, y_estimated2, label1, label2)
     plot_est_and_especial_points(y_estimated)
 
 

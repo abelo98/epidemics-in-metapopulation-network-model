@@ -30,7 +30,7 @@ def create_SEAIR():
 
 
 def main():
-    iters = 1
+    iters = 50000
     networks = [
         'tests/mmodel/havana_all_Conn_Classic_SIR/simple_network.json']
 
