@@ -20,10 +20,10 @@ def plot_est_and_original(y1, y2, label_y1, label_y2):
     days = np.linspace(0, min_len, min_len)
 
     print(f'max x {label_y1}: {y1[:min_len].argmax()}')
-    print(f'max y {label_y1}: {y1[:min_len].max()}')
+    print(f'max y {label_y1}: {int(y1[:min_len].max())}')
 
     print(f'max x {label_y2}: {y2[:min_len].argmax()}')
-    print(f'max y {label_y2}: {y2[:min_len].max()}')
+    print(f'max y {label_y2}: {int(y2[:min_len].max())}')
 
     plot_values(y1[:min_len], y2[:min_len], days, label_y1, label_y2)
 
@@ -122,12 +122,12 @@ def run_test():
 def main():
     active_path = 'data_cov/cv19_conf_mun.xlsx'
     death_path = 'data_cov/cv19_fall_mun.xlsx'
-    network1 = 'tests/mmodel/havana_geo_connections_SAIR/havana_geo_correct_perc.json'
-    params_est1 = 'tests/mmodel/havana_geo_connections_SAIR/params/parameters_d16_SAIR.json'
+    network1 = 'tests/mmodel/without_plaza_all_connections/havana_network_correct_perc.json'
+    params_est1 = 'tests/mmodel/without_plaza_all_connections/estimation/parameters_estimated_PSO_Numba_d29_iter-50000.json'
     # network2 = 'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json'
     # params_est2 = 'tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json'
     # arreglar q numba se pide en est y sim
-    days = np.linspace(0, 500, 500)
+    days = np.linspace(0, 2500, 2500)
     d_op = data_operator(death_path, active_path)
 
     est = estimator_test(network_path=network1,
@@ -139,7 +139,7 @@ def main():
     #                       params=params_est2, numba=False)
     # y_estimated2 = get_data_simulation(est2, False, days, 'I')
 
-    label1 = 'I(t) estimado todos los municipios conectados'
+    label1 = 'I(t) Sin plaza'
     label2 = 'I(t) datos reales'
     # run_test()
     compare_est_with_org(y_estimated, infected_all_combine)
