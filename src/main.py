@@ -1,5 +1,5 @@
 from mmodel.params_estimation.estimator_class import estimator_SIR, estimator_SAIR
-from mmodel.params_estimation.classic_models import estimator_SIR_classic
+from mmodel.params_estimation.classic_models import estimator_SIR_classic, estimator_SAIR_classic
 from mmodel.data_manager.data_operations import data_operator
 from mmodel.json_manager.json_processor import *
 from mmodel.constants import *
@@ -32,24 +32,24 @@ def create_SEAIR():
 def main():
     iters = 50000
     networks = [
-        'tests/mmodel/havana_all_Conn_Classic_SIR/simple_network.json']
+        'tests/mmodel/havana_all_Conn_Classic_SAIR/simple_network.json']
 
     params = [
-        'tests/mmodel/havana_all_Conn_Classic_SIR/params/parameters_d16.json']
+        'tests/mmodel/havana_all_Conn_Classic_SAIR/params/parameters_d16.json']
 
     paramas_estimated_jsons = [
-        f"tests/mmodel/havana_all_Conn_Classic_SIR/estimation/parameters_estimated_pso_SIR_Classic_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
+        f"tests/mmodel/havana_all_Conn_Classic_SAIR/estimation/parameters_estimated_pso_SIR_Classic_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
 
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
     results_path = os.path.join(os.path.abspath(
-        os.getcwd()), "out_SIR_Classic.txt")
+        os.getcwd()), "out_SAIR_Classic.txt")
 
     with open(results_path, "a") as sys.stdout:
 
         for i, n in enumerate(networks):
-            est = estimator_SIR_classic(model_name=f"model_havana_d{START_INFECTED}", network_path=n,
-                                        params_path=params[i], iter=iters, method='pso', numba=True)
+            est = estimator_SAIR_classic(model_name=f"model_havana_d{START_INFECTED}", network_path=n,
+                                         params_path=params[i], iter=iters, method='pso', numba=True)
 
             d_op = data_operator(data_dead_path, data_conf_path)
 

@@ -41,6 +41,16 @@ def plot_values(data_org, data_est, time, label_y1, label_y2):
     plt.show()
 
 
+def plot_values_multiple_curves(curves, time, labels):
+    for i, curve in enumerate(curves):
+        plt.plot(time, curve, label=labels[i])
+
+    plt.xlabel("tiempo en días")
+    plt.ylabel("activos por día")
+    plt.legend()
+    plt.show()
+
+
 def sigle_plot_and_itresting_points(x, y, points: list, dates: list):
     plt.plot(x, y, label='I(t) estimado')
     for i, point in enumerate(points):
