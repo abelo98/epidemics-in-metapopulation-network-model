@@ -180,39 +180,7 @@ psoNumba
  
 pso
 *********************************************
- 
-psoNumba
- 
-pso
-*********************************************
 Backend GTK3Agg is interactive backend. Turning interactive mode on.
- 
-psoNumba
- 
-pso
-*********************************************
-Backend GTK3Agg is interactive backend. Turning interactive mode on.
- 
-psoNumba
- 
-pso
-*********************************************
- 
-psoNumba
- 
-pso
-*********************************************
-Backend GTK3Agg is interactive backend. Turning interactive mode on.
- 
-psoNumba
- 
-pso
-*********************************************
- 
-psoNumba
- 
-pso
-*********************************************
  
 psoNumba
  

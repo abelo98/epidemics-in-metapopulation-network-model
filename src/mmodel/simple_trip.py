@@ -92,7 +92,7 @@ class SimpleTripMetaModel(MetaModel):
         if numba:
             code += "from numba import njit, jit, cuda\n\n\n"
             # code += "@njit(parallel=True)\n"
-            code += "@njit\n"
+            #code += "@njit\n"
 
         code += "def deriv(y, t, params):\n"
         code += "\tresult = np.zeros(shape = (y.size,), dtype=np.float64)\n"
