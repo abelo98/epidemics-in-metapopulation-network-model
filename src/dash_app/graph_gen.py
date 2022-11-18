@@ -14,6 +14,9 @@ def show_simulation(model: MetaModel, result, time: np.ndarray):
     if cmodel == "seair":
         return show_seair_simulation(model, result, time)
 
+    if cmodel == "sair":
+        return show_sair_simulation(model, result, time)
+
     if cmodel == "sis":
         return show_sis_simulation(model, result, time)
 
@@ -79,6 +82,35 @@ def show_seair_simulation(model: MetaModel, result, time: np.ndarray):
         x=time, y=r, mode="lines", name="R"), row=5, col=1)
 
     figure.update_layout(height=1000, width=600)
+    return figure
+
+
+def show_sair_simulation(model: MetaModel, result, time: np.ndarray):
+    s, a, i, r = (0, 0, 0, 0)
+    try:
+        for node in model.network.nodes:
+            idx = node.id
+            s += result[idx]["S"]
+            a += result[idx]["A"]
+            i += result[idx]["I"]
+            r += result[idx]["R"]
+    except:
+        s = result["S"]
+        a = result["A"]
+        i = result["I"]
+        r = result["R"]
+
+    figure = make_subplots(rows=4, cols=1)
+    figure.append_trace(go.Scatter(
+        x=time, y=s, mode="lines", name="S"), row=1, col=1)
+    figure.append_trace(go.Scatter(
+        x=time, y=a, mode="lines", name="A"), row=2, col=1)
+    figure.append_trace(go.Scatter(
+        x=time, y=i, mode="lines", name="I"), row=3, col=1)
+    figure.append_trace(go.Scatter(
+        x=time, y=r, mode="lines", name="R"), row=4, col=1)
+
+    figure.update_layout(height=600, width=600)
     return figure
 
 
