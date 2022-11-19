@@ -8,17 +8,8 @@ import os
 import sys
 
 
-# def calc_params_with_acc_infected_combine(est: estimator_SIR, acc_infected, d_op):
-#     return est.get_params_estimation_combine_infected(acc_infected, d_op)
-
-
 def create_SEAIR():
     save_path = 'src/cmodel/repo'
-    text = r"""
-            \frac{dS}{dt} = - \frac{\beta S I}{N}\\
-            \frac{dI}{dt} = \frac{\beta S I}{N} - \gamma I\\
-            \frac{dR}{dt} = \gamma I
-            """
     model = r"""
         \frac{dS}{dt} = - \frac{\beta ( I + A ) S}{N}\\
         \frac{dA}{dt} =  \frac{\beta ( I + A ) S}{N} - (\frac{1}{7}) A - \gamma A\\
@@ -60,8 +51,6 @@ def main():
 
             print(f'elapsed time: {time} s')
             save_file_as_json(paramas_estimated_jsons[i], new_paramas_to_save)
-
-    # os.system("shutdown /s /t 1")
 
 
 if __name__ == "__main__":

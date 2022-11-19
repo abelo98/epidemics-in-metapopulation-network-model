@@ -23,6 +23,10 @@ SIMPLE_TRIP = 2
 LOAD = 1
 GENERATE = 2
 
+PSO = 1
+DIFFERENTIAL_EVOLUTION = 2
+LEVENBERG_MARQUARDT = 3
+
 model: Union[MetaModel, None] = None
 result: Union[Dict, None] = None
 
@@ -152,6 +156,110 @@ param_file_input = dbc.Row(
     ]
 )
 
+confirmed_cases_input = dbc.Row(
+    [
+        dcc.Markdown("##### Confirmed Cases"),
+        dbc.Col(
+            dbc.Input(
+                id="input-data-confirmed",
+                placeholder="path/to/data/confirmed cases",
+                type="text",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        html.Div(
+            id="param-status",
+            style={
+                "marginTop": "10px",
+            },
+        ),
+    ]
+)
+
+deceased_cases_input = dbc.Row(
+    [
+        dcc.Markdown("##### Deceased Cases"),
+        dbc.Col(
+            dbc.Input(
+                id="input-data-deceased",
+                placeholder="path/to/data/deceased cases",
+                type="text",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        html.Div(
+            id="param-status",
+            style={
+                "marginTop": "10px",
+            },
+        ),
+    ]
+)
+
+start_estimation = dbc.Row(
+    [
+        dcc.Markdown("##### Estimation", style={"marginTop": "10px"}),
+        dbc.Col(
+            dbc.Input(
+                id="input-iters",
+                placeholder="Algorithem iterations",
+                type="number",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=3,
+        ),
+        dbc.Col(
+            dcc.Dropdown(
+                id="algorithem-type",
+                options=[
+                    {"label": "Particle Swarm Optimization", "value": PSO},
+                    {"label": "Differential Evolution",
+                        "value": DIFFERENTIAL_EVOLUTION},
+                    {"label": "Levenberg-Marquardt", "value": LEVENBERG_MARQUARDT},
+                ],
+                placeholder="Algorithem",
+                value=PSO,
+                clearable=True,
+                searchable=False,
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        dbc.Col(
+            [
+                dbc.Button(
+                    id="estimate-btn",
+                    children="Run Estimation",
+                    color="success",
+                    style={
+                        "paddingRight": "40px",
+                        "paddingLeft": "40px",
+                        "textStyle": "bold",
+                    },
+                ),
+            ],
+            sm=12,
+            md=5,
+        ),
+        html.Div(
+            id="simul-status",
+            style={
+                "marginTop": "10px",
+            },
+        ),
+    ]
+)
+
 start_simulation = dbc.Row(
     [
         dcc.Markdown("##### Simulation", style={"marginTop": "10px"}),
@@ -274,6 +382,9 @@ layout = dbc.Container(
         application_info,
         model_file_input,
         param_file_input,
+        confirmed_cases_input,
+        deceased_cases_input,
+        start_estimation,
         start_simulation,
         network_info,
         network_visualization,
