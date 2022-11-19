@@ -2,7 +2,7 @@
     {
         "id": "0",
         "label": "node1",
-        "model": "SIR",
+        "model": "SAIRada",
         "y": {
             "S": 999,
             "I": 1,
@@ -10,14 +10,14 @@
             "N": 1000
         },
         "params": {
-            "beta": 0.25,
-            "gamma": 0.052
+            "beta": 0.5,
+            "gamma": 0.071428571
         }
     },
     {
         "id": "0",
         "label": "node2",
-        "model": "SIR",
+        "model": "SAIRada",
         "y": {
             "S": 999,
             "I": 1,
@@ -25,8 +25,8 @@
             "N": 1000
         },
         "params": {
-            "beta": 0.25,
-            "gamma": 0.052
+            "beta": 0.5,
+            "gamma": 0.071428571
         }
     }
 ]

@@ -1,0 +1,76 @@
+Regla
+params: 
+beta: 0.34275983649626174
+gamma: 0.43055540540131176
+
+La Lisa
+params: 
+beta: 0.7278764696386067
+gamma: 0.5357913656012149
+
+Playa
+params: 
+beta: 0.03479915302408711
+gamma: 0.0002900264349723347
+
+Marianao
+params: 
+beta: 0.5205178425161172
+gamma: 0.4278221573188409
+
+Boyeros
+params: 
+beta: 0.5632662737048252
+gamma: 0.6380896392406529
+
+Arroyo Naranjo
+params: 
+beta: 0.5501545712719873
+gamma: 0.5580201790214413
+
+Diez de Octubre
+params: 
+beta: 0.5383590245452182
+gamma: 0.5349463147587415
+
+Cerro
+params: 
+beta: 0.39799803822473123
+gamma: 0.7501455327291185
+
+Plaza de la Revolución
+params: 
+beta: 0.4324884714418744
+gamma: 0.4850064326021688
+
+Centro Habana
+params: 
+beta: 0.3819222850828479
+gamma: 0.2746739277460342
+
+Habana Vieja
+params: 
+beta: 0.5415813088161064
+gamma: 0.5451337546528477
+
+San Miguel del Padrón
+params: 
+beta: 0.2642795634039448
+gamma: 0.4897082887263534
+
+Cotorro
+params: 
+beta: 0.547264239187136
+gamma: 0.5453697083030039
+
+Guanabacoa
+params: 
+beta: 0.6336840804201522
+gamma: 0.3894476770686978
+
+Habana del Este
+params: 
+beta: 0.5697641354367394
+gamma: 0.7056042941561822
+
+elapsed time: 50192.34279727936 s

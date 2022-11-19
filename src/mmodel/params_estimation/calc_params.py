@@ -1,3 +1,5 @@
+from numba import njit, jit, cuda
+from scipy.integrate import odeint
 import numpy as np
 from scipy import integrate, optimize
 from .params_builder_answer import get_params
@@ -64,7 +66,7 @@ class estimator_calc_PSO(estimator_calc_base):
                                   options=options, bounds=bounds, init_pos=x0)
         kwargs = {"time": time, "ydata": ydata}
         _, pos = optimizer.optimize(
-            self.__error_func__, iters=self.iter, **kwargs)
+            self.__error_func__, iters=self.iter, n_processes=6, **kwargs)
 
         return pos
 
