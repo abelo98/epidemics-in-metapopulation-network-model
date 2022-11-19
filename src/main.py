@@ -30,26 +30,26 @@ def create_SEAIR():
 
 
 def main():
-    iters = 50000
+    iters = 10000
     networks = [
-        'tests/mmodel/havana_all_Conn_Classic_SAIR/simple_network.json']
+        'tests/mmodel/hav_all_conn_SAIR/havana_network_correct_perc.json']
 
     params = [
-        'tests/mmodel/havana_all_Conn_Classic_SAIR/params/parameters_d16.json']
+        'tests/mmodel/hav_all_conn_SAIR/params/parameters_d16.json']
 
     paramas_estimated_jsons = [
-        f"tests/mmodel/havana_all_Conn_Classic_SAIR/estimation/parameters_estimated_pso_SIR_Classic_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
+        f"tests/mmodel/hav_all_conn_SAIR/estimation/parameters_estimated_pso_SAIR_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
 
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
     results_path = os.path.join(os.path.abspath(
-        os.getcwd()), "out_SAIR_Classic.txt")
+        os.getcwd()), "out_SAIR_all_hav_metapop.txt")
 
     with open(results_path, "a") as sys.stdout:
 
         for i, n in enumerate(networks):
-            est = estimator_SAIR_classic(model_name=f"model_havana_d{START_INFECTED}", network_path=n,
-                                         params_path=params[i], iter=iters, method='pso', numba=True)
+            est = estimator_SAIR(model_name=f"model_havana_d{START_INFECTED}", network_path=n,
+                                 params_path=params[i], iter=iters, method='pso', numba=True)
 
             d_op = data_operator(data_dead_path, data_conf_path)
 
