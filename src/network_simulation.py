@@ -12,6 +12,7 @@ from mmodel.simple_trip import SimpleTripMetaModel
 from app import app
 from mmodel.mmodel import MetaModel
 from dash_app.graph_gen import show_simulation
+from main_est import start_estimation
 
 # ------------------- Ploting ----------------------
 
@@ -171,7 +172,7 @@ confirmed_cases_input = dbc.Row(
             md=4,
         ),
         html.Div(
-            id="param-status",
+            id="confirmed-status",
             style={
                 "marginTop": "10px",
             },
@@ -194,7 +195,7 @@ deceased_cases_input = dbc.Row(
             md=4,
         ),
         html.Div(
-            id="param-status",
+            id="deceased-status",
             style={
                 "marginTop": "10px",
             },
@@ -218,7 +219,7 @@ start_estimation = dbc.Row(
         ),
         dbc.Col(
             dcc.Dropdown(
-                id="algorithem-type",
+                id="input-algorithem-type",
                 options=[
                     {"label": "Particle Swarm Optimization", "value": PSO},
                     {"label": "Differential Evolution",
@@ -252,7 +253,30 @@ start_estimation = dbc.Row(
             md=5,
         ),
         html.Div(
-            id="simul-status",
+            id="estim-status",
+            style={
+                "marginTop": "10px",
+            },
+        ),
+    ]
+)
+
+estimation_output = dbc.Row(
+    [
+        dcc.Markdown("##### Estimation Output"),
+        dbc.Col(
+            dbc.Input(
+                id="input-est-path",
+                placeholder="path/to/estimation/result",
+                type="text",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        html.Div(
+            id="est-output-status",
             style={
                 "marginTop": "10px",
             },
@@ -384,6 +408,7 @@ layout = dbc.Container(
         param_file_input,
         confirmed_cases_input,
         deceased_cases_input,
+        estimation_output,
         start_estimation,
         start_simulation,
         network_info,
@@ -585,6 +610,66 @@ def simulate_network(_, input_params, input_time):
         md=10,
     )
     return completed, figure
+
+
+@app.callback(
+    Output("estim-status", "children"),
+    Input("estimate-btn", "n_clicks"),
+    State("input-data-confirmed", "value"),
+    State("input-data-deceased", "value"),
+    State("input-algorithem-type", "value"),
+    State("input-iters", "value"),
+    State("input-model", "value"),
+    State("input-params", "value"),
+    State("input-est-path", "value"),
+    prevent_initial_call=True,
+)
+def estimate_params(input_data_confirmed, input_data_deceased,
+                    input_algorithem_type, input_iters, input_model, input_params,
+                    input_est_path):
+    print(input_data_confirmed)
+    print("*************")
+    if model is None:
+        not_yet = dbc.Col(
+            dbc.Alert(
+                "Please load a network configuration first.",
+                color="warning",
+                dismissable=True,
+            ),
+            md=10,
+        )
+        return not_yet, go.Figure()
+
+    try:
+        start_estimation(input_model, input_params, input_est_path, input_data_confirmed,
+                         input_data_deceased, input_iters, input_algorithem_type)
+    except (TypeError, AttributeError):
+        text = "Parameter file is not set." if input_params is None else ""
+        text += "\n\nPath to save estimation is not set." if input_est_path is None else ""
+        text += "\n\nConfirmed cases file is not set." if input_data_confirmed is None else ""
+        text += "\n\nDeceased cases file is not set." if input_data_deceased is None else ""
+        text += "\n\nNumber of iterations is not set." if input_iters is None else ""
+        text += "\n\nAlgorithem is not set." if input_algorithem_type is None else ""
+
+        not_yet = dbc.Col(
+            dbc.Alert(
+                f"Please fill a meta-model parameter with valid information.\n\n{text}",
+                color="warning",
+                dismissable=True,
+            ),
+            md=10,
+        )
+        return not_yet, go.Figure()
+
+    completed = dbc.Col(
+        dbc.Alert(
+            "Estiamtion Completed",
+            color="success",
+            dismissable=True,
+        ),
+        md=10,
+    )
+    return completed
 
 
 @app.callback(

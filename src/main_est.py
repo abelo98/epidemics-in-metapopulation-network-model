@@ -20,39 +20,26 @@ def create_SEAIR():
     compile_model(text=model, model_name=model_name, path=save_path)
 
 
-def main():
-    iters = 10000
-    networks = [
-        'tests/mmodel/hav_all_conn_SAIR/havana_network_correct_perc.json']
-
-    params = [
-        'tests/mmodel/hav_all_conn_SAIR/params/parameters_d16.json']
-
-    paramas_estimated_jsons = [
-        f"tests/mmodel/hav_all_conn_SAIR/estimation/parameters_estimated_pso_SAIR_Numba_GPU_d{START_INFECTED}_iter-{iters}.json"]
+def start_estimation(network, params, result_location,
+                     data_conf_path, data_dead_path, iters, algorithem, initial_day):
 
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
-    results_path = os.path.join(os.path.abspath(
-        os.getcwd()), "out_SAIR_all_hav_metapop.txt")
 
-    with open(results_path, "a") as sys.stdout:
+    est = estimator_SAIR(model_name=f"model_havana_d{initial_day}", network_path=network,
+                         params_path=params, iter=iters, method=algorithem, numba=True)
 
-        for i, n in enumerate(networks):
-            est = estimator_SAIR(model_name=f"model_havana_d{START_INFECTED}", network_path=n,
-                                 params_path=params[i], iter=iters, method='pso', numba=True)
+    d_op = data_operator(data_dead_path, data_conf_path)
 
-            d_op = data_operator(data_dead_path, data_conf_path)
+    acc_infected = d_op.get_infected_by_muncps(params)
 
-            acc_infected = d_op.get_infected_by_muncps(params[i])
+    new_paramas_to_save, time = est.get_params_estimation_combine_infected(
+        acc_infected, d_op)
 
-            new_paramas_to_save, time = est.get_params_estimation_combine_infected(
-                acc_infected, d_op)
-
-            print(f'elapsed time: {time} s')
-            save_file_as_json(paramas_estimated_jsons[i], new_paramas_to_save)
+    print(f'elapsed time: {time} s')
+    save_file_as_json(result_location, new_paramas_to_save)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     start_estimation()
     # create_SEAIR()
