@@ -30,34 +30,26 @@ def create_SEAIR():
 
 
 def main():
-    iters = 20000
-    networks = ['tests/mmodel/havana_geo_connections/havana_geo_correct_perc.json',
-                'tests/mmodel/havana_all_connections/havana_network_correct_perc.json',
-                'tests/mmodel/without_centro_habana_all_connections/havana_network_correct_perc.json',
-                'tests/mmodel/without_plaza_all_connections/havana_network_correct_perc.json']
+    iters = 50000
+    networks = [
+        'tests/mmodel/havana_all_Conn_Classic_SIR/simple_network.json']
 
-    params = ['tests/mmodel/havana_geo_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json',
-              'tests/mmodel/havana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json',
-              'tests/mmodel/without_centro_habana_all_connections/estimation/parameters_estimated_PSO_Numba_GPU_d29_iter-50000.json',
-              'tests/mmodel/without_plaza_all_connections/estimation/parameters_estimated_PSO_Numba_d29_iter-50000.json']
+    params = [
+        'tests/mmodel/havana_all_Conn_Classic_SIR/params/parameters_d16.json']
 
     paramas_estimated_jsons = [
-        'tests/mmodel/havana_geo_connections/estimation/estimation_PSO_Numba_2_d29_iter-50000.json',
-        'tests/mmodel/havana_all_connections/estimation/estimation_PSO_Numba_2_d29_iter-50000.json',
-        'tests/mmodel/without_centro_habana_all_connections/estimation/estimation_PSO_Numba_2_d29_iter-50000.json',
-        'tests/mmodel/without_plaza_all_connections/estimation/estimation_PSO_Numba_2_d29_iter-50000.json'
-    ]
+        f"tests/mmodel/havana_all_Conn_Classic_SIR/estimation/parameters_estimated_pso_SIR_Numba_2_d{START_INFECTED}_iter-{iters}.json"]
 
     data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     data_dead_path = "data_cov/cv19_fall_mun.xlsx"
     results_path = os.path.join(os.path.abspath(
-        os.getcwd()), "out_All_models.txt")
+        os.getcwd()), "out_SAIR_all_hav_metapop.txt")
 
     with open(results_path, "a") as sys.stdout:
 
         for i, n in enumerate(networks):
-            est = estimator_SIR(model_name=f"model_havana_d{START_INFECTED}", network_path=n,
-                                params_path=params[i], iter=iters, method='pso', numba=True)
+            est = estimator_SIR_classic(model_name=f"model_havana_d{START_INFECTED}", network_path=n,
+                                        params_path=params[i], iter=iters, method='pso', numba=True)
 
             d_op = data_operator(data_dead_path, data_conf_path)
 

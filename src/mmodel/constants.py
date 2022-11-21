@@ -23,7 +23,7 @@
 #     "Cerro"]
 
 
-START_INFECTED = 29  # constant to get the infected from the day 15
+START_INFECTED = 29  # constant to get the infected from the day 29
 
 BETA = 0.17  # difusion rate
 GAMMA = 0.082  # recovery rate
