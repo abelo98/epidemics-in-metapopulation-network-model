@@ -5,13 +5,13 @@
             "0": {
                 "label": "node1",
                 "metadata": {
-                    "cmodel": "SAIRada"
+                    "cmodel": "SIR"
                 }
             },
             "1": {
                 "label": "node2",
                 "metadata": {
-                    "cmodel": "SAIRada"
+                    "cmodel": "SIR"
                 }
             }
         },

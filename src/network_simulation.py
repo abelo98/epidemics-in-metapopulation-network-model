@@ -250,7 +250,7 @@ start_estimation = dbc.Row(
                 ),
             ],
             sm=12,
-            md=5,
+            md=4,
         ),
         html.Div(
             id="estim-status",
@@ -258,6 +258,28 @@ start_estimation = dbc.Row(
                 "marginTop": "10px",
             },
         ),
+        # dbc.Col(
+        #     [
+        #         dbc.Button(
+        #             id="estimate-btn",
+        #             children="Run Estimation",
+        #             color="success",
+        #             style={
+        #                 "paddingRight": "40px",
+        #                 "paddingLeft": "40px",
+        #                 "textStyle": "bold",
+        #             },
+        #         ),
+        #     ],
+        #     sm=12,
+        #     md=5,
+        # ),
+        # html.Div(
+        #     id="estim-status",
+        #     style={
+        #         "marginTop": "10px",
+        #     },
+        # ),
     ]
 )
 
@@ -624,11 +646,11 @@ def simulate_network(_, input_params, input_time):
     State("input-est-path", "value"),
     prevent_initial_call=True,
 )
-def estimate_params(input_data_confirmed, input_data_deceased,
+def estimate_params(_, input_data_confirmed, input_data_deceased,
                     input_algorithem_type, input_iters, input_model, input_params,
                     input_est_path):
-    print(input_data_confirmed)
-    print("*************")
+    print("nooooo")
+
     if model is None:
         not_yet = dbc.Col(
             dbc.Alert(
@@ -638,11 +660,13 @@ def estimate_params(input_data_confirmed, input_data_deceased,
             ),
             md=10,
         )
-        return not_yet, go.Figure()
+        return not_yet
 
     try:
+        print("akiiiiiii")
+        nodes = len(model.network.nodes)
         start_estimation(input_model, input_params, input_est_path, input_data_confirmed,
-                         input_data_deceased, input_iters, input_algorithem_type)
+                         input_data_deceased, input_iters, input_algorithem_type, 20, nodes)
     except (TypeError, AttributeError):
         text = "Parameter file is not set." if input_params is None else ""
         text += "\n\nPath to save estimation is not set." if input_est_path is None else ""
@@ -659,7 +683,7 @@ def estimate_params(input_data_confirmed, input_data_deceased,
             ),
             md=10,
         )
-        return not_yet, go.Figure()
+        return not_yet
 
     completed = dbc.Col(
         dbc.Alert(
