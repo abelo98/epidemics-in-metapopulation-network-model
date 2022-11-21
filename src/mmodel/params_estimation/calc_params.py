@@ -1,3 +1,4 @@
+import math
 from numba import njit, jit, cuda
 from scipy.integrate import odeint
 import numpy as np
@@ -50,7 +51,7 @@ class estimator_calc_PSO(estimator_calc_base):
             infected = estimator_calc_PSO.fit_odeint_metamodel(
                 time, particle)
 
-            diff_square[i] = (sum((infected - ydata)**2))/len(ydata)
+            diff_square[i] = math.sqrt((sum((infected - ydata)**2))/len(ydata))
         return diff_square
 
     @timer
