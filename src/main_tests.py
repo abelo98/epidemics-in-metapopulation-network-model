@@ -43,8 +43,9 @@ def plot_multiple(curves, labels):
     days = np.linspace(0, min_len, min_len)
 
     for i, curve in enumerate(curves):
-        print(f'max x {labels[i]}: {curve[:min_len].argmax()}')
-        print(f'max y {labels[i]}: {int(curve[min_len-1])}')
+        x = curve[:min_len].argmax()
+        print(f'max x {labels[i]}: {x}')
+        print(f'max y {labels[i]}: {int(curve[x])}')
 
     curves = [c[:min_len] for c in curves]
     plot_values_multiple_curves(curves, days, labels)
@@ -52,10 +53,10 @@ def plot_multiple(curves, labels):
 
 def plot_est_and_especial_points(y_est, label):
     days = np.linspace(0, len(y_est), len(y_est))
-
-    ranges = [(0, 178), (80, int(y_est.argmax())), (int(y_est.argmax()), int(y_est.argmax())),
+    # (0, 178), (118, int(y_est.argmax())),
+    ranges = [(int(y_est.argmax()), int(y_est.argmax())),
               (int(y_est.argmax()), len(y_est)-1)]
-    min_maxs = [1, -1, 1, -1]
+    min_maxs = [1, -1]
 
     points = get_points_in_range(ranges, y_est, min_maxs)
     epidemic_start = date(2020, 3, 26)
@@ -172,28 +173,28 @@ def main():
     # arreglar q numba se pide en est y sim
     days = np.linspace(0, 5000, 5000)
     d_op = data_operator(death_path, active_path)
-    infected_all_combine = get_infected_combine(params_path3, d_op)[14:]
+    infected_all_combine = get_infected_combine(params_path3, d_op)
 
-    # est1 = estimator_SIR_classic(network_path=network1,
-    #                              params_path=params_est1, numba=False)
-    # y_estimated = get_data_simulation(est1, False, days)
-    # y_infected1 = y_estimated['I']
+    est1 = estimator_SIR_classic(network_path=network1,
+                                 params_path=params_path1, numba=False)
+    y_estimated = get_data_simulation(est1, False, days)
+    y_infected1 = y_estimated['I']
 
-    # est2 = estimator_SAIR_classic(network_path=network2,
-    #                               params_path=params_est2, numba=False)
-    # y_estimated = get_data_simulation(est1, False, days)
-    # y_infected2 = y_estimated['I']
-    # y_asyntomatic2 = y_estimated['A']
+    est2 = estimator_SAIR_classic(network_path=network2,
+                                  params_path=params_path2, numba=False)
+    y_estimated = get_data_simulation(est2, False, days)
+    y_infected2 = y_estimated['I']
+    y_asyntomatic2 = y_estimated['A']
 
     est_hav_allConn = estimator_SIR(network_path=network3,
                                     params_path=params_path3, numba=False)
     y_estimated_hav_allConn = get_data_simulation(est_hav_allConn, False, days)
     y_infected_hav_allConn = y_estimated_hav_allConn['I']
 
-    # est4 = estimator_SIR(network_path=network4,
-    #                             params_path=params_est4, numba=False)
-    # y_estimated = get_data_simulation(params_est4, False, days)
-    # y_infected4 = y_estimated['I']
+    # est_hav_geoConn = estimator_SIR(network_path=network4,
+    #                                 params_path=params_path4, numba=False)
+    # y_estimated_hav_geoConn = get_data_simulation(est_hav_geoConn, False, days)
+    # y_infected_hav_geoConn = y_estimated_hav_geoConn['I']
 
     # est_centroHav = estimator_SIR(network_path=network5,
     #                               params_path=params_path5, numba=False)
@@ -205,32 +206,43 @@ def main():
     # y_estimated_plaza = get_data_simulation(est_plaza, False, days)
     # y_infected_plaza = y_estimated_plaza['I']
 
-    # est6 = estimator_SAIR(network_path=network6,
-    #                              params_path=params_est6, numba=False)
-    # y_estimated = get_data_simulation(params_est6, False, days)
-    # y_infected6 = y_estimated['I']
-    # y_infected6 = y_estimated['A']
+    # est_hav_geo_SAIR = estimator_SAIR(network_path=network7,
+    #                                   params_path=params_path7, numba=False)
+    # y_estimated_hav_geoConn_SAIR = get_data_simulation(
+    #     est_hav_geo_SAIR, False, days)
+    # y_infected_hav_geoConn_SAIR_I = y_estimated_hav_geoConn_SAIR['I']
+    # y_infected_hav_geoConn_SAIR_A = y_estimated_hav_geoConn_SAIR['A']
 
     label1 = 'I(t) SIR clasico Habana todos los municipios conectados'
     label2 = 'I(t) SAIR clasico Habana todos los municipios conectados'
     label3 = 'A(t) SAIR clasico Habana todos los municipios conectados'
     # label4 = 'I(t) SIR metapoblaciones todos los municipios conectados'
-    label4 = 'I(t) estimado Habana con todos los municipios conectados '
-    label5 = 'I(t) estimado Habana con municipios colindantes conectados'
+    label4 = 'I(t) SIR (metapoblaciones), estimado Habana con todos los municipios conectados '
+    label5 = 'I(t) SIR (metapoblaciones), estimado Habana con municipios colindantes conectados'
     label6 = 'I(t) estimado sin Centro Habana'
     label7 = 'I(t) estimado sin Plaza'
-    label8 = 'I(t) estimado SAIR Habana municipios colindantes conectados'
-    label9 = 'A(t) estimado SAIR Habana municipios colindantes conectados'
+    label8 = 'I(t) SAIR (metapoblaciones), estimado Habana municipios colindantes conectados'
+    label9 = 'A(t) SAIR (metapoblaciones), estimado Habana municipios colindantes conectados'
 
     label10 = 'datos reales'
 
-    # run_test()
-    compare_est_with_org(y_infected_hav_allConn, infected_all_combine)
-    plot_multiple([y_infected_hav_allConn, infected_all_combine],
-                  [label7, label10])
+    # # run_test()
+    # compare_est_with_org(y_infected2,
+    #                      infected_all_combine[14:])
 
-    # plot_est_and_original(y_infected5, infected_all_combine, label6, label10)
-    plot_est_and_especial_points(y_infected_hav_allConn, 'estimado I(t)')
+    plot_multiple([y_infected_hav_allConn, y_infected1, y_infected2, infected_all_combine],
+                  [label4, label1, label2, label10])
+    plot_multiple([y_infected_hav_allConn, y_infected1, y_infected2, y_asyntomatic2],
+                  [label4, label1, label2, label3])
+
+    # plot_multiple([y_infected2, y_asyntomatic2],
+    #               [label2, label3])
+
+    # plot_est_and_original(y_infected1, y_infected_hav_allConn, label1, label4)
+    # plot_est_and_especial_points(
+    #     y_infected2, 'estimado I(t)')
+    # plot_est_and_especial_points(
+    #     y_asyntomatic2, 'estimado A(t)')
 
 
 if __name__ == "__main__":
