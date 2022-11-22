@@ -24,7 +24,7 @@ def plot_values(data_org, data_est, time, label_y1, label_y2):
     idx = idx[-1]
     # plt.plot(time[idx], data_est[idx], 'ro')
     intercept_date = datetime.date(
-        year=2020, month=4, day=9) + datetime.timedelta(days=int(time[idx]))
+        year=2020, month=3, day=26) + datetime.timedelta(days=int(time[idx]))
 
     plt.plot(int(time[idx]), int(data_est[idx]), marker="o", color="green",
              label=f'p0: {intercept_date}')

@@ -3,7 +3,7 @@ from .calc_params import *
 
 
 class estimator_base:
-    def __init__(self, model_name: str, network_path: str, params_path: str, method='diff_evol', iter=6000, numba=False):
+    def __init__(self, network_path: str, params_path: str, method='diff_evol', iter=6000, numba=False, model_name='model_havana_d29'):
         self.model_name = model_name
         self.params_path = params_path
         self.method_name = method
