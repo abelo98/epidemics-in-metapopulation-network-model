@@ -12,7 +12,7 @@ from mmodel.simple_trip import SimpleTripMetaModel
 from app import app
 from mmodel.mmodel import MetaModel
 from dash_app.graph_gen import show_simulation
-from main_est import start_estimation
+from main_est import make_estimation
 
 # ------------------- Ploting ----------------------
 
@@ -218,6 +218,17 @@ start_estimation = dbc.Row(
             md=3,
         ),
         dbc.Col(
+            dbc.Input(
+                id="input-startDay",
+                placeholder="Starting Day",
+                type="number",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        dbc.Col(
             dcc.Dropdown(
                 id="input-algorithem-type",
                 options=[
@@ -234,7 +245,7 @@ start_estimation = dbc.Row(
                 persistence_type="session",
             ),
             sm=12,
-            md=4,
+            md=5,
         ),
         dbc.Col(
             [
@@ -250,7 +261,7 @@ start_estimation = dbc.Row(
                 ),
             ],
             sm=12,
-            md=5,
+            md=6,
         ),
         html.Div(
             id="estim-status",
@@ -622,13 +633,14 @@ def simulate_network(_, input_params, input_time):
     State("input-model", "value"),
     State("input-params", "value"),
     State("input-est-path", "value"),
+    State("input-startDay", "value"),
+
     prevent_initial_call=True,
 )
-def estimate_params(input_data_confirmed, input_data_deceased,
+def estimate_params(_, input_data_confirmed, input_data_deceased,
                     input_algorithem_type, input_iters, input_model, input_params,
-                    input_est_path):
-    print(input_data_confirmed)
-    print("*************")
+                    input_est_path, input_startDay):
+
     if model is None:
         not_yet = dbc.Col(
             dbc.Alert(
@@ -638,11 +650,17 @@ def estimate_params(input_data_confirmed, input_data_deceased,
             ),
             md=10,
         )
-        return not_yet, go.Figure()
+        return not_yet
+    nodes = len(model.network.nodes)
+    system_type = model.network.nodes[0].cmodel
+    make_estimation(input_model, input_params, input_est_path, input_data_confirmed,
+                    input_data_deceased, input_iters, input_algorithem_type, input_startDay, 2, 'SAIR')
 
     try:
-        start_estimation(input_model, input_params, input_est_path, input_data_confirmed,
-                         input_data_deceased, input_iters, input_algorithem_type)
+        nodes = len(model.network.nodes)
+        # system_type = model.network.nodes[0].cmodel
+        # make_estimation(input_model, input_params, input_est_path, input_data_confirmed,
+        #                 input_data_deceased, input_iters, input_algorithem_type, input_startDay, nodes, system_type)
     except (TypeError, AttributeError):
         text = "Parameter file is not set." if input_params is None else ""
         text += "\n\nPath to save estimation is not set." if input_est_path is None else ""
@@ -659,7 +677,7 @@ def estimate_params(input_data_confirmed, input_data_deceased,
             ),
             md=10,
         )
-        return not_yet, go.Figure()
+        return not_yet
 
     completed = dbc.Col(
         dbc.Alert(

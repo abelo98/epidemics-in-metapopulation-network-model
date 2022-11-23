@@ -1,0 +1,1 @@
+{"name": "simpleson", "config-file": "tests/mmodel/simple/simpleson.cnf.json", "network-file": "tests/mmodel/simple/simple_network.json", "code-file": "tests/mmodel/simple/simpleson.py", "network-hash": "eba418875d9b31ffeb6838b0604fdbf79f0721fa"}

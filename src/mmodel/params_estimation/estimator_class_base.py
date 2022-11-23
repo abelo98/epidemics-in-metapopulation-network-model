@@ -3,11 +3,12 @@ from .calc_params import *
 
 
 class estimator_base:
-    def __init__(self, network_path: str, params_path: str, method='diff_evol', iter=6000, numba=False, model_name='model_havana_d29'):
+    def __init__(self, model_name: str, network_path: str, params_path: str, method='diff_evol', iter=6000, numba=False, initial_day=1):
         self.model_name = model_name
         self.params_path = params_path
         self.method_name = method
         self.iter = iter
+        self.initial_day = initial_day
         # compiles the model
         self.api = ApiConn(self.model_name, network_path, numba)
         self.opt_func = self.__opt_selector__()

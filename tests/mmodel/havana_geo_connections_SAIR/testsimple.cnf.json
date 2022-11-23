@@ -1,0 +1,1 @@
+{"name": "testsimple", "config-file": "tests/mmodel/havana_geo_connections_SAIR/testsimple.cnf.json", "network-file": "tests/mmodel/havana_geo_connections_SAIR/havana_geo_correct_perc.json", "code-file": "tests/mmodel/havana_geo_connections_SAIR/testsimple.py", "network-hash": "a17c70404e46f717278bd7d9787da46282ef3816"}

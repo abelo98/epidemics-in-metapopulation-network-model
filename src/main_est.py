@@ -20,14 +20,33 @@ def create_SEAIR():
     compile_model(text=model, model_name=model_name, path=save_path)
 
 
-def start_estimation(network, params, result_location,
-                     data_conf_path, data_dead_path, iters, algorithem, initial_day):
+def select_model(nodes, network, params, iters, algorithem, initial_day, compartimrntal_type):
+    if algorithem == 1:
+        algorithem = 'pso'
+    elif algorithem == 2:
+        algorithem = 'diff_evol'
+    else:
+        algorithem = 'lm'
 
-    data_conf_path = "data_cov/cv19_conf_mun.xlsx"
-    data_dead_path = "data_cov/cv19_fall_mun.xlsx"
+    if nodes > 1 and compartimrntal_type == 'SAIR':
+        return estimator_SAIR(model_name=f"model_havana_d{initial_day}", network_path=network,
+                              params_path=params, iter=iters, method=algorithem, numba=True, initial_day=initial_day)
+    elif nodes > 1 and compartimrntal_type == 'SIR':
+        return estimator_SIR(model_name=f"model_havana_d{initial_day}", network_path=network,
+                             params_path=params, iter=iters, method=algorithem, numba=True, initial_day=initial_day)
+    if nodes == 1 and compartimrntal_type == 'SAIR':
+        return estimator_SAIR_classic(model_name=f"model_havana_d{initial_day}", network_path=network,
+                                      params_path=params, iter=iters, method=algorithem, numba=True, initial_day=initial_day)
+    elif nodes == 1 and compartimrntal_type == 'SIR':
+        return estimator_SIR_classic(model_name=f"model_havana_d{initial_day}", network_path=network,
+                                     params_path=params, iter=iters, method=algorithem, numba=True, initial_day=initial_day)
 
-    est = estimator_SAIR(model_name=f"model_havana_d{initial_day}", network_path=network,
-                         params_path=params, iter=iters, method=algorithem, numba=True)
+
+def make_estimation(network, params, result_location,
+                    data_conf_path, data_dead_path, iters, algorithem, initial_day, nodes, model):
+
+    est = select_model(nodes, network=network,
+                       params=params, iters=iters, initial_day=initial_day, algorithem=algorithem, compartimrntal_type=model)
 
     d_op = data_operator(data_dead_path, data_conf_path)
 
@@ -39,7 +58,6 @@ def start_estimation(network, params, result_location,
     print(f'elapsed time: {time} s')
     save_file_as_json(result_location, new_paramas_to_save)
 
-
-# if __name__ == "__main__":
-#     start_estimation()
+    # if __name__ == "__main__":
+    #     start_estimation()
     # create_SEAIR()

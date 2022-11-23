@@ -2,7 +2,7 @@
     {
         "id": "0",
         "label": "node1",
-        "model": "SAIRada",
+        "model": "SIR",
         "y": {
             "S": 999,
             "I": 1,
@@ -17,7 +17,7 @@
     {
         "id": "0",
         "label": "node2",
-        "model": "SAIRada",
+        "model": "SIR",
         "y": {
             "S": 999,
             "I": 1,
