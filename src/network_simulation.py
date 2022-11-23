@@ -60,8 +60,6 @@ application_info = dbc.Row(
             * _Starting Day_ sets the initial to take initial values like infected, susceptibles, etc
             * _Algorithem_ sets the optimization function to use
 
-            
-
 
             **Simulation**
             * _Simulation Time_ sets simulation total duration

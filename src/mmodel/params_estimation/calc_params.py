@@ -153,7 +153,7 @@ class estimator_calc_Diff_Evol(estimator_calc_base):
     def __error_func__(x, time, ydata):
         infected = estimator_calc_Diff_Evol.fit_odeint_metamodel(time, x)
 
-        return sum((infected - ydata)**2)/len(ydata)
+        return math.sqrt(sum((infected - ydata)**2)/len(ydata))
 
     @timer
     def __apply_method__(self, guess, time, ydata):
