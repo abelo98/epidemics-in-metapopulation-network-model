@@ -45,7 +45,6 @@ def select_model(nodes, network, params, iters, algorithem, initial_day, compart
 def make_estimation(network, params, result_location,
                     data_conf_path, data_dead_path, iters, algorithem, initial_day, nodes, model):
 
-    print(model)
     est = select_model(nodes, network=network,
                        params=params, iters=iters, initial_day=initial_day, algorithem=algorithem, compartimrntal_type=model)
 
