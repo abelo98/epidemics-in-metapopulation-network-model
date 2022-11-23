@@ -1,1 +1,0 @@
-{"name": "model_havana_d29", "config-file": "tests/mmodel/hav_all_conn_SAIR/model_havana_d29.cnf.json", "network-file": "tests/mmodel/hav_all_conn_SAIR/havana_network_correct_perc.json", "code-file": "tests/mmodel/hav_all_conn_SAIR/model_havana_d29.py", "network-hash": "ebe3d2f41bc1d3fcbd3d437c213392de41c25e57"}

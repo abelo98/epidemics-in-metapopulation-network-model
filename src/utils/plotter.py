@@ -24,7 +24,7 @@ def plot_values(data_org, data_est, time, label_y1, label_y2):
     idx = idx[-1]
     # plt.plot(time[idx], data_est[idx], 'ro')
     intercept_date = datetime.date(
-        year=2020, month=3, day=20) + datetime.timedelta(days=int(time[idx]))
+        year=2020, month=3, day=26) + datetime.timedelta(days=int(time[idx]))
 
     plt.plot(int(time[idx]), int(data_est[idx]), marker="o", color="green",
              label=f'p0: {intercept_date}')
@@ -51,8 +51,8 @@ def plot_values_multiple_curves(curves, time, labels):
     plt.show()
 
 
-def sigle_plot_and_itresting_points(x, y, points: list, dates: list):
-    plt.plot(x, y, label='I(t) estimado')
+def sigle_plot_and_itresting_points(x, y, label, points: list, dates: list):
+    plt.plot(x, y, label=label)
     for i, point in enumerate(points):
         p_x = point[0]
         p_y = point[1]
