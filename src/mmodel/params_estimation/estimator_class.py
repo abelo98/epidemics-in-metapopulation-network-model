@@ -1,6 +1,5 @@
 from ..json_manager.json_processor import read_json
 import numpy as np
-from ..constants import START_INFECTED
 from .estimator_class_base import estimator_base
 
 
@@ -13,7 +12,7 @@ class estimator_SIR(estimator_base):
         index_S = models[0]['model'].index('S')
 
         for model in models:
-            infected_by_munc = infected[model["label"]][START_INFECTED:]
+            infected_by_munc = infected[model["label"]][self.initial_day:]
             if (len(infected_by_munc) > time):
                 time = len(infected_by_munc)
 
@@ -31,7 +30,7 @@ class estimator_SIR(estimator_base):
     def build_json_params_metamodel(self, models_json, acc_infected_by_munc, d_op):
         output = []
         acc_infected_combine = d_op.combine_infected_all_mcps(
-            acc_infected_by_munc)[START_INFECTED:]
+            acc_infected_by_munc)[self.initial_day:]
 
         initial_v, guess, time = self.get_initial_values_metamodel(
             models_json, acc_infected_by_munc)
@@ -63,7 +62,7 @@ class estimator_SEAIR(estimator_base):
         index_S = models[0]['model'].index('S')
 
         for model in models:
-            infected_by_munc = infected[model["label"]][START_INFECTED:]
+            infected_by_munc = infected[model["label"]][self.initial_day:]
             if (len(infected_by_munc) > time):
                 time = len(infected_by_munc)
 
@@ -81,7 +80,7 @@ class estimator_SEAIR(estimator_base):
     def build_json_params_metamodel(self, models_json, acc_infected_by_munc, d_op):
         output = []
         acc_infected_combine = d_op.combine_infected_all_mcps(
-            acc_infected_by_munc)[START_INFECTED:]
+            acc_infected_by_munc)[self.initial_day:]
 
         initial_v, guess, time = self.get_initial_values_metamodel(
             models_json, acc_infected_by_munc)
@@ -113,7 +112,7 @@ class estimator_SAIR(estimator_base):
         index_S = models[0]['model'].index('S')
 
         for model in models:
-            infected_by_munc = infected[model["label"]][START_INFECTED:]
+            infected_by_munc = infected[model["label"]][self.initial_day:]
             if (len(infected_by_munc) > time):
                 time = len(infected_by_munc)
 
@@ -131,7 +130,7 @@ class estimator_SAIR(estimator_base):
     def build_json_params_metamodel(self, models_json, acc_infected_by_munc, d_op):
         output = []
         acc_infected_combine = d_op.combine_infected_all_mcps(
-            acc_infected_by_munc)[START_INFECTED:]
+            acc_infected_by_munc)[self.initial_day:]
 
         initial_v, guess, time = self.get_initial_values_metamodel(
             models_json, acc_infected_by_munc)

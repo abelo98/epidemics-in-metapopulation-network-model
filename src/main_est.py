@@ -30,36 +30,34 @@ def select_model(nodes, network, params, iters, algorithem, initial_day, compart
 
     if nodes > 1 and compartimrntal_type == 'SAIR':
         return estimator_SAIR(model_name=f"model_havana_d{initial_day}", network_path=network,
-                              params_path=params, iter=iters, method=algorithem, numba=True)
+                              params_path=params, iter=iters, method=algorithem, numba=True, initial_day=initial_day)
     elif nodes > 1 and compartimrntal_type == 'SIR':
         return estimator_SIR(model_name=f"model_havana_d{initial_day}", network_path=network,
-                             params_path=params, iter=iters, method=algorithem, numba=True)
+                             params_path=params, iter=iters, method=algorithem, numba=True, initial_day=initial_day)
     if nodes == 1 and compartimrntal_type == 'SAIR':
         return estimator_SAIR_classic(model_name=f"model_havana_d{initial_day}", network_path=network,
-                                      params_path=params, iter=iters, method=algorithem, numba=True)
+                                      params_path=params, iter=iters, method=algorithem, numba=True, initial_day=initial_day)
     elif nodes == 1 and compartimrntal_type == 'SIR':
-        return estimator_SAIR_classic(model_name=f"model_havana_d{initial_day}", network_path=network,
-                                      params_path=params, iter=iters, method=algorithem, numba=True)
+        return estimator_SIR_classic(model_name=f"model_havana_d{initial_day}", network_path=network,
+                                     params_path=params, iter=iters, method=algorithem, numba=True, initial_day=initial_day)
 
 
 def make_estimation(network, params, result_location,
-                    data_conf_path, data_dead_path, iters, algorithem, initial_day, nodes):
+                    data_conf_path, data_dead_path, iters, algorithem, initial_day, nodes, model):
 
-    # data_conf_path = "data_cov/cv19_conf_mun.xlsx"
-    # data_dead_path = "data_cov/cv19_fall_mun.xlsx"
+    print(model)
+    est = select_model(nodes, network=network,
+                       params=params, iters=iters, initial_day=initial_day, algorithem=algorithem, compartimrntal_type=model)
 
-    # est = select_model(nodes, network_path=network,
-    #                    params_path=params, iter=iters, method=algorithem)
+    d_op = data_operator(data_dead_path, data_conf_path)
 
-    # d_op = data_operator(data_dead_path, data_conf_path)
+    acc_infected = d_op.get_infected_by_muncps(params)
 
-    # acc_infected = d_op.get_infected_by_muncps(params)
+    new_paramas_to_save, time = est.get_params_estimation_combine_infected(
+        acc_infected, d_op)
 
-    # new_paramas_to_save, time = est.get_params_estimation_combine_infected(
-    #     acc_infected, d_op)
-
-    # print(f'elapsed time: {time} s')
-    # save_file_as_json(result_location, new_paramas_to_save)
+    print(f'elapsed time: {time} s')
+    save_file_as_json(result_location, new_paramas_to_save)
 
     # if __name__ == "__main__":
     #     start_estimation()

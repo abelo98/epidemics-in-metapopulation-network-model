@@ -651,11 +651,16 @@ def estimate_params(_, input_data_confirmed, input_data_deceased,
             md=10,
         )
         return not_yet
+    nodes = len(model.network.nodes)
+    system_type = model.network.nodes[0].cmodel
+    make_estimation(input_model, input_params, input_est_path, input_data_confirmed,
+                    input_data_deceased, input_iters, input_algorithem_type, input_startDay, 2, 'SAIR')
 
     try:
         nodes = len(model.network.nodes)
-        make_estimation(input_model, input_params, input_est_path, input_data_confirmed,
-                        input_data_deceased, input_iters, input_algorithem_type, input_startDay, nodes)
+        # system_type = model.network.nodes[0].cmodel
+        # make_estimation(input_model, input_params, input_est_path, input_data_confirmed,
+        #                 input_data_deceased, input_iters, input_algorithem_type, input_startDay, nodes, system_type)
     except (TypeError, AttributeError):
         text = "Parameter file is not set." if input_params is None else ""
         text += "\n\nPath to save estimation is not set." if input_est_path is None else ""
