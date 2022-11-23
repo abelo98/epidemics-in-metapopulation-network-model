@@ -51,6 +51,18 @@ application_info = dbc.Row(
             * If dropdown is equal to _Generate_:
                 * _path/to/network/params_ generates a file in selected location. It uses xml or json notation depending on filetype.
 
+            **Confirmed Cases** path of the excel file with the confirmed cases
+
+            **Deceased Cases** path of the excel file with the Deceased cases
+
+            **Estimation** 
+            * _Algorithem iterations_ sets number of iterations to make by the optimization function
+            * _Starting Day_ sets the initial to take initial values like infected, susceptibles, etc
+            * _Algorithem_ sets the optimization function to use
+
+            
+
+
             **Simulation**
             * _Simulation Time_ sets simulation total duration
             """
@@ -220,7 +232,7 @@ start_estimation = dbc.Row(
         dbc.Col(
             dbc.Input(
                 id="input-startDay",
-                placeholder="Starting Day",
+                placeholder="Starting day",
                 type="number",
                 persistence=True,
                 persistence_type="session",
