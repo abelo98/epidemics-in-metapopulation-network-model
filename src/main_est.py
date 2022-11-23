@@ -42,8 +42,8 @@ def select_model(nodes, network, params, iters, algorithem, initial_day, compart
                                       params_path=params, iter=iters, method=algorithem, numba=True)
 
 
-def start_estimation(network, params, result_location,
-                     data_conf_path, data_dead_path, iters, algorithem, initial_day, nodes):
+def make_estimation(network, params, result_location,
+                    data_conf_path, data_dead_path, iters, algorithem, initial_day, nodes):
 
     # data_conf_path = "data_cov/cv19_conf_mun.xlsx"
     # data_dead_path = "data_cov/cv19_fall_mun.xlsx"
@@ -54,14 +54,6 @@ def start_estimation(network, params, result_location,
     # d_op = data_operator(data_dead_path, data_conf_path)
 
     # acc_infected = d_op.get_infected_by_muncps(params)
-    print(network)
-    print(params)
-    print(nodes)
-    print(result_location)
-    print(data_conf_path)
-    print(data_dead_path)
-    print(iters)
-    print(algorithem)
 
     # new_paramas_to_save, time = est.get_params_estimation_combine_infected(
     #     acc_infected, d_op)
@@ -69,7 +61,6 @@ def start_estimation(network, params, result_location,
     # print(f'elapsed time: {time} s')
     # save_file_as_json(result_location, new_paramas_to_save)
 
-
-# if __name__ == "__main__":
-#     start_estimation()
+    # if __name__ == "__main__":
+    #     start_estimation()
     # create_SEAIR()

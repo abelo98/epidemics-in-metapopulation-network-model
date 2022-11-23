@@ -12,7 +12,7 @@ from mmodel.simple_trip import SimpleTripMetaModel
 from app import app
 from mmodel.mmodel import MetaModel
 from dash_app.graph_gen import show_simulation
-from main_est import start_estimation
+from main_est import make_estimation
 
 # ------------------- Ploting ----------------------
 
@@ -218,6 +218,17 @@ start_estimation = dbc.Row(
             md=3,
         ),
         dbc.Col(
+            dbc.Input(
+                id="input-startDay",
+                placeholder="Starting Day",
+                type="number",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        dbc.Col(
             dcc.Dropdown(
                 id="input-algorithem-type",
                 options=[
@@ -234,7 +245,7 @@ start_estimation = dbc.Row(
                 persistence_type="session",
             ),
             sm=12,
-            md=4,
+            md=5,
         ),
         dbc.Col(
             [
@@ -250,7 +261,7 @@ start_estimation = dbc.Row(
                 ),
             ],
             sm=12,
-            md=4,
+            md=6,
         ),
         html.Div(
             id="estim-status",
@@ -258,28 +269,6 @@ start_estimation = dbc.Row(
                 "marginTop": "10px",
             },
         ),
-        # dbc.Col(
-        #     [
-        #         dbc.Button(
-        #             id="estimate-btn",
-        #             children="Run Estimation",
-        #             color="success",
-        #             style={
-        #                 "paddingRight": "40px",
-        #                 "paddingLeft": "40px",
-        #                 "textStyle": "bold",
-        #             },
-        #         ),
-        #     ],
-        #     sm=12,
-        #     md=5,
-        # ),
-        # html.Div(
-        #     id="estim-status",
-        #     style={
-        #         "marginTop": "10px",
-        #     },
-        # ),
     ]
 )
 
@@ -644,12 +633,13 @@ def simulate_network(_, input_params, input_time):
     State("input-model", "value"),
     State("input-params", "value"),
     State("input-est-path", "value"),
+    State("input-startDay", "value"),
+
     prevent_initial_call=True,
 )
 def estimate_params(_, input_data_confirmed, input_data_deceased,
                     input_algorithem_type, input_iters, input_model, input_params,
-                    input_est_path):
-    print("nooooo")
+                    input_est_path, input_startDay):
 
     if model is None:
         not_yet = dbc.Col(
@@ -663,10 +653,9 @@ def estimate_params(_, input_data_confirmed, input_data_deceased,
         return not_yet
 
     try:
-        print("akiiiiiii")
         nodes = len(model.network.nodes)
-        start_estimation(input_model, input_params, input_est_path, input_data_confirmed,
-                         input_data_deceased, input_iters, input_algorithem_type, 20, nodes)
+        make_estimation(input_model, input_params, input_est_path, input_data_confirmed,
+                        input_data_deceased, input_iters, input_algorithem_type, input_startDay, nodes)
     except (TypeError, AttributeError):
         text = "Parameter file is not set." if input_params is None else ""
         text += "\n\nPath to save estimation is not set." if input_est_path is None else ""
