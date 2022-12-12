@@ -1,0 +1,1 @@
+{"name": "model_havana_d29", "config-file": "tests/mmodel/havana_full_network/model_havana_d29.cnf.json", "network-file": "tests/mmodel/havana_full_network/network.json", "code-file": "tests/mmodel/havana_full_network/model_havana_d29.py", "network-hash": "740468858bb77e755c35a97a4e49ce62ebd831ff"}

@@ -1,0 +1,1 @@
+{"name": "model_havana_d29", "config-file": "tests/mmodel/havana_geo_connections SEAIR/model_havana_d29.cnf.json", "network-file": "tests/mmodel/havana_geo_connections SEAIR/havana_geo_correct_perc.json", "code-file": "tests/mmodel/havana_geo_connections SEAIR/model_havana_d29.py", "network-hash": "a6564db2c1f55faa413d46b6913e02dfe5dcafe9"}

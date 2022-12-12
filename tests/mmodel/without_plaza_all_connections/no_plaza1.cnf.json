@@ -1,0 +1,1 @@
+{"name": "no_plaza1", "config-file": "tests/mmodel/without_plaza_all_connections/no_plaza1.cnf.json", "network-file": "tests/mmodel/without_plaza_all_connections/havana_network_correct_perc.json", "code-file": "tests/mmodel/without_plaza_all_connections/no_plaza1.py", "network-hash": "1216337e41276e0be6ff0881b2038377e15f4f47"}

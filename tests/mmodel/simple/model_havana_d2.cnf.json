@@ -1,0 +1,1 @@
+{"name": "model_havana_d2", "config-file": "tests/mmodel/simple/model_havana_d2.cnf.json", "network-file": "tests/mmodel/simple/simple_network.json", "code-file": "tests/mmodel/simple/model_havana_d2.py", "network-hash": "eba418875d9b31ffeb6838b0604fdbf79f0721fa"}

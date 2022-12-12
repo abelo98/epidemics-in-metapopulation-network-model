@@ -1,0 +1,248 @@
+[
+  {
+    "id": 0,
+    "label": "Regla",
+    "model": "SEAIRada",
+    "y": {
+      "S": 43833,
+      "E": 0,
+      "A": 0,
+      "I": 0,
+      "R": 0,
+      "N": 43833
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 1,
+    "label": "La Lisa",
+    "model": "SEAIRada",
+    "y": {
+      "S": 145022,
+      "E": 0,
+      "A": 0,
+      "I": 1,
+      "R": 0,
+      "N": 145023
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 2,
+    "label": "Playa",
+    "model": "SEAIRada",
+    "y": {
+      "S": 178556,
+      "E": 0,
+      "A": 0,
+      "I": 1,
+      "R": 0,
+      "N": 178557
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 3,
+    "label": "Marianao",
+    "model": "SEAIRada",
+    "y": {
+      "S": 134994,
+      "I": 0,
+      "R": 0,
+      "N": 134994
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 4,
+    "label": "Boyeros",
+    "model": "SEAIRada",
+    "y": {
+      "S": 199633,
+      "I": 0,
+      "R": 0,
+      "N": 199633
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 5,
+    "label": "Arroyo Naranjo",
+    "model": "SEAIRada",
+    "y": {
+      "S": 205701,
+      "I": 0,
+      "R": 0,
+      "N": 205701
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 6,
+    "label": "Diez de Octubre",
+    "model": "SEAIRada",
+    "y": {
+      "S": 201435,
+      "I": 0,
+      "R": 0,
+      "N": 201435
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 7,
+    "label": "Cerro",
+    "model": "SEAIRada",
+    "y": {
+      "S": 124646,
+      "I": 0,
+      "R": 0,
+      "N": 124646
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 8,
+    "label": "Plaza de la Revolución",
+    "model": "SEAIRada",
+    "y": {
+      "S": 141780,
+      "I": 1,
+      "R": 0,
+      "N": 141781
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 9,
+    "label": "Centro Habana",
+    "model": "SEAIRada",
+    "y": {
+      "S": 133898,
+      "I": 0,
+      "R": 0,
+      "N": 133898
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 10,
+    "label": "Habana Vieja",
+    "model": "SEAIRada",
+    "y": {
+      "S": 81312,
+      "I": 1,
+      "R": 0,
+      "N": 81313
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 11,
+    "label": "San Miguel del Padrón",
+    "model": "SEAIRada",
+    "y": {
+      "S": 159022,
+      "I": 0,
+      "R": 0,
+      "N": 159022
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 12,
+    "label": "Cotorro",
+    "model": "SEAIRada",
+    "y": {
+      "S": 82049,
+      "I": 0,
+      "R": 0,
+      "N": 82049
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 13,
+    "label": "Guanabacoa",
+    "model": "SEAIRada",
+    "y": {
+      "S": 125702,
+      "I": 0,
+      "R": 0,
+      "N": 125702
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  },
+  {
+    "id": 14,
+    "label": "Habana del Este",
+    "model": "SEAIRada",
+    "y": {
+      "S": 174807,
+      "I": 0,
+      "R": 0,
+      "N": 174807
+    },
+    "params": {
+      "beta": 0.5,
+      "gamma": 0.071428571,
+      "alpha": 0.192307692
+    }
+  }
+]

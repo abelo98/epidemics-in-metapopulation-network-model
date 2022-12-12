@@ -1,0 +1,1 @@
+{"name": "hav_all_conn_classic_SIR", "config-file": "tests/mmodel/havana_all_Conn_Classic_SIR/hav_all_conn_classic_SIR.cnf.json", "network-file": "tests/mmodel/havana_all_Conn_Classic_SIR/simple_network.json", "code-file": "tests/mmodel/havana_all_Conn_Classic_SIR/hav_all_conn_classic_SIR.py", "network-hash": "c61cbb359ca88c6bc07638284e861b55de61be8f"}

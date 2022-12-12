@@ -12,6 +12,7 @@ from mmodel.simple_trip import SimpleTripMetaModel
 from app import app
 from mmodel.mmodel import MetaModel
 from dash_app.graph_gen import show_simulation
+from main_est import make_estimation
 
 # ------------------- Ploting ----------------------
 
@@ -22,6 +23,10 @@ SIMPLE_TRIP = 2
 
 LOAD = 1
 GENERATE = 2
+
+PSO = 1
+DIFFERENTIAL_EVOLUTION = 2
+LEVENBERG_MARQUARDT = 3
 
 model: Union[MetaModel, None] = None
 result: Union[Dict, None] = None
@@ -45,6 +50,16 @@ application_info = dbc.Row(
                 * _path/to/network/params_ loads the parameter of each node from a selected file
             * If dropdown is equal to _Generate_:
                 * _path/to/network/params_ generates a file in selected location. It uses xml or json notation depending on filetype.
+
+            **Confirmed Cases** path of the excel file with the confirmed cases
+
+            **Deceased Cases** path of the excel file with the Deceased cases
+
+            **Estimation** 
+            * _Algorithem iterations_ sets number of iterations to make by the optimization function
+            * _Starting Day_ sets the initial to take initial values like infected, susceptibles, etc
+            * _Algorithem_ sets the optimization function to use
+
 
             **Simulation**
             * _Simulation Time_ sets simulation total duration
@@ -98,7 +113,8 @@ model_file_input = dbc.Row(
             md=2,
         ),
         dbc.Col(
-            dbc.Button(id="input-model-btn", children="Compile", color="primary"),
+            dbc.Button(id="input-model-btn",
+                       children="Compile", color="primary"),
             sm=12,
             md=3,
         ),
@@ -137,12 +153,151 @@ param_file_input = dbc.Row(
             md=4,
         ),
         dbc.Col(
-            dbc.Button(id="generate-params-btn", children="Generate", color="primary"),
+            dbc.Button(id="generate-params-btn",
+                       children="Generate", color="primary"),
             sm=12,
             md=3,
         ),
         html.Div(
             id="param-status",
+            style={
+                "marginTop": "10px",
+            },
+        ),
+    ]
+)
+
+confirmed_cases_input = dbc.Row(
+    [
+        dcc.Markdown("##### Confirmed Cases"),
+        dbc.Col(
+            dbc.Input(
+                id="input-data-confirmed",
+                placeholder="path/to/data/confirmed cases",
+                type="text",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        html.Div(
+            id="confirmed-status",
+            style={
+                "marginTop": "10px",
+            },
+        ),
+    ]
+)
+
+deceased_cases_input = dbc.Row(
+    [
+        dcc.Markdown("##### Deceased Cases"),
+        dbc.Col(
+            dbc.Input(
+                id="input-data-deceased",
+                placeholder="path/to/data/deceased cases",
+                type="text",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        html.Div(
+            id="deceased-status",
+            style={
+                "marginTop": "10px",
+            },
+        ),
+    ]
+)
+
+start_estimation = dbc.Row(
+    [
+        dcc.Markdown("##### Estimation", style={"marginTop": "10px"}),
+        dbc.Col(
+            dbc.Input(
+                id="input-iters",
+                placeholder="Algorithem iterations",
+                type="number",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=3,
+        ),
+        dbc.Col(
+            dbc.Input(
+                id="input-startDay",
+                placeholder="Starting day",
+                type="number",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        dbc.Col(
+            dcc.Dropdown(
+                id="input-algorithem-type",
+                options=[
+                    {"label": "Particle Swarm Optimization", "value": PSO},
+                    {"label": "Differential Evolution",
+                        "value": DIFFERENTIAL_EVOLUTION},
+                    {"label": "Levenberg-Marquardt", "value": LEVENBERG_MARQUARDT},
+                ],
+                placeholder="Algorithem",
+                value=PSO,
+                clearable=True,
+                searchable=False,
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=5,
+        ),
+        dbc.Col(
+            [
+                dbc.Button(
+                    id="estimate-btn",
+                    children="Run Estimation",
+                    color="success",
+                    style={
+                        "paddingRight": "40px",
+                        "paddingLeft": "40px",
+                        "textStyle": "bold",
+                    },
+                ),
+            ],
+            sm=12,
+            md=6,
+        ),
+        html.Div(
+            id="estim-status",
+            style={
+                "marginTop": "10px",
+            },
+        ),
+    ]
+)
+
+estimation_output = dbc.Row(
+    [
+        dcc.Markdown("##### Estimation Output"),
+        dbc.Col(
+            dbc.Input(
+                id="input-est-path",
+                placeholder="path/to/estimation/result",
+                type="text",
+                persistence=True,
+                persistence_type="session",
+            ),
+            sm=12,
+            md=4,
+        ),
+        html.Div(
+            id="est-output-status",
             style={
                 "marginTop": "10px",
             },
@@ -272,6 +427,10 @@ layout = dbc.Container(
         application_info,
         model_file_input,
         param_file_input,
+        confirmed_cases_input,
+        deceased_cases_input,
+        estimation_output,
+        start_estimation,
         start_simulation,
         network_info,
         network_visualization,
@@ -296,7 +455,8 @@ def load_input_model(n_clicks, file_path, model_name, model_type):
             model = FluxMetaModel(model_name, file_path)
         except (AttributeError, FileNotFoundError) as err:
             text = "Configuration file is not set." if file_path is None else ""
-            text = "File not found." if isinstance(err, FileNotFoundError) else ""
+            text = "File not found." if isinstance(
+                err, FileNotFoundError) else ""
             fail = dbc.Col(
                 dbc.Alert(
                     f"Could not load meta-model. {text}",
@@ -311,7 +471,8 @@ def load_input_model(n_clicks, file_path, model_name, model_type):
             model = SimpleTripMetaModel(model_name, file_path)
         except (AttributeError, FileNotFoundError) as err:
             text = "Configuration file is not set." if file_path is None else ""
-            text = "File not found." if isinstance(err, FileNotFoundError) else ""
+            text = "File not found." if isinstance(
+                err, FileNotFoundError) else ""
             fail = dbc.Col(
                 dbc.Alert(
                     f"Could not load meta-model. {text}",
@@ -323,7 +484,8 @@ def load_input_model(n_clicks, file_path, model_name, model_type):
             return fail, []
 
     success = dbc.Col(
-        dbc.Alert("Meta-Model loaded successfuly", color="success", dismissable=True),
+        dbc.Alert("Meta-Model loaded successfuly",
+                  color="success", dismissable=True),
         md=10,
     )
     elements = []
@@ -427,6 +589,8 @@ def generate_base_model(_, input_params):
     prevent_initial_call=True,
 )
 def simulate_network(_, input_params, input_time):
+    print(input_params)
+    print("*************")
     if model is None:
         not_yet = dbc.Col(
             dbc.Alert(
@@ -470,6 +634,73 @@ def simulate_network(_, input_params, input_time):
 
 
 @app.callback(
+    Output("estim-status", "children"),
+    Input("estimate-btn", "n_clicks"),
+    State("input-data-confirmed", "value"),
+    State("input-data-deceased", "value"),
+    State("input-algorithem-type", "value"),
+    State("input-iters", "value"),
+    State("input-model", "value"),
+    State("input-params", "value"),
+    State("input-est-path", "value"),
+    State("input-startDay", "value"),
+
+    prevent_initial_call=True,
+)
+def estimate_params(_, input_data_confirmed, input_data_deceased,
+                    input_algorithem_type, input_iters, input_model, input_params,
+                    input_est_path, input_startDay):
+
+    if model is None:
+        not_yet = dbc.Col(
+            dbc.Alert(
+                "Please load a network configuration first.",
+                color="warning",
+                dismissable=True,
+            ),
+            md=10,
+        )
+        return not_yet
+    nodes = len(model.network.nodes)
+    system_type = model.network.nodes[0].cmodel
+    make_estimation(input_model, input_params, input_est_path, input_data_confirmed,
+                    input_data_deceased, input_iters, input_algorithem_type, input_startDay, 2, 'SAIR')
+
+    try:
+        nodes = len(model.network.nodes)
+        # system_type = model.network.nodes[0].cmodel
+        # make_estimation(input_model, input_params, input_est_path, input_data_confirmed,
+        #                 input_data_deceased, input_iters, input_algorithem_type, input_startDay, nodes, system_type)
+    except (TypeError, AttributeError):
+        text = "Parameter file is not set." if input_params is None else ""
+        text += "\n\nPath to save estimation is not set." if input_est_path is None else ""
+        text += "\n\nConfirmed cases file is not set." if input_data_confirmed is None else ""
+        text += "\n\nDeceased cases file is not set." if input_data_deceased is None else ""
+        text += "\n\nNumber of iterations is not set." if input_iters is None else ""
+        text += "\n\nAlgorithem is not set." if input_algorithem_type is None else ""
+
+        not_yet = dbc.Col(
+            dbc.Alert(
+                f"Please fill a meta-model parameter with valid information.\n\n{text}",
+                color="warning",
+                dismissable=True,
+            ),
+            md=10,
+        )
+        return not_yet
+
+    completed = dbc.Col(
+        dbc.Alert(
+            "Estiamtion Completed",
+            color="success",
+            dismissable=True,
+        ),
+        md=10,
+    )
+    return completed
+
+
+@app.callback(
     Output("node-graph", "figure"),
     Input("cytoscape-network", "selectedNodeData"),
     State("input-time", "value"),
@@ -477,7 +708,7 @@ def simulate_network(_, input_params, input_time):
 )
 def simulate_node(node_data, time):
     print("Call to node show")
-    print(node_data)
+    # print(node_data)
 
     try:
         idx = node_data[0]["id"]
@@ -488,22 +719,25 @@ def simulate_node(node_data, time):
         return go.Figure()
 
     # Only SIR cmodel is assumed
-    print(idx)
+    # print(idx)
 
-    time = np.linspace(0, time, time)
-    figure = go.Figure()
+    input_time = np.linspace(0, time, time)
+    figure = show_simulation(model, result[int(idx)], input_time)
 
-    s = result[int(idx)]["S"]
-    i = result[int(idx)]["I"]
+    # figure = go.Figure()
 
-    figure.add_trace(go.Scatter(x=time, y=s, mode="lines", name="S"))
-    figure.add_trace(go.Scatter(x=time, y=i, mode="lines", name="I"))
+    # s = result[int(idx)]["S"]
+    # i = result[int(idx)]["I"]
+    # print(type(i))
 
-    try:
-        r = result[int(idx)]["R"]
-        figure.add_trace(go.Scatter(x=time, y=r, mode="lines", name="R"))
-    except KeyError:
-        pass
+    # figure.add_trace(go.Scatter(x=time, y=s, mode="lines", name="S"))
+    # figure.add_trace(go.Scatter(x=time, y=i, mode="lines", name="I"))
+
+    # try:
+    #     r = result[int(idx)]["R"]
+    #     figure.add_trace(go.Scatter(x=time, y=r, mode="lines", name="R"))
+    # except KeyError:
+    #     pass
 
     print("returning calculated figure")
     return figure

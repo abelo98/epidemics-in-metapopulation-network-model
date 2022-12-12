@@ -5,6 +5,7 @@ from utils.hashing import hash_file
 import importlib
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+import numpy as np
 
 # Meta Model input constants
 NAME = "name"
@@ -32,52 +33,58 @@ class MetaModel:
         if len(args) == 1:
             self.__load_model__(args[0])
             self.network = Network(self.net_file)
-        elif len(args) == 2:
+        elif len(args) >= 2:
             self.name = args[0]
             self.net_file = args[1]
             self.net_file_hash = None
 
-            self.path = self.net_file[: self.net_file.rfind("/")]  # generated files
+            # generated files
+            self.path = self.net_file[: self.net_file.rfind("/")]
             self.code_file = f"{self.path}/{self.name}.py"
             self.config_file = f"{self.path}/{self.name}.cnf.json"
 
             self.network = Network(self.net_file)
-            self.compile()
+
+            try:
+                self.numba = args[2]
+                self.compile(self.numba)
+            except IndexError:
+                self.compile()
+
         else:
             raise Exception("Paremeter exception")
 
-   
-    def simulate(self, input_file, t):
+    def simulate(self, input_file, t, numba=False):
         if hash_file(self.net_file) != self.net_file_hash:
-            print(f"hash of network file {self.net_file} changed, recompiling...")
+            print(
+                f"hash of network file {self.net_file} changed, recompiling...")
             self.network = Network(self.net_file)
-            self.compile()
-        else:
-            print("hash matched")
+            self.compile(numba)
 
         try:
             y, params = self.import_input(input_file)
         except FileNotFoundError:
             print("input file not exists")
             return None
-       
+
         y_, params_ = self.__transform_input__(y, params)
 
         model = import_from_file(self.name, self.code_file)
 
+        y_ = np.array(y_, np.float64)
+        params_ = np.array(params_, np.float64)
+
         ret = model.solve(y_, t, params_).T
-        
+
         results = self.__transform_output__(ret)
 
         return results
 
-    
     def __transform_input__(self, y, params):
         raise NotImplementedError()
 
     def __transform_output__(self, ret):
         raise NotImplementedError()
-
 
     # ------------------------------------------------------------------
     # This sections conatins the methods that generate the code for
@@ -86,11 +93,11 @@ class MetaModel:
     # classes of specific meta models variations.
     # ------------------------------------------------------------------
 
-    def compile(self):
+    def compile(self, numba=False):
 
         structures = self.__compute_structures__()
 
-        code = self.__generate_code__(structures)
+        code = self.__generate_code__(structures, numba)
 
         with open(self.code_file, "w") as f:
             f.write(code)
@@ -102,7 +109,7 @@ class MetaModel:
     def __compute_structures__(self):
         raise NotImplementedError()
 
-    def __generate_code__(self, structures):
+    def __generate_code__(self, structures, numba=False):
         raise NotImplementedError()
 
     # ------------------------------------------------------------------
@@ -219,7 +226,8 @@ class MetaModel:
         for node in root:
             for item in node:
                 if item.tag == NY:
-                    nodey = {key: float(value) for key, value in item.attrib.items()}
+                    nodey = {key: float(value)
+                             for key, value in item.attrib.items()}
                 elif item.tag == NPARAMS:
                     nodeparams = {
                         key: float(value) for key, value in item.attrib.items()
